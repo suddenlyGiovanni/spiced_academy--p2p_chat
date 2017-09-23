@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
 import axios from '../utils/axios';
 // import PropTypes from 'prop-types';
-import ProfilePic from '../components/profilePic';
+import ProfilePic from '../components/profile-pic';
 import FriendshipButtonContainer from './friendshipButtonContainer';
 
 export default class ProfileOther extends Component {

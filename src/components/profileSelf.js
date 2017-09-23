@@ -2,7 +2,7 @@ import React from 'react';
 // REDUX
 import { connect } from 'react-redux';
 // MY COMPONENTS
-import ProfilePic from './profilePic';
+import ProfilePic from './profile-pic';
 import PropTypes from 'prop-types';
 import ProfileSelfBio from './profileSelfBio';
 

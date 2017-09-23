@@ -12,11 +12,13 @@ import getSocket from '../utils/socketIo';
 // MATERIAL-UI:
 import AppBar from 'material-ui/AppBar';
 import FlatButton from 'material-ui/FlatButton';
+import Drawer from 'material-ui/Drawer';
+
 
 // MY COMPONENTS
 import Logo from '../components/logo';
-import ProfilePic from '../components/profilePic';
-import ProfilePicUpload from '../components/profilePicUpload';
+import ProfilePic from '../components/profile-pic';
+import ProfilePicUpload from '../components/profile-pic-upload';
 
 
 class App extends Component {
@@ -26,6 +28,7 @@ class App extends Component {
         getSocket();
         this.state = {
             uploaderIsVisible: false,
+            open: false
         };
         this.showProfilePicUpload = this.showProfilePicUpload.bind( this );
     }
@@ -64,6 +67,17 @@ class App extends Component {
         console.log( 'App - fn: handleTouchTitle' );
         browserHistory.push( '/' );
     }
+
+
+    // DRAWER:
+    handleToggle() {
+        this.setState( { open: !this.state.open } );
+    }
+
+    handleClose() {
+        this.setState( { open: false } );
+    }
+
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     render() {
@@ -104,8 +118,16 @@ class App extends Component {
                     onTitleTouchTap={ () => this.handleTouchTitle() }
                     iconClassNameRight='muidocs-icon-navigation-expand-more'
                     iconElementRight={<FlatButton label="LogOut" />}
-                    onRightIconButtonTouchTap={ () =>this.handleLogOut() }
+                    onRightIconButtonTouchTap={ () => this.handleLogOut() }
+                    onLeftIconButtonTouchTap={ () => this.handleToggle() }
                 />
+
+                <Drawer
+                    docked={false}
+                    width={200}
+                    open={this.state.open}
+                    onRequestChange={ open => this.setState( { open } )}>
+                </Drawer>
 
 
                 <header style={headerStyle}>
