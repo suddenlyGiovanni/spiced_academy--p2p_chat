@@ -69,10 +69,10 @@ const RegistrationForm = ( { handleInput, handleSubmit, error } ) => {
                 <br />
 
                 {/* <button type='submit'>Register</button> */}
-                <RaisedButton type='submit' label="Register" style={style} />
+                <RaisedButton type='submit' label='Register' style={style} />
             </form>
 
-            <p>Already a member? <Link to='/login'>Log In</Link></p>
+            {/* <p>Already a member? <Link to='/login'>Log In</Link></p> */}
         </div>
     );
 };

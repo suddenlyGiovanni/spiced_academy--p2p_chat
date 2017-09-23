@@ -45,10 +45,10 @@ const LoginForm = ( { handleInput, handleSubmit, error } ) => {
                 <br />
 
                 {/* <button type='submit'>Log In</button> */}
-                <RaisedButton type='submit' label="Log In" style={style} />
+                <RaisedButton type='submit' label='Log In' style={style} />
 
             </form>
-            <p>Not a member? <Link to='/'>Register</Link></p>
+            {/* <p>Not a member? <Link to='/'>Register</Link></p> */}
         </div>
     );
 };

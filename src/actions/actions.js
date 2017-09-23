@@ -10,7 +10,7 @@ export function logOutUser() {
         .then( result => {
             console.log( 'REDUX - ACTION - fn: logOutUser - data', result.data );
             if ( result.data.success ) {
-                return { type: 'LOG_OUT_USER' };
+                window.location.href = '/';
             }
         } )
 
@@ -39,6 +39,23 @@ export function loadUserData() {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
+export function updateProfilePic( formData ) {
+    console.log( 'REDUX - ACTION - fn: updateProfilePic' );
+    return axios.put( '/api/user/profile_pic', formData )
+
+        .then( result => {
+            if ( result.data.success ) {
+                return {
+                    type: 'UPDATE_USER_DATA',
+                    user: result.data.userData
+                };
+            }
+        } )
+
+        .catch( err => console.log( err ) );
+
+}
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
 export function loadFriends() {

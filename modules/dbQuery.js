@@ -191,15 +191,13 @@ module.exports.saveUserProfilePic = ( uid, profilePic ) => {
 
     return db.query( query, [ uid, profilePic ] )
 
-        .then( ( resp ) => {
-            // console.log( resp.rows[ 0 ] );
-            resp.rows[ 0 ].profilePic = s3Url + resp.rows[ 0 ].profilePic;
-            return resp.rows[ 0 ];
+        .then( results => {
+            // console.log( results.rows[ 0 ] );
+            results.rows[ 0 ].profilePic = s3Url + results.rows[ 0 ].profilePic;
+            return results.rows[ 0 ];
         } )
 
-        .catch( ( err ) => {
-            console.error( err.stack );
-        } );
+        .catch( err => console.error( err.stack ) );
 };
 //_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 

@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router';
+
 // MATERIAL-UI:
 // import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
@@ -17,12 +19,20 @@ const style = {
 
 const Welcome = ( props ) => {
     console.log( 'Welcome - RENDER - this.props: ', props );
+    let action;
+    let url;
+    props.location.pathname === '/' ?
+        ( action = 'login' ) && ( url = 'login' ) :
+        ( action = 'register' ) && ( url = '' );
     return (
         <div>
             <AppBar
                 title="p2pChat"
                 iconClassNameRight="muidocs-icon-navigation-expand-more"
-                iconElementRight={<FlatButton label="LogIn" />}
+                iconElementRight={
+                    <Link to={`/${url}`}>
+                        <FlatButton label={action}/>
+                    </Link>}
             />
             <div style={style}>{props.children}</div>
         </div>

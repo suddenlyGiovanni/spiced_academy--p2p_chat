@@ -1,22 +1,22 @@
+// REACT
 import React, { Component } from 'react';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
+
 // REDUX
 import { connect } from 'react-redux';
-// import { store } from '../shell';
-import { logOutUser, loadUserData } from '../actions/actions';
+import { logOutUser, updateProfilePic, loadUserData } from '../actions/actions';
+
 // SOCKETIO
 import getSocket from '../utils/socketIo';
-// UTILS
-// import axios from '../utils/axios';
+
+// MATERIAL-UI:
+import AppBar from 'material-ui/AppBar';
+import FlatButton from 'material-ui/FlatButton';
+
 // MY COMPONENTS
 import Logo from '../components/logo';
 import ProfilePic from '../components/profilePic';
 import ProfilePicUpload from '../components/profilePicUpload';
-
-// MATERIAL-UI:
-// import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import AppBar from 'material-ui/AppBar';
-import FlatButton from 'material-ui/FlatButton'
 
 
 class App extends Component {
@@ -30,7 +30,6 @@ class App extends Component {
         this.showProfilePicUpload = this.showProfilePicUpload.bind( this );
     }
 
-    // life-cycle method
     componentDidMount() {
         console.log( 'App - fn: componentDidMount - this.props: ', this.props );
         this.props.loadUserData();
@@ -53,19 +52,7 @@ class App extends Component {
         e.stopPropagation();
         const formData = new FormData;
         formData.append( 'file', e.target.files[ 0 ] );
-
-        axios.put( `/api/user/${this.state.uid}/profile_pic`, formData )
-
-            .then( resp => {
-                const userData = Object.assign( resp.data.userData, { uploaderIsVisible: false } );
-                this.setState( userData );
-                console.log( 'App - fn: uploadProfilePic - AXIOS PUT', this.state );
-            } )
-
-            .catch( ( err ) => {
-                this.setState( { error: 'Something went wrong. Please try again!' } );
-                console.log( err );
-            } );
+        this.props.updateProfilePic( formData );
     }
 
     handleLogOut() {
@@ -73,29 +60,18 @@ class App extends Component {
         this.props.logOutUser();
     }
 
+    handleTouchTitle() {
+        console.log( 'App - fn: handleTouchTitle' );
+        browserHistory.push( '/' );
+    }
+
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     render() {
         console.log( 'App - RENDER - this.props: ', this.props );
 
-        const {
-            uid,
-            firstName,
-            lastName,
-            email,
-            bio,
-            profilePic
-        } = this.props;
+
 
         const { error, uploaderIsVisible } = this.state;
-
-        const children = React.cloneElement( this.props.children, {
-            uid,
-            firstName,
-            lastName,
-            email,
-            bio,
-            profilePic
-        } );
 
 
         const headerStyle = {
@@ -106,32 +82,39 @@ class App extends Component {
             backgroundColor: 'goldenrod'
 
         };
+        const titleStyle = { cursor: 'pointer' };
 
-        // if ( !this.props.uid ) {
-        //     return <div>Loading....</div>;
-        // }
+        if ( !this.props.user ) {
+            return null;
+        }
+
+        const {
+            uid,
+            firstName,
+            lastName,
+            email,
+            bio,
+            profilePic
+        } = this.props.user;
+
         return (
             <div>
-                {/* <MuiThemeProvider> */}
                 <AppBar
-                    title="p2pChat"
-                    iconClassNameRight="muidocs-icon-navigation-expand-more"
+                    title={<span style={titleStyle}>p2pChat</span>}
+                    onTitleTouchTap={ () => this.handleTouchTitle() }
+                    iconClassNameRight='muidocs-icon-navigation-expand-more'
                     iconElementRight={<FlatButton label="LogOut" />}
-                    onRightIconButtonTouchTap={e=>this.handleLogOut()}
+                    onRightIconButtonTouchTap={ () =>this.handleLogOut() }
                 />
-                {/* </MuiThemeProvider> */}
 
 
                 <header style={headerStyle}>
                     <Logo />
                     <nav>
                         <ul>
-                            <li><Link to='/'>Home</Link></li>
                             <li><Link to='/online'>Online Users</Link></li>
                             <li><Link to='/chat'>Chat</Link></li>
                             <li><Link to='/friends'>Friends</Link></li>
-                            <li><Link to='/logout'>Logout</Link></li>
-
                         </ul>
                     </nav>
 
@@ -149,7 +132,7 @@ class App extends Component {
 
 
                 {
-                        uploaderIsVisible &&
+                    uploaderIsVisible &&
                     <ProfilePicUpload
                         uploadProfilePic={ (e) => this.uploadProfilePic(e) }
                         hideProfilePicUpload={ (e) => this.hideProfilePicUpload(e) }/>
@@ -159,7 +142,7 @@ class App extends Component {
                 { error && <div>{ error }</div> }
 
 
-                {children}
+                {this.props.children}
 
 
                 <footer></footer>
@@ -172,14 +155,13 @@ class App extends Component {
 // REDUX - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const mapStateToProps = ( state ) => {
     console.log( 'App - fn: mapStateToProps' );
-    return {
-        user: state.user
-    };
+    return { user: state.user };
 };
 
 const mapDispatchToProps = ( dispatch ) => ( {
     loadUserData: () => dispatch( loadUserData() ),
-    logOutUser: () => dispatch( logOutUser() )
+    logOutUser: () => dispatch( logOutUser() ),
+    updateProfilePic: ( formData ) => dispatch( updateProfilePic( formData ) )
 } );
 
 export default connect( mapStateToProps, mapDispatchToProps )( App );

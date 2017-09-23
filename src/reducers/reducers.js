@@ -52,15 +52,14 @@ export default ( state = {}, action ) => {
         */
     switch ( action.type ) {
 
-    case 'LOG_OUT_USER':
-        state = Object.assign( {}, state, { user: null } );
-        break;
-
-
     case 'LOAD_USER_DATA':
         state = Object.assign( {}, state, { user: action.user } );
         break;
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    case 'UPDATE_USER_DATA':
+        state = Object.assign( {}, state, { user: action.user } );
+        break;
 
 
     case 'LOAD_FRIENDS':

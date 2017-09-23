@@ -144,6 +144,7 @@ router.post( '/login', ( req, res ) => {
 router.get( '/logout', ( req, res ) => {
     console.log( 'API: method: POST /api/logout' );
     req.session = null;
+    // res.redirect('/welcome');
     return res.json( { success: true } );
 } );
 
@@ -186,8 +187,8 @@ router.get( '/user/:uid', ( req, res ) => {
 
 
 // SET USER PROFILE PICTURE PROFILE
-router.put( '/user/:uid/profile_pic', uploader.single( 'file' ), ( req, res ) => {
-    console.log( 'API: ', 'method: PUT ', `/api/user/${req.session.user.uid}/profile_pic` );
+router.put( '/user/profile_pic', uploader.single( 'file' ), ( req, res ) => {
+    console.log( 'API: method: PUT /api/user/profile_pic' );
     console.log( req.file );
 
     if ( req.file ) {
@@ -225,20 +226,15 @@ router.put( '/user/:uid/profile_pic', uploader.single( 'file' ), ( req, res ) =>
 
                 return db.saveUserProfilePic( uid, profilePic )
 
-                    .then( ( userData ) => {
-                        res.json( {
-                            success: wasSuccessful,
-                            userData: userData
-                        } );
+                    .then( userData => {
+                        res.json( { success: wasSuccessful, userData } );
                         // remove image from server/uploads
                         fs.unlink( req.file.path, () => {} );
                     } );
             }
         } );
     } else {
-        res.json( {
-            success: false
-        } );
+        return res.json( { success: false } );
     }
 
 } );

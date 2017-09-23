@@ -1,4 +1,7 @@
 import React from 'react';
+// REDUX
+import { connect } from 'react-redux';
+// MY COMPONENTS
 import ProfilePic from './profilePic';
 import PropTypes from 'prop-types';
 import ProfileSelfBio from './profileSelfBio';
@@ -6,7 +9,13 @@ import ProfileSelfBio from './profileSelfBio';
 
 const ProfileSelf = ( props ) => {
     console.log( 'ProfileSelf - RENDER - this.props: ', props );
+    console.log( 'ProfileSelf - RENDER - this.props.user: ', props.user );
 
+
+
+    if (!props.user) {
+        return null;
+    }
     const {
         uid,
         firstName,
@@ -14,7 +23,7 @@ const ProfileSelf = ( props ) => {
         email,
         bio,
         profilePic
-    } = props;
+    } = props.user;
 
     return (
         <div style={{border:'medium dotted blue'}}>
@@ -60,4 +69,11 @@ ProfileSelf.propTypes = {
     profilePic: PropTypes.string
 };
 
-export default ProfileSelf;
+// REDUX - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const mapStateToProps = ( state ) => {
+    console.log( 'App - fn: ProfileSelf' );
+    return { user: state.user };
+};
+
+
+export default connect( mapStateToProps )( ProfileSelf );
