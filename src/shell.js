@@ -31,6 +31,8 @@ import Registration from './components/registration';
 import Login from './components/login';
 import ProfileSelf from './components/profileSelf';
 
+// MATERIAL-UI:
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 export const store = createStore( reducers, composeWithDevTools( applyMiddleware( reduxPromise ) ) );
 
@@ -40,30 +42,34 @@ let router;
 if ( location.pathname === '/welcome/' ) {
     console.log( 'Shell: ', location.pathname );
     router = (
-        <Router history={hashHistory}>
-            <Route path='/' component={Welcome}>
-                <IndexRoute component={Registration}/>
-                <Route path='/login' component={Login}/>
-            </Route>
-        </Router>
+        <MuiThemeProvider>
+            <Router history={hashHistory}>
+                <Route path='/' component={Welcome}>
+                    <IndexRoute component={Registration}/>
+                    <Route path='/login' component={Login}/>
+                </Route>
+            </Router>
+        </MuiThemeProvider>
     );
 } else if ( location.pathname !== '/welcome/' ) {
     console.log( 'Shell: ', location.pathname );
     router = (
         <Provider store={store}>
-            <Router history={browserHistory}>
-                <Route path='/' component={App}>
-                    <IndexRoute component={ProfileSelf} />
-                    <Route path='friends' component={FriendsContainer} />
-                    <Route path='user/:uid' component={ProfileOther} />
-                    <Route path='online' component={OnlineUsersContainer} />
-                    <Route path='chat' component={ChatChildrenContainer}>
-                        <IndexRoute component={ChatListContainer} />
-                        <Route path='public' component={ChatPublicContainer} />
-                        <Route path='private/:otherUid' component={ChatPrivateContainer} />
+            <MuiThemeProvider>
+                <Router history={browserHistory}>
+                    <Route path='/' component={App}>
+                        <IndexRoute component={ProfileSelf} />
+                        <Route path='friends' component={FriendsContainer} />
+                        <Route path='user/:uid' component={ProfileOther} />
+                        <Route path='online' component={OnlineUsersContainer} />
+                        <Route path='chat' component={ChatChildrenContainer}>
+                            <IndexRoute component={ChatListContainer} />
+                            <Route path='public' component={ChatPublicContainer} />
+                            <Route path='private/:otherUid' component={ChatPrivateContainer} />
+                        </Route>
                     </Route>
-                </Route>
-            </Router>
+                </Router>
+            </MuiThemeProvider>
         </Provider>
     );
 }

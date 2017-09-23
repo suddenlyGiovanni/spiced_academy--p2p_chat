@@ -15,7 +15,7 @@ const RegistrationForm = ( { handleInput, handleSubmit, error } ) => {
     return (
         <div style={{border: 'thin dotted red'}}>
 
-            <h1>Join Us!</h1>
+            <h1>Register</h1>
             {error && <div>Something went wrong. Please try again!</div>}
             <form onSubmit={handleSubmit}>
 

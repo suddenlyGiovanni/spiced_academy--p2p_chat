@@ -1,14 +1,25 @@
-import React from 'react';
-import axios from '../utils/axios';
-import { store } from '../shell';
-import { persistThisUserDataOnce } from '../actions/actions';
+import React, { Component } from 'react';
+import { Link } from 'react-router';
+// REDUX
+import { connect } from 'react-redux';
+// import { store } from '../shell';
+import { logOutUser, loadUserData } from '../actions/actions';
+// SOCKETIO
+import getSocket from '../utils/socketIo';
+// UTILS
+// import axios from '../utils/axios';
+// MY COMPONENTS
 import Logo from '../components/logo';
 import ProfilePic from '../components/profilePic';
 import ProfilePicUpload from '../components/profilePicUpload';
-import { Link } from 'react-router';
-import getSocket from '../utils/socketIo';
 
-export default class App extends React.Component {
+// MATERIAL-UI:
+// import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import AppBar from 'material-ui/AppBar';
+import FlatButton from 'material-ui/FlatButton'
+
+
+class App extends Component {
 
     constructor( props ) {
         super( props );
@@ -21,19 +32,8 @@ export default class App extends React.Component {
 
     // life-cycle method
     componentDidMount() {
-        axios.get( '/api/getUserInfo' )
-
-            .then( resp => {
-                this.setState( resp.data.userData );
-                const user = resp.data.userData
-                store.dispatch( persistThisUserDataOnce(  user ) );
-                console.log( 'App - fn: componentDidMount - this.state', this.state );
-            } )
-
-            .catch( err => {
-                this.setState( { error: 'Something went wrong. Please try again!' } );
-                console.log( err );
-            } );
+        console.log( 'App - fn: componentDidMount - this.props: ', this.props );
+        this.props.loadUserData();
     }
 
     showProfilePicUpload( e ) {
@@ -68,9 +68,14 @@ export default class App extends React.Component {
             } );
     }
 
+    handleLogOut() {
+        console.log( 'App - fn: handleLogOut' );
+        this.props.logOutUser();
+    }
+
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     render() {
-        console.log( 'App - RENDER - this.state: ', this.state );
+        console.log( 'App - RENDER - this.props: ', this.props );
 
         const {
             uid,
@@ -79,7 +84,7 @@ export default class App extends React.Component {
             email,
             bio,
             profilePic
-        } = this.state;
+        } = this.props;
 
         const { error, uploaderIsVisible } = this.state;
 
@@ -93,21 +98,31 @@ export default class App extends React.Component {
         } );
 
 
-        if ( !uid ) {
-            return <div>Loading....</div>;
-        }
+        const headerStyle = {
+            display: 'inline-flex',
+            width: '100%',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            backgroundColor: 'goldenrod'
 
+        };
 
+        // if ( !this.props.uid ) {
+        //     return <div>Loading....</div>;
+        // }
         return (
-            <div style={{border : 'thin dashed green'}}>
-                <header style={{
-                    display: 'inline-flex',
-                    width: '100%',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    backgroundColor: 'goldenrod'
+            <div>
+                {/* <MuiThemeProvider> */}
+                <AppBar
+                    title="p2pChat"
+                    iconClassNameRight="muidocs-icon-navigation-expand-more"
+                    iconElementRight={<FlatButton label="LogOut" />}
+                    onRightIconButtonTouchTap={e=>this.handleLogOut()}
+                />
+                {/* </MuiThemeProvider> */}
 
-                }}>
+
+                <header style={headerStyle}>
                     <Logo />
                     <nav>
                         <ul>
@@ -133,7 +148,8 @@ export default class App extends React.Component {
 
 
 
-                {uploaderIsVisible &&
+                {
+                        uploaderIsVisible &&
                     <ProfilePicUpload
                         uploadProfilePic={ (e) => this.uploadProfilePic(e) }
                         hideProfilePicUpload={ (e) => this.hideProfilePicUpload(e) }/>
@@ -147,8 +163,23 @@ export default class App extends React.Component {
 
 
                 <footer></footer>
+
             </div>
         );
     }
 
 }
+// REDUX - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const mapStateToProps = ( state ) => {
+    console.log( 'App - fn: mapStateToProps' );
+    return {
+        user: state.user
+    };
+};
+
+const mapDispatchToProps = ( dispatch ) => ( {
+    loadUserData: () => dispatch( loadUserData() ),
+    logOutUser: () => dispatch( logOutUser() )
+} );
+
+export default connect( mapStateToProps, mapDispatchToProps )( App );

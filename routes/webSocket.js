@@ -143,7 +143,7 @@ router.post( '/connected/:socketId', makeSureUserIsLoggedIn, ( req, res ) => {
                 about the user who just came online as the payload, allowing all clients
                 to keep their list of online users updated: event 'userJoined' */
                 if ( !userAlreadyThere ) {
-                    return db.getUserInfo( uid )
+                    return db.readUser( uid )
                         .then( userJoined => io.sockets.emit( 'userJoined', userJoined ) );
                 }
             } )

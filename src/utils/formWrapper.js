@@ -2,7 +2,6 @@ import React from 'react';
 import axios from './axios';
 
 export default ( Component, url ) => {
-    // console.log( 'React Utils: fn: formWrapper ' );
 
     return class AuthForm extends React.Component {
 
@@ -32,7 +31,6 @@ export default ( Component, url ) => {
                     //     this.setState({ success: true });
                     // }
 
-                    // FIXME: find a way to move location.replace outside this el. this is preventing the el to be reusable in every situation
                     location.replace( '/' );
                 } )
 

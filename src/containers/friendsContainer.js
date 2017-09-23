@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // import { bindActionCreators } from 'redux';
-import { fetchFriends, updateFriendship } from '../actions/actions';
+import { loadFriends, updateFriendship } from '../actions/actions';
 import PendingFriendships from '../components/pendingFriendships';
 import CurrentFriendships from '../components/currentFriendships';
 import BlockedFriendships from '../components/blockedFriendships';
@@ -14,7 +14,7 @@ class FriendsContainer extends Component {
     }
 
     componentDidMount() {
-        this.props.fetchFriends();
+        this.props.loadFriends();
     }
 
     handleFriendshipChange( toUserId, status ) {
@@ -78,7 +78,7 @@ const mapStateToProps = ( state ) => {
 
 // Get actions and pass them as props to to FriendsContainer
 const mapDispatchToProps = ( dispatch ) => ( {
-    fetchFriends: () => dispatch( fetchFriends() ),
+    loadFriends: () => dispatch( loadFriends() ),
     updateFriendship: ( fromUserId, toUserId, status ) => dispatch( updateFriendship( fromUserId, toUserId, status ) )
 } );
 

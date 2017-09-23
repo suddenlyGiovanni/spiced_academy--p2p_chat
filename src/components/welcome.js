@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 // MATERIAL-UI:
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+// import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import AppBar from 'material-ui/AppBar';
+import FlatButton from 'material-ui/FlatButton';
 
 const style = {
     flex: '0 0 auto',
@@ -12,14 +14,18 @@ const style = {
     justifyContent: 'center',
     backgroundColor: '#2196f3'
 };
+
 const Welcome = ( props ) => {
     console.log( 'Welcome - RENDER - this.props: ', props );
     return (
-        <MuiThemeProvider>
-            <div style={style}>
-                {props.children}
-            </div>
-        </MuiThemeProvider>
+        <div>
+            <AppBar
+                title="p2pChat"
+                iconClassNameRight="muidocs-icon-navigation-expand-more"
+                iconElementRight={<FlatButton label="LogIn" />}
+            />
+            <div style={style}>{props.children}</div>
+        </div>
     );
 };
 

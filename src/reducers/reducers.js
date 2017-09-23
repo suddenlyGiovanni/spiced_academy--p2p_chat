@@ -52,13 +52,18 @@ export default ( state = {}, action ) => {
         */
     switch ( action.type ) {
 
-    case 'STORE_LOGGEDIN_USER_DATA':
+    case 'LOG_OUT_USER':
+        state = Object.assign( {}, state, { user: null } );
+        break;
+
+
+    case 'LOAD_USER_DATA':
         state = Object.assign( {}, state, { user: action.user } );
         break;
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
-    case 'FETCH_FRIENDS':
+    case 'LOAD_FRIENDS':
         state = Object.assign( {}, state, { friends: action.friends } );
         break;
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -71,17 +71,17 @@ router.post( '/register', ( req, res ) => {
 
         return db.createUser( firstName, lastName, email, password )
 
-            .then( result => {
-                if ( result ) {
+            .then( ( resp ) => {
+                if ( resp ) {
                     // set the session to be true
                     req.session.user = {
-                        uid: result.uid,
-                        firstName: result.firstName,
-                        lastName: result.lastName,
-                        email: result.email
+                        uid: resp.uid,
+                        firstName: resp.firstName,
+                        lastName: resp.lastName,
+                        email: resp.email
                     };
                     // log user session
-                    console.log( 'successfully set the session', req.session.user );
+                    console.log( 'succesfuly set thye session', req.session.user );
 
                     res.json( { success: true } );
 
@@ -102,7 +102,7 @@ router.post( '/register', ( req, res ) => {
 
 // LOGIN USER
 router.post( '/login', ( req, res ) => {
-    console.log( 'API: method: POST /api/login' );
+    console.log( 'API: ', 'method: POST ', '/api/login' );
 
     const email = req.body.email.toLowerCase();
     const password = req.body.password.toLowerCase();
@@ -140,26 +140,24 @@ router.post( '/login', ( req, res ) => {
 } );
 
 
-// LOGOUT USER
-router.get( '/logout', ( req, res ) => {
-    console.log( 'API: method: POST /api/logout' );
-    req.session = null;
-    return res.json( { success: true } );
-} );
-
-
-
-
-
-
-// GET USER DATA
-router.get( '/user', ( req, res ) => {
-    console.log( `API: method: GET /api/user - uid = ${req.session.user.uid}` );
+// GET LOGGED IN USER DATA
+router.get( '/getUserInfo', ( req, res ) => {
+    console.log( 'API: ', 'method: GET ', `/api/getUserInfo/${req.session.user.uid}` );
 
     if ( req.session.user ) {
-        return db.readUser( req.session.user.uid )
-            .then( userData => res.json( { userData } ) )
-            .catch( err => console.error( err.stack ) );
+        return db.getUserInfo( req.session.user.uid )
+
+            .then( ( userData ) => {
+
+                return res.json( {
+                    success: true,
+                    userData: userData
+                } );
+            } )
+
+            .catch( ( err ) => {
+                console.error( err.stack );
+            } );
 
     }
 } );

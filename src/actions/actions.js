@@ -3,25 +3,53 @@ import axios from '../utils/axios';
 
 
 
-export function persistThisUserDataOnce( user ) {
-    console.log( 'REDUX - ACTION - fn: persistThisUserDataOnce' );
-    return {
-        type: 'STORE_LOGGEDIN_USER_DATA',
-        user
-    };
+export function logOutUser() {
+    console.log( 'REDUX - ACTION - fn: logOutUser' );
+    return axios.get( '/api/logout' )
+
+        .then( result => {
+            console.log( 'REDUX - ACTION - fn: logOutUser - data', result.data );
+            if ( result.data.success ) {
+                return { type: 'LOG_OUT_USER' };
+            }
+        } )
+
+        .catch( err => console.log( err ) );
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
-export function fetchFriends() {
-    console.log( 'REDUX - ACTION - fn: fetchFriends' );
+export function loadUserData() {
+    console.log( 'REDUX - ACTION - fn: loadUserData' );
+    return axios.get( '/api/user' )
+        .then( result => {
+            console.log( 'REDUX - ACTION - fn: loadUserData - data', result.data );
+            return {
+                type: 'LOAD_USER_DATA',
+                user: result.data.userData
+            };
+
+        } )
+
+        .catch( err => {
+            console.log( err );
+            return { type: 'ERROR' };
+        } );
+}
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
+
+export function loadFriends() {
+    console.log( 'REDUX - ACTION - fn: loadFriends' );
 
     return axios.get( '/api/friends' )
 
         .then( result => {
-            console.log( 'REDUX - ACTION - fn: fetchFriends - data', result.data.friends );
+            console.log( 'REDUX - ACTION - fn: loadFriends - data', result.data.friends );
             return {
-                type: 'FETCH_FRIENDS',
+                type: 'LOAD_FRIENDS',
                 friends: result.data.friends
             };
         } )

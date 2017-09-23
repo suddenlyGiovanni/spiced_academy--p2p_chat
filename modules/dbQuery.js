@@ -22,7 +22,9 @@ module.exports.createUser = ( firstName, lastName, email, password ) => {
 
         .then( ( hashedPass ) => {
 
-            const query = 'INSERT INTO users ( "firstName", "lastName", email, password) VALUES ($1, $2, $3, $4) RETURNING uid, "firstName", "lastName"';
+            const query = ` INSERT INTO users ( "firstName", "lastName", email, password)
+                            VALUES ($1, $2, $3, $4)
+                            RETURNING uid, "firstName", "lastName"`;
 
             return db.query( query, [
                 firstName,
@@ -103,8 +105,8 @@ module.exports.checkUser = ( email, password ) => {
 
 
 // GET LOGGED IN USER DATA
-module.exports.getUserInfo = ( uid ) => {
-    console.log( 'dbQuery.js - fn: "getUserData"\n' );
+module.exports.readUser = ( uid ) => {
+    console.log( 'dbQuery.js - fn: "readUser"\n' );
 
     const query = `SELECT   uid,
                             "firstName",
@@ -123,18 +125,13 @@ module.exports.getUserInfo = ( uid ) => {
                 const defProfilePic =
                     `def_profilePic_${(Math.floor(Math.random()*(12-1+1)+1))}.svg`;
                 results.rows[ 0 ].profilePic = s3Url + 'def_profilePic/' + defProfilePic;
-            }
-            //
-            else {
+            } else {
                 results.rows[ 0 ].profilePic = s3Url + results.rows[ 0 ].profilePic;
             }
-            //
             return results.rows[ 0 ];
         } )
 
-        .catch( ( err ) => {
-            console.error( err.stack );
-        } );
+        .catch( err => console.error( err.stack ) );
 };
 //_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
@@ -572,7 +569,7 @@ module.exports.createPrivateMessage = ( fromUserId, toUserId, messageBody ) => {
                     } else {
                         results.rows[ 0 ].profilePic = s3Url + results.rows[ 0 ].profilePic;
                     }
-                    console.log( 'dbQuery.js - fn: "createPrivateMessage"\n - result:',results.rows[ 0 ] );
+                    console.log( 'dbQuery.js - fn: "createPrivateMessage"\n - result:', results.rows[ 0 ] );
                     return results.rows[ 0 ];
                 } );
         } )
