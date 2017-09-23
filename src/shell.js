@@ -2,6 +2,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, IndexRoute, hashHistory, browserHistory } from 'react-router';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
+
 
 // REDUX components
 import { Provider } from 'react-redux';
@@ -11,7 +14,6 @@ import reduxPromise from 'redux-promise';
 import reducers from './reducers/reducers';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
-// MY Components:
 
 // Containers:
 import App from './containers/app';

@@ -2,6 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import FormWrapper from '../utils/formWrapper';
+// MATERIAL-UI
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+
+const style = { margin: 12 };
+
 
 const RegistrationForm = ( { handleInput, handleSubmit, error } ) => {
     console.log( 'RegistrationForm - RENDER ' );
@@ -13,43 +19,57 @@ const RegistrationForm = ( { handleInput, handleSubmit, error } ) => {
             {error && <div>Something went wrong. Please try again!</div>}
             <form onSubmit={handleSubmit}>
 
-                <label forHtml='firstName'>First Name</label>
-                <input id='firstName'
+                <TextField
+                    id='firstName'
                     type="text"
                     name='firstName'
                     autoComplete="given-name"
+                    hintText="Hint Text"
+                    floatingLabelText="First Name"
+                    onChange={handleInput}
                     required
-                    onChange={handleInput}>
-                </input>
-                
-                <label forHtml='lastName'>Last Name</label>
-                <input
+                />
+                <br />
+
+                <TextField
                     id='lastName'
                     type="text"
-                    name="lastName"
+                    name='lastName'
                     autoComplete="family-name"
+                    hintText="Hint Text"
+                    floatingLabelText="Last Name"
+                    onChange={handleInput}
                     required
-                    onChange={handleInput}>
-                </input>
+                />
+                <br />
 
-                <label forHtml='email'>Email</label>
-                <input id='email'
-                    type="email"
-                    name="email"
-                    autoComplete="email"
-                    required onChange={handleInput}>
-                </input>
 
-                <label forHtml='password'>Password</label>
-                <input id='password'
-                    type="password"
-                    name="password"
-                    autoComplete="new-password"
+                <TextField
+                    id='email'
+                    type='email'
+                    name='email'
+                    autoComplete='email'
+                    hintText='Hint Text'
+                    floatingLabelText='email'
+                    onChange={handleInput}
                     required
-                    onChange={handleInput}>
-                </input>
+                />
+                <br />
 
-                <button type='submit'>Register</button>
+                <TextField
+                    id='password'
+                    type='password'
+                    name='password'
+                    autoComplete='new-password'
+                    hintText='Hint Text'
+                    floatingLabelText='password'
+                    onChange={handleInput}
+                    required
+                />
+                <br />
+
+                {/* <button type='submit'>Register</button> */}
+                <RaisedButton type='submit' label="Register" style={style} />
             </form>
 
             <p>Already a member? <Link to='/login'>Log In</Link></p>
