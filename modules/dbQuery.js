@@ -243,7 +243,7 @@ module.exports.readLatestUsers = () => {
                             "profilePic"
                     FROM users
                     ORDER BY timestamp desc
-                    LIMIT 20;`;
+                    LIMIT 10;`;
     return db.query( query )
         .then( latestUsers => {
             // console.log( results.rows );

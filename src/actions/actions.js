@@ -74,7 +74,21 @@ export function loadLatestUsers() {
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+export function loadSearchedUsers( search ) {
+    console.log( 'REDUX - ACTION - fn: loadSearchedUsers', search );
+    // TODO: switch to socketio at some point
 
+    return axios.post( '/api/users/search', { search } )
+        .then( results => {
+            console.log( 'REDUX - ACTION - fn: loadSearchedUsers - data', results.data );
+            // return {
+            //     type: 'LOAD_SEARCHED_USERS',
+            //     users: results.data
+            // }
+        } )
+
+        .catch( err => console.log( err ) );
+};
 
 
 export function loadFriends() {

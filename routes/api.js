@@ -240,7 +240,7 @@ router.put( '/user/profile_pic', uploader.single( 'file' ), ( req, res ) => {
 // SET USER BIO_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 router.put( '/user/:uid/bio', ( req, res ) => {
-    console.log( 'API: ', 'method: PUT ', `/api/user/${req.params.uid}/bio` );
+    console.log( 'API: ', 'method: PUT ', `/api/user/${req.params.uid}/bio \n` );
     const bio = req.body.bio.toLowerCase();
 
     return db.saveUserBio( req.params.uid, bio )
@@ -261,7 +261,7 @@ router.put( '/user/:uid/bio', ( req, res ) => {
 
 // GET OTHER USER'S DATA _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 router.get( '/user/:uid', ( req, res ) => {
-    console.log( `API: method: GET /api/user/${req.params.uid}` );
+    console.log( `API: method: GET /api/user/${req.params.uid} \n` );
 
     return db.getOtherUserInfo( req.params.uid )
         .then( otherUserData => res.json( { success: true, otherUserData } ) )
@@ -274,16 +274,24 @@ router.get( '/user/:uid', ( req, res ) => {
 
 // GET USERS DATA FROM LATEST 20 TO REGISTER:
 router.get( '/users', ( req, res ) => {
-    console.log( 'API: method: GET /api/users' );
+    console.log( 'API: method: GET /api/users \n' );
     return db.readLatestUsers()
         .then( latestUsers => {
-            console.log( 'latestUsers: ', latestUsers );
+            // console.log( 'latestUsers: ', latestUsers );
             res.json( { users: latestUsers } );
         } )
         .catch( err => console.error( err.stack ) )
 } );
 
 
+
+
+// GET USERS DATA FOR SERCHED USERS:
+router.post( '/users/search', ( req, res ) => {
+    const search = req.body;
+    console.log( 'API: method: GET /api/users/search - search: ', search );
+
+} )
 
 
 // ____________________________________________________________________________

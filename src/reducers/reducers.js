@@ -76,10 +76,20 @@ export default ( state = {}, action ) => {
 
 
 
+    case 'LOAD_SEARCHED_USERS':
+        state = Object.assign( {}, state, { users: action.users } );
+        break;
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
+
     case 'LOAD_FRIENDS':
         state = Object.assign( {}, state, { friends: action.friends } );
         break;
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
 
 
     case 'UPDATE_FRIENDSHIP':

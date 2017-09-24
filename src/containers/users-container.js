@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 // REDUX
 import { connect } from 'react-redux';
-import { loadLatestUsers, updateFriendship } from '../actions/actions';
+import { loadLatestUsers, loadSearchedUsers, updateFriendship } from '../actions/actions';
 
 // MY COMPONENTS
 import Users from '../components/users';
@@ -35,6 +35,8 @@ class UsersContainer extends Component {
 
     handleUpdateInput( value ) {
         console.log( 'handleUpdateInput: ', value );
+        this.props.loadSearchedUsers( value );
+
         this.setState( {
             dataSource: [
             value,
@@ -78,7 +80,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ( {
     loadLatestUsers: () => dispatch( loadLatestUsers() ),
-    updateFriendship: ( fromUserId, toUserId, status ) => dispatch( updateFriendship( fromUserId, toUserId, status ) )
+    updateFriendship: ( fromUserId, toUserId, status ) => dispatch( updateFriendship( fromUserId, toUserId, status ) ),
+    loadSearchedUsers: search  => dispatch( loadSearchedUsers( search ) )
 } );
 
 export default connect( mapStateToProps, mapDispatchToProps )( UsersContainer )
