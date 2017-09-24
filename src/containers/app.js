@@ -18,17 +18,20 @@ import { List, ListItem } from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
 import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
-import ContentInbox from 'material-ui/svg-icons/content/inbox';
-import ContentDrafts from 'material-ui/svg-icons/content/drafts';
+
+
 import ContentSend from 'material-ui/svg-icons/content/send';
 import ActionInfo from 'material-ui/svg-icons/action/info';
+
+import FontIcon from 'material-ui/FontIcon';
+import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
+
 
 
 // MY COMPONENTS
 import Logo from '../components/logo';
 import ProfilePic from '../components/profile-pic';
 import ProfilePicUpload from '../components/profile-pic-upload';
-
 
 class App extends Component {
 
@@ -110,6 +113,7 @@ class App extends Component {
             profilePic
         } = this.props.user;
 
+
         return (
             <div>
                 <AppBar
@@ -120,6 +124,24 @@ class App extends Component {
                     onRightIconButtonTouchTap={ () => this.handleLogOut() }
                     onLeftIconButtonTouchTap={ () => this.handleToggle() }>
                 </AppBar>
+
+
+                <BottomNavigation>
+                    <BottomNavigationItem
+                        label="Online Users"
+                        icon={<ContentSend />}
+                        onClick={ e => browserHistory.push('/online')}/>
+                    <BottomNavigationItem
+                        label="Chat"
+                        icon={<CommunicationChatBubble />}
+                        onClick={ e => browserHistory.push('/chat')}/>
+                    <BottomNavigationItem
+                        label="Friends"
+                        icon={<CommunicationChatBubble />}
+                        onClick={ e => browserHistory.push('/friends')}/>
+                </BottomNavigation>
+
+
 
                 <Drawer
                     docked={false}

@@ -1,8 +1,18 @@
 import React from 'react';
 import ProfilePicOther from './profilePicOther';
 
+// MATERIAL-UI
+import Avatar from 'material-ui/Avatar';
+import { List, ListItem } from 'material-ui/List';
+import Subheader from 'material-ui/Subheader';
+import Divider from 'material-ui/Divider';
+import { grey400, darkBlack, lightBlack } from 'material-ui/styles/colors';
+import IconButton from 'material-ui/IconButton';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 
-const PendingFriendships = ( props ) => {
+const PendingFriendships =  props => {
     console.log( 'PendingFriendships - RENDER - this.props: ', props );
     const { handleFriendshipChange } = props;
     // loop over the friends array and create an element for each

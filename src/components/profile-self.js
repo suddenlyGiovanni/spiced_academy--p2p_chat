@@ -6,12 +6,11 @@ import ProfilePic from './profile-pic';
 import PropTypes from 'prop-types';
 import ProfileSelfBio from './profile-self-bio';
 
+import Avatar from 'material-ui/Avatar';
+
 
 const ProfileSelf = ( props ) => {
     console.log( 'ProfileSelf - RENDER - this.props: ', props );
-    console.log( 'ProfileSelf - RENDER - this.props.user: ', props.user );
-
-
 
     if (!props.user) {
         return null;
@@ -29,10 +28,7 @@ const ProfileSelf = ( props ) => {
         <div style={{border:'medium dotted blue'}}>
 
             <h4>ProfileSelf</h4>
-
-            <ProfilePic
-                src={ profilePic }
-                alt={ firstName + ' ' + lastName } />
+            <Avatar src={ profilePic } />
 
 
             <label forHtml='uid'>Uid </label>

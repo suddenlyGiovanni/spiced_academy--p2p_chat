@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // import { bindActionCreators } from 'redux';
 import { loadFriends, updateFriendship } from '../actions/actions';
-import PendingFriendships from '../components/pendingFriendships';
-import CurrentFriendships from '../components/currentFriendships';
-import BlockedFriendships from '../components/blockedFriendships';
+import FriendshipsPending from '../components/friendships-pending';
+import FriendshipsCurrent from '../components/friendships-current';
+import FriendshipsBlocked from '../components/friendships-blocked';
 
 class FriendsContainer extends Component {
     constructor( props ) {
         super( props );
         this.state = {};
-        this.handleFriendshipChange = this.handleFriendshipChange.bind( this );
+        // this.handleFriendshipChange = this.handleFriendshipChange.bind( this );
     }
 
     componentDidMount() {
@@ -18,6 +18,7 @@ class FriendsContainer extends Component {
     }
 
     handleFriendshipChange( toUserId, status ) {
+        console.log('handleFriendshipChange', toUserId, status);
         const { updateFriendship, uid } = this.props;
         updateFriendship( uid, toUserId, status );
     }
@@ -35,27 +36,27 @@ class FriendsContainer extends Component {
                 <h1>FriendContainer</h1>
                 {
                     pendingFriendships &&
-                    <PendingFriendships
+                    <FriendshipsPending
                         pendingFriendships={pendingFriendships}
                         handleFriendshipChange={
-                            ( toUserId, status) => this.handleFriendshipChange( toUserId, status )
+                            ( toUserId, status ) => this.handleFriendshipChange( toUserId, status )
                         }/>
                 }
                 {
                     currentFriendships &&
-                    <CurrentFriendships
+                    <FriendshipsCurrent
                         uidSelf={this.props.uid}
                         currentFriendships={currentFriendships}
                         handleFriendshipChange={
-                            ( toUserId, status) => this.handleFriendshipChange( toUserId, status )
+                            ( toUserId, status ) => this.handleFriendshipChange( toUserId, status )
                         }/>
                 }
                 {
                     blockedFriendships &&
-                    <BlockedFriendships
+                    <FriendshipsBlocked
                         blockedFriendships={blockedFriendships}
                         handleFriendshipChange={
-                            ( toUserId, status) => this.handleFriendshipChange( toUserId, status )
+                            ( toUserId, status ) => this.handleFriendshipChange( toUserId, status )
                         }/>
                 }
             </div>

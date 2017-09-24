@@ -17,7 +17,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 // Containers:
 import App from './containers/app';
-import FriendsContainer from './containers/friendsContainer';
+import FriendsContainer from './containers/friends-container';
 import ProfileOther from './containers/profileOther';
 import ChatChildrenContainer from './containers/chat-children-container';
 import ChatListContainer from './containers/chat-list-container';
