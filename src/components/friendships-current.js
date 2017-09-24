@@ -1,7 +1,7 @@
+// REACT
 import React from 'react';
 import ProfilePicOther from './profilePicOther';
 import { browserHistory } from 'react-router';
-
 
 // MATERIAL-UI
 import Avatar from 'material-ui/Avatar';
@@ -13,6 +13,9 @@ import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+// ICONS
+import ContentRemoveCircle from 'material-ui/svg-icons/content/remove-circle';
+
 
 
 const handleTouchCurrentFriend = ( uid ) => {
@@ -24,8 +27,9 @@ const handleTouchCurrentFriend = ( uid ) => {
 const iconButtonElement = (
     <IconButton
         touch={true}
-        tooltip="more"
-    tooltipPosition="bottom-left" >
+        tooltip='edit friendship status'
+        tooltipPosition='bottom-left'
+    >
         <MoreVertIcon color={grey400} />
     </IconButton>
 );
@@ -42,8 +46,10 @@ const CurrentFriendship = ( props ) => {
             <IconMenu
                 iconButtonElement={iconButtonElement}
                 onItemTouchTap={ () => handleFriendshipChange( uid, 'TERMINATED' ) }>
-                <MenuItem value='end' primaryText='END FRIENDSHIP'/>
-
+                <MenuItem
+                    value='END'
+                    primaryText='END FRIENDSHIP'
+                    leftIcon={<ContentRemoveCircle />}/>
             </IconMenu>
         );
 
@@ -63,15 +69,10 @@ const CurrentFriendship = ( props ) => {
     } );
 
     return (
-        <div style={{border: 'thin dashed gold'}}>
-            <List>
+        <List>
                 <Subheader>These people are currently your friend</Subheader>
                 {listCurrentFriendships}
             </List>
-
-            <ul>
-            </ul>
-        </div>
     );
 
 };

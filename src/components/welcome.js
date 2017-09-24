@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 
 // MATERIAL-UI:
-// import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import FlatButton from 'material-ui/FlatButton';
 

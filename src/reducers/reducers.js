@@ -57,9 +57,23 @@ export default ( state = {}, action ) => {
         break;
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+
+
+
     case 'UPDATE_USER_DATA':
         state = Object.assign( {}, state, { user: action.user } );
         break;
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
+
+    case 'LOAD_LATEST_USERS':
+        state = Object.assign( {}, state, { users: action.users } );
+        break;
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
 
 
     case 'LOAD_FRIENDS':
@@ -84,17 +98,14 @@ export default ( state = {}, action ) => {
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
-    case 'CONNECT_LOGGEDIN_USER':
-        // state = Object.assign( {}, state);
-        break;
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 
 
     case 'CREATE_ONLINE_USERS':
         state = Object.assign( {}, state, { onlineUsers: action.onlineUsers } );
         break;
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
 
 
     case 'ADD_ONLINE_USER':
@@ -120,6 +131,9 @@ export default ( state = {}, action ) => {
         break;
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+
+
+
     case 'REMOVE_ONLINE_USER':
         var actionIndex = state.onlineUsers.findIndex( user => user.uid === action.uid );
         var newOnlineUsers = state.onlineUsers.slice();
@@ -129,16 +143,22 @@ export default ( state = {}, action ) => {
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
+
+
     case 'CREATE_PUBLIC_MESSAGE_LIST':
         state = Object.assign( {}, state, { publicMessages: action.publicMessageList } );
         break;
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
+
+
     case 'CREATE_PRIVATE_MESSAGE_LIST':
         state = Object.assign( {}, state, { privateMessages: action.privateMessageList } );
         break;
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
 
 
     case 'ADD_NEW_PUBLIC_MESSAGE':
@@ -149,12 +169,16 @@ export default ( state = {}, action ) => {
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
+
+
     case 'ADD_NEW_PRIVATE_MESSAGE':
         var newPrivateMessagesList = state.privateMessages.slice();
         newPrivateMessagesList.splice( ( newPrivateMessagesList.length ), 0, action.newPrivateMessage );
         state = Object.assign( {}, state, { privateMessages: newPrivateMessagesList } );
         break;
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
 
 
     case 'PERSIST_OTHER_UID':

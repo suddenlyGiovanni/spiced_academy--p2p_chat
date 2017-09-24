@@ -288,7 +288,7 @@ module.exports.readAllFriends = ( fromUserId ) => {
     return db.query( query, [ fromUserId ] )
 
         .then( friends => {
-            console.log( 'dbQuery.js - fn: "readAllFriends"', friends.rows );
+            console.log( 'dbQuery.js - fn: "readAllFriends"' );
 
             var s3mappedFriends = friends.rows.map( friend => {
                 if ( !friend.profilePic ) {
@@ -377,7 +377,7 @@ module.exports.updateFriendshipStatus = ( fromUserId, toUserId, status ) => {
                         status = $3
                     WHERE ("fromUserId" = $1 AND "toUserId" = $2)
                     OR ("fromUserId" = $2 and "toUserId" = $1)
-                    RETURNING "fId", "fromUserId", status, "toUserId";`;
+                    RETURNING fid, "fromUserId", status, "toUserId";`;
 
 
     return db.query( query, [ fromUserId, toUserId, status ] )

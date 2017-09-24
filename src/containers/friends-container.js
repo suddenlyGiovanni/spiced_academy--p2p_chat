@@ -33,7 +33,6 @@ class FriendsContainer extends Component {
 
         return (
             <div>
-                <h1>FriendContainer</h1>
                 {
                     pendingFriendships &&
                     <FriendshipsPending

@@ -23,7 +23,8 @@ import ChatChildrenContainer from './containers/chat-children-container';
 import ChatListContainer from './containers/chat-list-container';
 import ChatPublicContainer from './containers/chat-public-container';
 import ChatPrivateContainer from './containers/chat-private-container';
-import OnlineUsersContainer from './containers/onlineUsersContainer';
+import OnlineUsersContainer from './containers/online-users-container';
+import UsersContainer from './containers/users-container';
 
 // Components
 import Welcome from './components/welcome';
@@ -60,6 +61,7 @@ if ( location.pathname === '/welcome/' ) {
                     <Route path='/' component={App}>
                         <IndexRoute component={ProfileSelf} />
                         <Route path='friends' component={FriendsContainer} />
+                        <Route path='users' component={UsersContainer} />
                         <Route path='user/:uid' component={ProfileOther} />
                         <Route path='online' component={OnlineUsersContainer} />
                         <Route path='chat' component={ChatChildrenContainer}>

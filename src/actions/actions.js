@@ -58,6 +58,25 @@ export function updateProfilePic( formData ) {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
+export function loadLatestUsers() {
+    console.log( 'REDUX - ACTION - fn: loadLatestUsers' );
+    return axios.get( '' )
+
+        .then( result => {
+            console.log( 'REDUX - ACTION - fn: loadLatestUsers - data', result.data.users );
+            return {
+                type: 'LOAD_LATEST_USERS',
+                users: result.data.users
+            }
+        } )
+
+        .catch( err => console.log( err ) );
+}
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
+
 export function loadFriends() {
     console.log( 'REDUX - ACTION - fn: loadFriends' );
 

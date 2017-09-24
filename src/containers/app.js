@@ -17,14 +17,17 @@ import Avatar from 'material-ui/Avatar';
 import { List, ListItem } from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
-import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
-
-
-import ContentSend from 'material-ui/svg-icons/content/send';
-import ActionInfo from 'material-ui/svg-icons/action/info';
-
 import FontIcon from 'material-ui/FontIcon';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
+
+// ICONS
+import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
+import ContentSend from 'material-ui/svg-icons/content/send';
+import ActionInfo from 'material-ui/svg-icons/action/info';
+import ActionHome from 'material-ui/svg-icons/action/home';
+import SocialGroup from 'material-ui/svg-icons/social/group';
+import SocialGroupAdd from 'material-ui/svg-icons/social/group-add';
+
 
 
 
@@ -128,17 +131,21 @@ class App extends Component {
 
                 <BottomNavigation>
                     <BottomNavigationItem
-                        label="Online Users"
-                        icon={<ContentSend />}
+                        label='Online Users'
+                        icon={<ActionHome />}
                         onClick={ e => browserHistory.push('/online')}/>
                     <BottomNavigationItem
-                        label="Chat"
+                        label='Chat'
                         icon={<CommunicationChatBubble />}
                         onClick={ e => browserHistory.push('/chat')}/>
                     <BottomNavigationItem
-                        label="Friends"
-                        icon={<CommunicationChatBubble />}
+                        label='Friends'
+                        icon={<SocialGroup />}
                         onClick={ e => browserHistory.push('/friends')}/>
+                    <BottomNavigationItem
+                        label='Users'
+                        icon={<SocialGroupAdd />}
+                        onClick={ e => browserHistory.push('/users')}/>
                 </BottomNavigation>
 
 

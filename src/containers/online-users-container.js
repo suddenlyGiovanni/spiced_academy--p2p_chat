@@ -26,7 +26,7 @@ class OnlineUsersContainer extends Component {
 const mapStateToProps = ( state ) => {
     console.log( 'OnlineUsersContainer - fn: mapStateToProps' );
     return {
-        onlineUsers: state.onlineUsers && state.onlineUsers
+        onlineUsers: state.onlineUsers
     };
 };
 
