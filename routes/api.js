@@ -44,21 +44,27 @@ if ( process.env.NODE_ENV == 'production' ) {
 const client = knox.createClient( {
     key: secrets.AWS_KEY,
     secret: secrets.AWS_SECRET,
-    bucket: 'spicedsocialnetwork'
+    bucket: secrets.AWS_BUCKET
 } );
 
 // _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 // _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 // _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-// ROOT OF THE API
+
+
+
+// ROOT OF THE API _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 router.get( '/', ( req, res ) => {
     console.log( 'API: ', 'method: GET ', '/api/' );
     res.json( { message: 'api route working fine' } );
 } );
+// _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 
-// REGISTER USER
+
+
+// REGISTER USER _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 router.post( '/register', ( req, res ) => {
     console.log( 'API: ', 'method: POST ', '/api/register' );
 
@@ -98,9 +104,13 @@ router.post( '/register', ( req, res ) => {
         res.json( { error: true } );
     }
 } );
+// _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 
-// LOGIN USER
+
+
+// LOGIN USER_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
 router.post( '/login', ( req, res ) => {
     console.log( 'API: method: POST /api/login' );
 
@@ -138,22 +148,24 @@ router.post( '/login', ( req, res ) => {
         res.json( { error: true } );
     }
 } );
+// _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 
-// LOGOUT USER
+
+
+// LOGOUT USER _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 router.get( '/logout', ( req, res ) => {
     console.log( 'API: method: POST /api/logout' );
     req.session = null;
     // res.redirect('/welcome');
     return res.json( { success: true } );
 } );
+// _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 
 
 
-
-
-// GET USER DATA
+// GET USER DATA _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 router.get( '/user', ( req, res ) => {
     console.log( `API: method: GET /api/user - uid = ${req.session.user.uid}` );
 
@@ -161,32 +173,14 @@ router.get( '/user', ( req, res ) => {
         return db.readUser( req.session.user.uid )
             .then( userData => res.json( { userData } ) )
             .catch( err => console.error( err.stack ) );
-
     }
 } );
+// _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 
-// GET OTHER USER'S DATA
-router.get( '/user/:uid', ( req, res ) => {
-    console.log( 'API: ', 'method: GET ', `/api/user/${req.params.uid}` );
-
-    return db.getOtherUserInfo( req.params.uid )
-
-        .then( ( otherUserData ) => {
-            return res.json( {
-                success: true,
-                otherUserData
-            } );
-        } )
-
-        .catch( ( err ) => {
-            console.error( err.stack );
-        } );
-
-} );
 
 
-// SET USER PROFILE PICTURE PROFILE
+// SET USER PROFILE PICTURE PROFILE_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 router.put( '/user/profile_pic', uploader.single( 'file' ), ( req, res ) => {
     console.log( 'API: method: PUT /api/user/profile_pic' );
     console.log( req.file );
@@ -238,27 +232,59 @@ router.put( '/user/profile_pic', uploader.single( 'file' ), ( req, res ) => {
     }
 
 } );
+// _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 
-// SET USER BIO
+
+
+// SET USER BIO_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
 router.put( '/user/:uid/bio', ( req, res ) => {
     console.log( 'API: ', 'method: PUT ', `/api/user/${req.params.uid}/bio` );
     const bio = req.body.bio.toLowerCase();
 
     return db.saveUserBio( req.params.uid, bio )
-
         .then( ( userData ) => {
             res.json( {
                 success: true,
                 userData: userData
             } );
         } )
-
         .catch( ( err ) => {
             console.error( err.stack );
         } );
-
 } );
+// _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+
+
+
+// GET OTHER USER'S DATA _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+router.get( '/user/:uid', ( req, res ) => {
+    console.log( `API: method: GET /api/user/${req.params.uid}` );
+
+    return db.getOtherUserInfo( req.params.uid )
+        .then( otherUserData => res.json( { success: true, otherUserData } ) )
+        .catch( err => console.error( err.stack ) );
+} );
+// _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+
+
+
+// GET USERS DATA FROM LATEST 20 TO REGISTER:
+router.get( '/users', ( req, res ) => {
+    console.log( 'API: method: GET /api/users' );
+    return db.readLatestUsers()
+        .then( latestUsers => {
+            console.log( 'latestUsers: ', latestUsers );
+            res.json( { users: latestUsers } );
+        } )
+        .catch( err => console.error( err.stack ) )
+} );
+
+
+
 
 // ____________________________________________________________________________
 // FRIENDSHIP ROUTES:
@@ -273,17 +299,11 @@ router.put( '/user/:uid/bio', ( req, res ) => {
 // R:   READ    -   GET     -   /api/friends/:fromUserId/   SEE ALL USERS'S FRIEND
 router.get( '/friends', ( req, res ) => {
     const fromUserId = req.session.user.uid;
-    console.log( 'API: ', 'method: GET ', `/api/friends/${fromUserId}` );
+    console.log( `API: method: GET /api/friends/${fromUserId}` );
 
     return db.readAllFriends( fromUserId )
-
         .then( resp => res.json( resp ) )
-
-        .catch( err => console.log( err ) );
-    // res.json( {
-    //     success: true,
-    //     action: `DISPLAY ALL FRIENDS OF - fromUserId[${fromUserId}]`
-    // } );
+        .catch( err => console.error( err.stack ) );
 } );
 //_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
@@ -378,11 +398,8 @@ router.delete( '/friends/:fromUserId/:toUserId/delete', ( req, res ) => {
     console.log( `API: method: DELETE /api/friends/${fromUserId}/${toUserId}/delete - status: ${status}` );
 
     return db.deleteFriendship( fromUserId, toUserId )
-
         .then( resp => res.json( resp ) )
-
         .catch( err => console.error( err.stack ) );
-
 } );
 //_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 

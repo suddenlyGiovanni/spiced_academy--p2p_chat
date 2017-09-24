@@ -2,7 +2,12 @@
 import React, { Component } from 'react';
 // REDUX
 import { connect } from 'react-redux';
-import { loadLatestUsers } from '../actions/actions';
+import { loadLatestUsers, updateFriendship } from '../actions/actions';
+
+// MY COMPONENTS
+import Users from '../components/users';
+
+
 
 // MATERIAL-UI
 import { Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui/Toolbar';
@@ -22,6 +27,12 @@ class UsersContainer extends Component {
         this.props.loadLatestUsers();
     }
 
+    handleFriendshipChange( toUserId, status ) {
+        console.log( 'handleFriendshipChange', toUserId, status );
+        const { updateFriendship, uid } = this.props;
+        updateFriendship( uid, toUserId, status );
+    }
+
     handleUpdateInput( value ) {
         console.log( 'handleUpdateInput: ', value );
         this.setState( {
@@ -34,6 +45,7 @@ class UsersContainer extends Component {
     }
 
     render() {
+        const { users } = this.props;
         return (
             <div>
                 <Toolbar>
@@ -45,6 +57,12 @@ class UsersContainer extends Component {
                     />
                     <ToolbarGroup><ActionSearch/></ToolbarGroup>
                 </Toolbar>
+                {
+                    users &&
+                    <Users
+                        users={users}
+                        handleFriendshipChange={( toUserId, status ) => this.handleFriendshipChange( toUserId, status )}/>
+                }
             </div>
         );
     }
@@ -54,12 +72,13 @@ class UsersContainer extends Component {
 const mapStateToProps = state => {
     console.log( 'UsersContainer - fn: mapStateToProps' );
     return {
-        user: state.user
+        users: state.users
     }
 };
 
 const mapDispatchToProps = dispatch => ( {
     loadLatestUsers: () => dispatch( loadLatestUsers() ),
+    updateFriendship: ( fromUserId, toUserId, status ) => dispatch( updateFriendship( fromUserId, toUserId, status ) )
 } );
 
 export default connect( mapStateToProps, mapDispatchToProps )( UsersContainer )

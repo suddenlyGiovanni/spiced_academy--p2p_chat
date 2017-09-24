@@ -14,7 +14,7 @@ const s3Url = require( '../config/secrets.json' ).s3Url;
 
 
 
-// CREATE NEW USER
+// CREATE NEW USER _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 module.exports.createUser = ( firstName, lastName, email, password ) => {
     console.log( 'dbQuery.js - fn: "postUser"\n' );
     // hash user password with bcrypt ( hashPassword ) before saving
@@ -47,7 +47,7 @@ module.exports.createUser = ( firstName, lastName, email, password ) => {
 
 
 
-// AUTHENTICATE USER
+// AUTHENTICATE USER_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 module.exports.checkUser = ( email, password ) => {
 
     console.log( 'dbQuery.js - fn: "checkUser"\n' );
@@ -104,7 +104,7 @@ module.exports.checkUser = ( email, password ) => {
 
 
 
-// GET LOGGED IN USER DATA
+// GET LOGGED IN USER DATA_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 module.exports.readUser = ( uid ) => {
     console.log( 'dbQuery.js - fn: "readUser"\n' );
 
@@ -138,7 +138,7 @@ module.exports.readUser = ( uid ) => {
 
 
 
-// GET OTHER USER'S DATA
+// GET OTHER USER'S DATA_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 module.exports.getOtherUserInfo = ( uid ) => {
     console.log( 'dbQuery.js - fn: "getOtherUserInfo"\n' );
     const query = `SELECT   uid,
@@ -176,7 +176,7 @@ module.exports.getOtherUserInfo = ( uid ) => {
 
 
 
-// SET USER PROFILE PICTURE PROFILE
+// SET USER PROFILE PICTURE PROFILE_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 module.exports.saveUserProfilePic = ( uid, profilePic ) => {
     console.log( 'dbQuery.js - fn: "saveUserProfilePic"\n' );
 
@@ -204,7 +204,7 @@ module.exports.saveUserProfilePic = ( uid, profilePic ) => {
 
 
 
-//  SET USER BIO
+//  SET USER BIO_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 module.exports.saveUserBio = ( uid, bio ) => {
     console.log( 'dbQuery.js - fn: "saveUserBio"\n' );
 
@@ -232,7 +232,40 @@ module.exports.saveUserBio = ( uid, bio ) => {
 
 
 
-// READ ALL USERS FROM THIS ARRYS OF IDs
+//  READ DATA FROM LATEST 20 USERS TO REGISTER_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+module.exports.readLatestUsers = () => {
+    console.log( 'dbQuery.js - fn: "readLatestUsers"\n' );
+    const query = `SELECT   uid,
+                            "firstName",
+                            "lastName",
+                            email,
+                            bio,
+                            "profilePic"
+                    FROM users
+                    ORDER BY timestamp desc
+                    LIMIT 20;`;
+    return db.query( query )
+        .then( latestUsers => {
+            // console.log( results.rows );
+            const s3mappedlatestUsers = latestUsers.rows.map( user => {
+                if ( !user.profilePic ) {
+                    const defProfilePic =
+                        `def_profilePic_${(Math.floor(Math.random()*(12-1+1)+1))}.svg`;
+                    user.profilePic = s3Url + 'def_profilePic/' + defProfilePic;
+                } else {
+                    user.profilePic = s3Url + user.profilePic;
+                }
+                return user;
+            } );
+            return s3mappedlatestUsers;
+        } )
+        .catch( err => console.log( err.stack ) );
+};
+
+
+
+
+// READ ALL USERS FROM THIS ARRYS OF IDS _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 module.exports.readAllUsersByIds = ( arrayOfIds ) => {
     console.log( `dbQuery.js - fn: "readAllUsersByIds" -  arrayOfIds: ${arrayOfIds} \n` );
     const query = `SELECT uid,
@@ -268,7 +301,7 @@ module.exports.readAllUsersByIds = ( arrayOfIds ) => {
 
 
 
-// READ ALL fromUserId FRIENDS
+// READ ALL fromUserId FRIENDS_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 module.exports.readAllFriends = ( fromUserId ) => {
     // console.log( 'dbQuery.js - fn: "readAllFriends"' );
     const query = `SELECT   users.uid,
@@ -305,11 +338,12 @@ module.exports.readAllFriends = ( fromUserId ) => {
 
         .catch( err => console.error( err.stack ) );
 };
+// _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 
 
 
-// READ FRIENDSHIP STATUS OF fromUserId AND toUserId
+// READ FRIENDSHIP STATUS OF fromUserId AND toUserId_ _ _ _ _ _ _ _ _ _ _ _ _ _
 const readFriendshipStatus = ( fromUserId, toUserId ) => {
     console.log( 'dbQuery.js - fn: "readFriendshipStatus"' );
 
@@ -345,10 +379,12 @@ const readFriendshipStatus = ( fromUserId, toUserId ) => {
         .catch( err => console.error( err.stack ) );
 };
 module.exports.readFriendshipStatus = readFriendshipStatus;
+// _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 
 
-// CREATE FRIENDSHIP between fromUserId AND toUserId
+
+// CREATE FRIENDSHIP between fromUserId AND toUserId_ _ _ _ _ _ _ _ _ _ _ _ _ _
 module.exports.createFriendshipReq = ( fromUserId, toUserId, status ) => {
     console.log( 'dbQuery.js - fn: "createFriendship"' );
 
@@ -363,11 +399,12 @@ module.exports.createFriendshipReq = ( fromUserId, toUserId, status ) => {
 
         .catch( err => console.error( err.stack ) );
 };
+// _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 
 
 
-// UPDATE FREINDSHIP STATUS between fromUserId AND toUserId
+// UPDATE FREINDSHIP STATUS between fromUserId AND toUserId_ _ _ _ _ _ _ _ _ _ _
 module.exports.updateFriendshipStatus = ( fromUserId, toUserId, status ) => {
     console.log( 'dbQuery.js - fn: "updateFriendshipStatus"' );
 
@@ -386,11 +423,12 @@ module.exports.updateFriendshipStatus = ( fromUserId, toUserId, status ) => {
 
         .catch( err => console.error( err.stack ) );
 };
+// _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 
 
 
-// DELETE FREINDSHIP between fromUserId AND toUserId
+// DELETE FREINDSHIP between fromUserId AND toUserId_ _ _ _ _ _ _ _ _ _ _ _ _ _
 module.exports.deleteFriendship = ( fromUserId, toUserId ) => {
     console.log( 'dbQuery.js - fn: "deleteFriendship"' );
 
@@ -402,13 +440,12 @@ module.exports.deleteFriendship = ( fromUserId, toUserId ) => {
 
         .catch( err => console.error( err.stack ) );
 };
+// _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 
 
 
-//_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-// CHAT RELATED METHODS:
-
+// CHAT RELATED METHODS:________________________________________________________
 module.exports.readAllPublicMessages = () => {
     console.log( 'dbQuery.js - fn: "readAllPublicMessages"\n' );
     const query = `SELECT   users.uid,
@@ -444,6 +481,7 @@ module.exports.readAllPublicMessages = () => {
         } )
         .catch( err => console.error( err.stack ) );
 };
+// _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 
 
@@ -484,6 +522,7 @@ module.exports.readAllPrivateMessages = ( uid ) => {
         } )
         .catch( err => console.error( err.stack ) );
 };
+// _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 
 
@@ -527,6 +566,7 @@ module.exports.createPublicMessage = ( uid, messageBody ) => {
         } )
         .catch( err => console.error( err.stack ) );
 };
+// _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 
 
@@ -574,8 +614,4 @@ module.exports.createPrivateMessage = ( fromUserId, toUserId, messageBody ) => {
 
         .catch( err => console.error( err.stack ) );
 };
-
-
-
-
-//s
+// _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _

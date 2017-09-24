@@ -60,10 +60,10 @@ export function updateProfilePic( formData ) {
 
 export function loadLatestUsers() {
     console.log( 'REDUX - ACTION - fn: loadLatestUsers' );
-    return axios.get( '' )
+    return axios.get( '/api/users' )
 
         .then( result => {
-            console.log( 'REDUX - ACTION - fn: loadLatestUsers - data', result.data.users );
+            console.log( 'REDUX - ACTION - fn: loadLatestUsers - data', result.data );
             return {
                 type: 'LOAD_LATEST_USERS',
                 users: result.data.users
