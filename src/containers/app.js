@@ -43,7 +43,8 @@ class App extends Component {
         getSocket();
         this.state = {
             uploaderIsVisible: false,
-            open: false
+            open: false,
+            selectedIndex: null
         };
         this.showProfilePicUpload = this.showProfilePicUpload.bind( this );
     }
@@ -51,6 +52,24 @@ class App extends Component {
     componentDidMount() {
         console.log( 'App - fn: componentDidMount - this.props: ', this.props );
         this.props.loadUserData();
+    }
+
+    componentWillReceiveProps( nextProps ) {
+        const { pathname } = nextProps.location;
+        switch ( pathname ) {
+        case '/online':
+            this.setState( { selectedIndex: 0 } );
+            break;
+        case '/chat':
+            this.setState( { selectedIndex: 1 } );
+            break;
+        case '/friends':
+            this.setState( { selectedIndex: 2 } );
+            break;
+        case '/users':
+            this.setState( { selectedIndex: 3 } );
+            break;
+        }
     }
 
     showProfilePicUpload( e ) {
@@ -93,6 +112,24 @@ class App extends Component {
         this.setState( { open: false } );
     }
 
+    // BOTTOM NAVIGATION
+    handleNavigation( href ) {
+        browserHistory.push( href );
+        switch ( href ) {
+        case '/online':
+            this.setState( { selectedIndex: 0 } );
+            break;
+        case '/chat':
+            this.setState( { selectedIndex: 1 } );
+            break;
+        case '/friends':
+            this.setState( { selectedIndex: 2 } );
+            break;
+        case '/users':
+            this.setState( { selectedIndex: 3 } );
+            break;
+        }
+    }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     render() {
@@ -129,23 +166,23 @@ class App extends Component {
                 </AppBar>
 
 
-                <BottomNavigation>
+                <BottomNavigation selectedIndex={this.state.selectedIndex}>
                     <BottomNavigationItem
                         label='Online Users'
                         icon={<ActionHome />}
-                        onClick={ e => browserHistory.push('/online')}/>
+                        onClick={ e => this.handleNavigation('/online')}/>
                     <BottomNavigationItem
                         label='Chat'
                         icon={<CommunicationChatBubble />}
-                        onClick={ e => browserHistory.push('/chat')}/>
+                        onClick={ e => this.handleNavigation('/chat')}/>
                     <BottomNavigationItem
                         label='Friends'
                         icon={<SocialGroup />}
-                        onClick={ e => browserHistory.push('/friends')}/>
+                        onClick={ e => this.handleNavigation('/friends')}/>
                     <BottomNavigationItem
                         label='Users'
                         icon={<SocialGroupAdd />}
-                        onClick={ e => browserHistory.push('/users')}/>
+                        onClick={ e => this.handleNavigation('/users')}/>
                 </BottomNavigation>
 
 
@@ -169,15 +206,15 @@ class App extends Component {
                     <ListItem
                         primaryText="Online Users"
                         leftIcon={<ContentSend />}
-                        onClick={ e => browserHistory.push('/online')}/>
+                        onClick={ e => this.handleNavigation('/online')}/>
                     <ListItem
                         primaryText="Chat"
                         leftIcon={<CommunicationChatBubble />}
-                        onClick={ e => browserHistory.push('/chat')}/>
+                        onClick={ e => this.handleNavigation('/chat')}/>
                     <ListItem
                         primaryText="Friends"
                         leftIcon={<CommunicationChatBubble />}
-                        onClick={ e => browserHistory.push('/friends')}/>
+                        onClick={ e => this.handleNavigation('/friends')}/>
 
                 </Drawer>
 
