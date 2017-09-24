@@ -13,6 +13,15 @@ import getSocket from '../utils/socketIo';
 import AppBar from 'material-ui/AppBar';
 import FlatButton from 'material-ui/FlatButton';
 import Drawer from 'material-ui/Drawer';
+import Avatar from 'material-ui/Avatar';
+import { List, ListItem } from 'material-ui/List';
+import Subheader from 'material-ui/Subheader';
+import Divider from 'material-ui/Divider';
+import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
+import ContentInbox from 'material-ui/svg-icons/content/inbox';
+import ContentDrafts from 'material-ui/svg-icons/content/drafts';
+import ContentSend from 'material-ui/svg-icons/content/send';
+import ActionInfo from 'material-ui/svg-icons/action/info';
 
 
 // MY COMPONENTS
@@ -83,19 +92,9 @@ class App extends Component {
     render() {
         console.log( 'App - RENDER - this.props: ', this.props );
 
-
-
         const { error, uploaderIsVisible } = this.state;
 
 
-        const headerStyle = {
-            display: 'inline-flex',
-            width: '100%',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            backgroundColor: 'goldenrod'
-
-        };
         const titleStyle = { cursor: 'pointer' };
 
         if ( !this.props.user ) {
@@ -119,36 +118,39 @@ class App extends Component {
                     iconClassNameRight='muidocs-icon-navigation-expand-more'
                     iconElementRight={<FlatButton label="LogOut" />}
                     onRightIconButtonTouchTap={ () => this.handleLogOut() }
-                    onLeftIconButtonTouchTap={ () => this.handleToggle() }
-                />
+                    onLeftIconButtonTouchTap={ () => this.handleToggle() }>
+                </AppBar>
 
                 <Drawer
                     docked={false}
                     width={200}
                     open={this.state.open}
                     onRequestChange={ open => this.setState( { open } )}>
+                    <List>
+                        <Subheader>User Data</Subheader>
+                        <ListItem
+                            primaryText={`${firstName} ${lastName}`}
+                            leftAvatar={<Avatar src={profilePic} />}
+                            rightIcon={<ActionInfo />}
+                            onClick={ (e) => this.showProfilePicUpload(e) }
+                        />
+                    </List>
+                    <Divider />
+                    <Subheader>Navigation</Subheader>
+                    <ListItem
+                        primaryText="Online Users"
+                        leftIcon={<ContentSend />}
+                        onClick={ e => browserHistory.push('/online')}/>
+                    <ListItem
+                        primaryText="Chat"
+                        leftIcon={<CommunicationChatBubble />}
+                        onClick={ e => browserHistory.push('/chat')}/>
+                    <ListItem
+                        primaryText="Friends"
+                        leftIcon={<CommunicationChatBubble />}
+                        onClick={ e => browserHistory.push('/friends')}/>
+
                 </Drawer>
-
-
-                <header style={headerStyle}>
-                    <Logo />
-                    <nav>
-                        <ul>
-                            <li><Link to='/online'>Online Users</Link></li>
-                            <li><Link to='/chat'>Chat</Link></li>
-                            <li><Link to='/friends'>Friends</Link></li>
-                        </ul>
-                    </nav>
-
-                    <title><h1>App</h1></title>
-
-                    <ProfilePic
-                        src={profilePic}
-                        alt={firstName + ' ' + lastName}
-                        showProfilePicUpload={ (e) => this.showProfilePicUpload(e) }
-                    />
-
-                </header>
 
 
 

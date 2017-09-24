@@ -19,9 +19,6 @@ export default class ProfileSelfBio extends React.Component {
         }
     }
 
-    // componentWillReceiveProps( props ) {
-    //     this.setState( { bio: props.bio } );
-    // }
 
 
     handleInput( e ) {
@@ -39,19 +36,12 @@ export default class ProfileSelfBio extends React.Component {
 
             .then( resp => {
                 const data = resp.data;
-                if ( !data.success ) {
-                    this.setState( { error: true } );
-                }
-                this.setState( {
-                    data: data,
-                    editBioIsVisible: false
-                } );
+                !data.success ?
+                    this.setState( { error: true } ) :
+                    this.setState( { data, editBioIsVisible: false } );
             } )
 
-            .catch( err => {
-                console.error( err.stack );
-                this.setState( { error: true } );
-            } );
+            .catch( err => console.error( err.stack ) );
     }
 
     setBioVisibility( boolean ) {

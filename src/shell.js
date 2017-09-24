@@ -29,7 +29,7 @@ import OnlineUsersContainer from './containers/onlineUsersContainer';
 import Welcome from './components/welcome';
 import Registration from './components/registration';
 import Login from './components/login';
-import ProfileSelf from './components/profileSelf';
+import ProfileSelf from './components/profile-self';
 
 // MATERIAL-UI:
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
