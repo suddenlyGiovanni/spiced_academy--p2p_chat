@@ -136,6 +136,14 @@ export default ( state = {}, action ) => {
 
 
 
+    case 'CLEAR_SEARCHED_USERS':
+        state = Object.assign( {}, state, { searchedUsersList: null } );
+        break;
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
+
     case 'LOAD_FRIENDS':
         state = Object.assign( {}, state, { friends: action.friends } );
         break;

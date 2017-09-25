@@ -89,6 +89,17 @@ export function loadSearchedUsers( search ) {
 
         .catch( err => console.log( err ) );
 };
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+export function clearSearchedUsers() {
+    console.log( 'REDUX - ACTION - fn: clearSearchedUsers' );
+    return { type: 'CLEAR_SEARCHED_USERS' };
+}
+
+
+
+
 
 
 export function loadFriends() {
