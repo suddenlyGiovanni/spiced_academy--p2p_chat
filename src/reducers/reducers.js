@@ -69,8 +69,36 @@ export default ( state = {}, action ) => {
 
 
     case 'LOAD_LATEST_USERS':
-        state = Object.assign( {}, state, { users: action.users } );
         // FIXME: this should not override current users.
+        if ( !state.users ) {
+            state = Object.assign( {}, state, { users: action.users } );
+        }
+        action.users.map( latestUser => {
+            const matchUser = state.users.find( user => user.uid == latestUser.uid );
+            // matchUser return either UNDEFINED || copy of the OBJ
+            if ( !matchUser ) {
+                // then insert the new latestUser into the array of users
+                const newUsers = state.users.slice();
+                newUsers.splice( ( newUsers.length ), 0, latestUser );
+                state = Object.assign( {}, state, { users: newUsers } );
+            } else {
+                // update the user and it's data in the array
+                const newUsers = state.users.map( user => {
+                    if ( user.uid !== latestUser.uid ) {
+                        // this isn't the user i care about
+                        return user;
+                    }
+                    if ( !user.online ) {
+                        return { ...user, ...latestUser };
+                    } else {
+                        let onlineUser = { ...user, ...latestUser }
+                        onlineUser.online = true;
+                        return onlineUser;
+                    }
+                } );
+                state = Object.assign( {}, state, { users: newUsers } );
+            }
+        } );
         break;
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
