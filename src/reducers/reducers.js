@@ -134,7 +134,35 @@ export default ( state = {}, action ) => {
 
 
     case 'CREATE_ONLINE_USERS':
-        state = Object.assign( {}, state, { onlineUsers: action.onlineUsers } );
+        // state = Object.assign( {}, state, { onlineUsers: action.onlineUsers } );
+        //...
+        if ( !state.users ) {
+            state = Object.assign( {}, state, { users: action.onlineUsers } );
+        } else {
+            action.onlineUsers.map( onlineUser => {
+                let matchUser = state.users.find( user => user.uid === onlineUser );
+                // matchUser return either UNDEFINED || copy of the OBJ
+                if ( !matchUser ) {
+                    // then insert the new onlineUser into the array of users
+                    let newUsers = state.users.slice();
+                    newUsers.splice( ( newUsers.length ), 0, onlineUser );
+                    state = Object.assign( {}, state, { users: newUsers } );
+                } else {
+                    // update the user and it's data in the array
+                    let newUsers = state.users.map( user => {
+                        if ( user.uid !== onlineUser.uid ) {
+                            // this isn't the user i care about
+                            return user;
+                        }
+                        return Object.assign( {}, user, {
+                            profilePic: onlineUser.profilePic,
+                            online: onlineUser.online
+                        } );
+                    } )
+                    state = Object.assign( {}, state, { users: newUsers } );
+                }
+            } )
+        }
         break;
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

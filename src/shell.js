@@ -5,7 +5,6 @@ import { Router, Route, IndexRoute, hashHistory, browserHistory } from 'react-ro
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
-
 // REDUX components
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';

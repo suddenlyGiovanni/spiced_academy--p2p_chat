@@ -10,7 +10,7 @@ class OnlineUsersContainer extends Component {
         const { onlineUsers } = this.props;
         console.log( 'OnlineUsersContainer - RENDER - this.props: ', this.props );
 
-        if (!onlineUsers) {
+        if ( !onlineUsers ) {
             return <div>Loading online users</div>;
         }
 
@@ -26,7 +26,7 @@ class OnlineUsersContainer extends Component {
 const mapStateToProps = ( state ) => {
     console.log( 'OnlineUsersContainer - fn: mapStateToProps' );
     return {
-        onlineUsers: state.onlineUsers
+        onlineUsers: state.users && state.users.filter( user => user.online == true )
     };
 };
 

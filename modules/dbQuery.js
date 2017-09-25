@@ -302,7 +302,7 @@ module.exports.readSearchedUsers = ( search ) => {
 // READ ALL USERS FROM THIS ARRYS OF IDS _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 module.exports.readAllUsersByIds = ( arrayOfIds ) => {
     console.log( `dbQuery.js - fn: "readAllUsersByIds" -  arrayOfIds: ${arrayOfIds} \n` );
-    const query = `SELECT uid,
+    const query = `SELECT   uid,
                             "firstName",
                             "lastName",
                             email,
@@ -319,8 +319,10 @@ module.exports.readAllUsersByIds = ( arrayOfIds ) => {
                     const defProfilePic =
                         `def_profilePic_${(Math.floor(Math.random()*(12-1+1)+1))}.svg`;
                     user.profilePic = s3Url + 'def_profilePic/' + defProfilePic;
+                    user.online = true;
                 } else {
                     user.profilePic = s3Url + user.profilePic;
+                    user.online = true;
                 }
                 return user;
             } );

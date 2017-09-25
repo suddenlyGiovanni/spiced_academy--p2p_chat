@@ -7,8 +7,6 @@ import { loadLatestUsers, loadSearchedUsers, updateFriendship } from '../actions
 // MY COMPONENTS
 import Users from '../components/users';
 
-
-
 // MATERIAL-UI
 import { Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui/Toolbar';
 import AutoComplete from 'material-ui/AutoComplete';
@@ -27,15 +25,9 @@ class UsersContainer extends Component {
         this.props.loadLatestUsers();
     }
 
-    // componentWillReceiveProps( nextProps ) {
-    //     console.log( 'UsersContainer - fn: componentWillReceiveProps - nextProps.users: ', nextProps.users );
-    //     this.setState( { users: nextProps.users } );
-    // }
-
     handleFriendshipChange( toUserId, status ) {
         console.log( 'handleFriendshipChange', toUserId, status );
-        const { updateFriendship, uid } = this.props;
-        updateFriendship( uid, toUserId, status );
+        this.props.updateFriendship( this.props.user.uid, toUserId, status );
     }
 
     handleUpdateInput( e ) {
@@ -51,19 +43,8 @@ class UsersContainer extends Component {
     }
 
     render() {
-        console.log( 'UsersContainer - RENDER - this.state: ', this.state );
-        // const users = this.props.searchedUsersList;
-        const { searchedUsersList } = this.props;
-        const { users } = this.props;
-        // let users;
-        // if (this.state.showSearchedUsersList) {
-        //     console.log('showSearchedUsersList: ', showSearchedUsersList);
-        //     users = this.props.searchedUsersList;
-        // } else {
-        //     console.log('showSearchedUsersList: ', showSearchedUsersList);
-        //     users = this.props.users;
-        // }
-
+        console.log( 'UsersContainer - RENDER - this.props: ', this.props );
+        const { searchedUsersList, users } = this.props;
         return (
             <div>
                 <Toolbar>
@@ -102,6 +83,7 @@ class UsersContainer extends Component {
 const mapStateToProps = state => {
     console.log( 'UsersContainer - fn: mapStateToProps' );
     return {
+        user: state.user,
         users: state.users,
         searchedUsersList: state.searchedUsersList
     }

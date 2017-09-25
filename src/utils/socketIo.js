@@ -2,7 +2,7 @@
 import * as io from 'socket.io-client';
 import { store } from '../shell';
 import {
-    connectLoggedInUser,
+    connectUser,
     createOnlineUsers,
     addOnlineUser,
     removeOnlineUser,
@@ -21,7 +21,7 @@ const getSocket = () => {
 
         socket.on( 'connect', () => {
             console.log( `Socket.io Event: connect - socketId: ${socket.id}` );
-            store.dispatch( connectLoggedInUser( socket.id ) );
+            store.dispatch( connectUser( socket.id ) );
         } );
 
 

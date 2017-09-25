@@ -143,11 +143,11 @@ export function updateFriendship( fromUserId, toUserId, status ) {
 
 
 
-export function connectLoggedInUser( socketId ) {
-    console.log( 'REDUX - ACTION - fn: connectLoggedInUser' );
+export function connectUser( socketId ) {
+    console.log( 'REDUX - ACTION - fn: connectUser' );
     return axios.post( `/ws/connected/${socketId}` )
 
-        .then( () => { return { type: 'CONNECT_LOGGEDIN_USER' }; } )
+        .then( () => { return { type: 'CONNECT_USER' }; } )
 
         .catch( err => console.log( err ) );
 }
