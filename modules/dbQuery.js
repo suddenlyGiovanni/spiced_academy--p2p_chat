@@ -261,7 +261,41 @@ module.exports.readLatestUsers = () => {
         } )
         .catch( err => console.log( err.stack ) );
 };
+//_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
+
+
+//  READ SEARCHED DATA FOR USERS_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+module.exports.readSearchedUsers = ( search ) => {
+    // console.log( 'dbQuery.js - fn: "readSearchedUsers"\n' );
+    const query = `SELECT   uid,
+                            "firstName",
+                            "lastName",
+                            email,
+                            bio,
+                            "profilePic"
+                    FROM users
+                    WHERE (email LIKE LOWER($1))
+                    OR ("firstName" LIKE LOWER($1))
+                    OR (LOWER("lastName") LIKE LOWER($1));`;
+    return db.query( query, [ search + '%' ] )
+        .then( results => {
+
+            const s3mappedSearchedUsers = results.rows.map( user => {
+                if ( !user.profilePic ) {
+                    const defProfilePic =
+                        `def_profilePic_${(Math.floor(Math.random()*(12-1+1)+1))}.svg`;
+                    user.profilePic = s3Url + 'def_profilePic/' + defProfilePic;
+                } else {
+                    user.profilePic = s3Url + user.profilePic;
+                }
+                return user;
+            } );
+            console.log( 'dbQuery.js - fn: "readSearchedUsers"\n', s3mappedSearchedUsers );
+            return s3mappedSearchedUsers;
+        } )
+        .catch( err => console.error( err.stack ) );
+};
 
 
 

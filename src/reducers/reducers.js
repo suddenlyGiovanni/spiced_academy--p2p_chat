@@ -77,7 +77,28 @@ export default ( state = {}, action ) => {
 
 
     case 'LOAD_SEARCHED_USERS':
-        state = Object.assign( {}, state, { users: action.users } );
+        // state = Object.assign( {}, state, { users: action.users } );
+        // prepare to
+        action.users.map( searchedUser => {
+            let matchUser = state.users.find( user => user.uid === searchedUser.uid );
+            // matchUser return either UNDEFINED || copy of the OBJ
+            if ( !matchUser ) {
+                // then insert the new searchedUser into the array of users
+                let newUsers = state.users.slice();
+                newUsers.splice( ( newUsers.length ), 0, searchedUser );
+                state = Object.assign( {}, state, { users: newUsers } );
+            } else {
+                // update the user and it's data in the array
+                let newUsers = state.users.map( user => {
+                    if ( user.uid !== searchedUser.uid ) {
+                        // this isn't the user i care about
+                        return user;
+                    }
+                    return searchedUser;
+                } )
+                state = Object.assign( {}, state, { users: newUsers } );
+            }
+        } );
         break;
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

@@ -19,12 +19,17 @@ class UsersContainer extends Component {
     constructor( props ) {
         super( props );
         this.state = {
-            dataSource: []
+            dataSource: [],
         }
     }
 
     componentDidMount() {
         this.props.loadLatestUsers();
+    }
+
+    componentWillReceiveProps( nextProps ) {
+        console.log( 'UsersContainer - fn: componentWillReceiveProps - nextProps.users: ', nextProps.users );
+        this.setState( { users: nextProps.users } );
     }
 
     handleFriendshipChange( toUserId, status ) {
@@ -47,7 +52,9 @@ class UsersContainer extends Component {
     }
 
     render() {
-        const { users } = this.props;
+        console.log( 'UsersContainer - RENDER - this.props: ', this.state );
+
+        const { users } = this.state;
         return (
             <div>
                 <Toolbar>
@@ -81,7 +88,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ( {
     loadLatestUsers: () => dispatch( loadLatestUsers() ),
     updateFriendship: ( fromUserId, toUserId, status ) => dispatch( updateFriendship( fromUserId, toUserId, status ) ),
-    loadSearchedUsers: search  => dispatch( loadSearchedUsers( search ) )
+    loadSearchedUsers: search => dispatch( loadSearchedUsers( search ) )
 } );
 
 export default connect( mapStateToProps, mapDispatchToProps )( UsersContainer )

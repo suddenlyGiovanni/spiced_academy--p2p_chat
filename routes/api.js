@@ -288,9 +288,11 @@ router.get( '/users', ( req, res ) => {
 
 // GET USERS DATA FOR SERCHED USERS:
 router.post( '/users/search', ( req, res ) => {
-    const search = req.body;
+    const search = req.body.search.toLowerCase();
     console.log( 'API: method: GET /api/users/search - search: ', search );
-
+    return db.readSearchedUsers( search )
+        .then( searchedUsers => res.json( { users: searchedUsers } ) )
+        .catch( err => console.error( err.stack ) );
 } )
 
 

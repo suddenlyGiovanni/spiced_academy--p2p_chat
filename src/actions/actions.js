@@ -80,11 +80,11 @@ export function loadSearchedUsers( search ) {
 
     return axios.post( '/api/users/search', { search } )
         .then( results => {
-            console.log( 'REDUX - ACTION - fn: loadSearchedUsers - data', results.data );
-            // return {
-            //     type: 'LOAD_SEARCHED_USERS',
-            //     users: results.data
-            // }
+            console.log( 'REDUX - ACTION - fn: loadSearchedUsers - data', results.data.users );
+            return {
+                type: 'LOAD_SEARCHED_USERS',
+                users: results.data.users
+            }
         } )
 
         .catch( err => console.log( err ) );
