@@ -78,7 +78,9 @@ export default ( state = {}, action ) => {
 
     case 'LOAD_SEARCHED_USERS':
         // state = Object.assign( {}, state, { users: action.users } );
-        // prepare to
+        // create new prop in the state of redux having just the results from the search
+        state = Object.assign( {}, state, { searchedUsersList: action.users } );
+        // save the up to date data to the array of users
         action.users.map( searchedUser => {
             let matchUser = state.users.find( user => user.uid === searchedUser.uid );
             // matchUser return either UNDEFINED || copy of the OBJ
