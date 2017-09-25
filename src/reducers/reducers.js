@@ -232,10 +232,21 @@ export default ( state = {}, action ) => {
 
 
     case 'REMOVE_ONLINE_USER':
-        var actionIndex = state.onlineUsers.findIndex( user => user.uid === action.uid );
-        var newOnlineUsers = state.onlineUsers.slice();
-        newOnlineUsers.splice( actionIndex, 1 );
-        state = Object.assign( {}, state, { onlineUsers: newOnlineUsers } );
+        const newUsers = state.users.map( user => {
+            if ( user.uid != action.offlineUserId.uid ) {
+                // then this isn't the user i care about
+                console.log(`REMOVE_ONLINE_USER - ${action.offlineUserId}`);
+                return user;
+            } else {
+                console.log('REMOVE_ONLINE_USER - user.uid === action.offlineUserId');
+
+                const newUserState = { ...user };
+                delete newUserState.online;
+                console.log( 'newUserState', newUserState );
+                return newUserState;
+            }
+        } );
+        state = Object.assign( {}, state, { users: newUsers } );
         break;
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

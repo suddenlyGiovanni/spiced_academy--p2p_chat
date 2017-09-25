@@ -195,7 +195,7 @@ export function removeOnlineUser( uid ) {
     console.log( 'REDUX - ACTION - fn: removeOnlineUser' );
     return {
         type: 'REMOVE_ONLINE_USER',
-        uid
+        offlineUserId: uid
     };
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
