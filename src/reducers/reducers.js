@@ -70,6 +70,7 @@ export default ( state = {}, action ) => {
 
     case 'LOAD_LATEST_USERS':
         state = Object.assign( {}, state, { users: action.users } );
+        // FIXME: this should not override current users.
         break;
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -168,26 +169,25 @@ export default ( state = {}, action ) => {
 
 
 
-
     case 'ADD_ONLINE_USER':
-        // console.log( 'CASE: ADD_ONLINE_USER: ', '\n state:', state, '\n action: ', action );
-        var onlineUser = state.onlineUsers.find( user => user.uid === action.userJoined.uid );
-        // onlineUser return either UNDEFINED || copy of the OBJ
-        if ( !onlineUser ) {
+        const { userJoined } = action;
+        let matchUser = state.users.find( user => user.uid === userJoined.uid );
+        if ( !matchUser ) {
             // then insert the new action.userJoined into the array of onlineUsers
-            let newOnlineUsers = state.onlineUsers.slice();
-            newOnlineUsers.splice( ( newOnlineUsers.length ), 0, action.userJoined );
-            state = Object.assign( {}, state, { onlineUsers: newOnlineUsers } );
+            let newUsers = state.users.slice();
+            newUsers.splice( ( newUsers.length ), 0, userJoined );
+            state = Object.assign( {}, state, { users: newUsers } );
         } else {
             // update the user and it's data in the array
-            let newOnlineUsers = state.onlineUsers.map( user => {
-                if ( user.uid !== action.userJoined.uid ) {
-                    // this isn't the user i care about
+            let newUsers = state.users.map( user => {
+                if ( user.uid !== userJoined.uid ) {
+                    // then this isn't the user i care about
                     return user;
                 }
-                return action.userJoined;
-            } );
-            state = Object.assign( {}, state, { onlineUsers: newOnlineUsers } );
+
+                return { ...user, ...userJoined };
+            } )
+            state = Object.assign( {}, state, { users: newUsers } );
         }
         break;
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

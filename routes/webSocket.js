@@ -72,12 +72,12 @@ io.on( 'connection', ( socket ) => {
         return db.createPrivateMessage( fromUserId, toUserId, messageBody )
 
             .then( newPrivateMessage => {
-                console.log('emitting private messaging - fromUserSocketId', fromUserSocketId);
-                io.sockets.sockets[ fromUserSocketId ].emit('privateChatMessage', newPrivateMessage);
-                toUserSocketId && io.sockets.sockets[ toUserSocketId ].emit('privateChatMessage', newPrivateMessage);
+                console.log( 'emitting private messaging - fromUserSocketId', fromUserSocketId );
+                io.sockets.sockets[ fromUserSocketId ].emit( 'privateChatMessage', newPrivateMessage );
+                toUserSocketId && io.sockets.sockets[ toUserSocketId ].emit( 'privateChatMessage', newPrivateMessage );
             } )
 
-            .catch(err=>console.error(err.stack));
+            .catch( err => console.error( err.stack ) );
     } );
 
 } );
@@ -144,7 +144,11 @@ router.post( '/connected/:socketId', makeSureUserIsLoggedIn, ( req, res ) => {
                 to keep their list of online users updated: event 'userJoined' */
                 if ( !userAlreadyThere ) {
                     return db.readUser( uid )
-                        .then( userJoined => io.sockets.emit( 'userJoined', userJoined ) );
+                        .then( userJoined => {
+                            // FIXME: this should not be done here!!!!! 
+                            userJoined.online = true;
+                            return io.sockets.emit( 'userJoined', userJoined );
+                        } );
                 }
             } )
 
