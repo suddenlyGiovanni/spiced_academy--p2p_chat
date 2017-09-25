@@ -145,7 +145,28 @@ export default ( state = {}, action ) => {
 
 
     case 'LOAD_FRIENDS':
+        // FIXME: friend state has to be removed from app after it is merged with users
         state = Object.assign( {}, state, { friends: action.friends } );
+        // save the up to date data to the array of users
+        action.friends.map( friend => {
+            const matchUser = state.users.find( user => user.uid === friend.uid );
+            // matchUser return either UNDEFINED || copy of the OBJ
+            if ( !matchUser ) {
+                // then insert the new friend into the array of users
+                const newUsers = state.users.slice();
+                newUsers.splice( ( newUsers.length ), 0, friend );
+                state = Object.assign( {}, state, { users: newUsers } );
+            } else {
+                const newUsers = state.users.map( user => {
+                    if ( user.uid !== friend.uid ) {
+                        // this isn't the user i care about
+                        return user;
+                    }
+                    return { ...user, ...friend };
+                } );
+                state = Object.assign( {}, state, { users: newUsers } );
+            }
+        } );
         break;
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -235,10 +256,10 @@ export default ( state = {}, action ) => {
         const newUsers = state.users.map( user => {
             if ( user.uid != action.offlineUserId.uid ) {
                 // then this isn't the user i care about
-                console.log(`REMOVE_ONLINE_USER - ${action.offlineUserId}`);
+                console.log( `REMOVE_ONLINE_USER - ${action.offlineUserId}` );
                 return user;
             } else {
-                console.log('REMOVE_ONLINE_USER - user.uid === action.offlineUserId');
+                console.log( 'REMOVE_ONLINE_USER - user.uid === action.offlineUserId' );
 
                 const newUserState = { ...user };
                 delete newUserState.online;

@@ -312,7 +312,7 @@ router.get( '/friends', ( req, res ) => {
     console.log( `API: method: GET /api/friends/${fromUserId}` );
 
     return db.readAllFriends( fromUserId )
-        .then( resp => res.json( resp ) )
+        .then( friends => res.json( { friends } ) )
         .catch( err => console.error( err.stack ) );
 } );
 //_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _

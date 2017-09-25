@@ -369,7 +369,7 @@ module.exports.readAllFriends = ( fromUserId ) => {
                 }
                 return friend;
             } );
-            return { friends: s3mappedFriends };
+            return s3mappedFriends;
         } )
 
         .catch( err => console.error( err.stack ) );
