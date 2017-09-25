@@ -19,8 +19,8 @@ class FriendsContainer extends Component {
 
     handleFriendshipChange( toUserId, status ) {
         console.log('handleFriendshipChange', toUserId, status);
-        const { updateFriendship, uid } = this.props;
-        updateFriendship( uid, toUserId, status );
+        const { updateFriendship, user } = this.props;
+        updateFriendship( user.uid, toUserId, status );
     }
 
     render() {
@@ -67,12 +67,13 @@ class FriendsContainer extends Component {
 const mapStateToProps = ( state ) => {
     console.log( 'FriendsContainer - fn: mapStateToProps' );
     return {
-        pendingFriendships: state.friends &&
-            state.friends.filter( friend => friend.status === 'PENDING' ),
-        currentFriendships: state.friends &&
-            state.friends.filter( friend => friend.status === 'ACCEPTED' ),
-        blockedFriendships: state.friends &&
-            state.friends.filter( friend => friend.status === 'TERMINATED' || friend.status === 'CANCELED' )
+        user: state.user,
+        pendingFriendships: state.users &&
+            state.users.filter( friend => friend.status === 'PENDING' ),
+        currentFriendships: state.users &&
+            state.users.filter( friend => friend.status === 'ACCEPTED' ),
+        blockedFriendships: state.users &&
+            state.users.filter( friend => friend.status === 'TERMINATED' || friend.status === 'CANCELED' )
     };
 };
 

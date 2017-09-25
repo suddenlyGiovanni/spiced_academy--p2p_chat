@@ -135,12 +135,10 @@ export function updateFriendship( fromUserId, toUserId, status ) {
     return axios.put( `/api/friends/${fromUserId}/${toUserId}`, { status: status } )
 
         .then( result => {
-            console.log( 'REDUX - ACTION - fn: updateFriendship - data', result.data );
+            console.log( 'REDUX - ACTION - fn: updateFriendship - data', result.data.newFriendshipStatus );
             return {
                 type: 'UPDATE_FRIENDSHIP',
-                status: result.data.status,
-                fromUserId: result.data.fromUserId,
-                toUserId: result.data.toUserId
+                newFriendshipStatus: result.data.newFriendshipStatus
             };
         } )
 

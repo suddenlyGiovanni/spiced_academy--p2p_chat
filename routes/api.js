@@ -386,7 +386,7 @@ router.put( '/friends/:fromUserId/:toUserId', ( req, res ) => {
 
         return db.updateFriendshipStatus( fromUserId, toUserId, status )
 
-            .then( resp => res.json( resp ) )
+            .then( newFriendshipStatus => res.json( { newFriendshipStatus } ) )
 
             .catch( err => console.error( err.stack ) );
     } else {

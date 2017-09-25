@@ -145,8 +145,6 @@ export default ( state = {}, action ) => {
 
 
     case 'LOAD_FRIENDS':
-        // FIXME: friend state has to be removed from app after it is merged with users
-        state = Object.assign( {}, state, { friends: action.friends } );
         // save the up to date data to the array of users
         action.friends.map( friend => {
             const matchUser = state.users.find( user => user.uid === friend.uid );
@@ -174,17 +172,19 @@ export default ( state = {}, action ) => {
 
 
     case 'UPDATE_FRIENDSHIP':
-        state = Object.assign( {}, state, {
-            friends: state.friends.map( friend => {
-                if ( friend.uid == action.toUserId ) {
-                    return Object.assign( {}, friend, {
-                        status: action.status
-                    } );
-                } else {
-                    return friend;
+        const { newFriendshipStatus } = action;
+        const matchUser = state.users.find( user => user.uid === newFriendshipStatus.toUserId );
+        if ( matchUser ) {
+            // update the user and it's data in the array
+            const newUsers = state.users.map( user => {
+                if ( user.uid !== newFriendshipStatus.toUserId ) {
+                    // then this isn't the user i care about
+                    return user;
                 }
-            } )
-        } );
+                return { ...user, status: newFriendshipStatus.status };
+            } );
+            state = Object.assign( {}, state, { users: newUsers } );
+        }
         break;
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -228,15 +228,15 @@ export default ( state = {}, action ) => {
 
     case 'ADD_ONLINE_USER':
         const { userJoined } = action;
-        let matchUser = state.users.find( user => user.uid === userJoined.uid );
-        if ( !matchUser ) {
+        const matchingUser = state.users.find( user => user.uid === userJoined.uid );
+        if ( !matchingUser ) {
             // then insert the new action.userJoined into the array of onlineUsers
-            let newUsers = state.users.slice();
+            const newUsers = state.users.slice();
             newUsers.splice( ( newUsers.length ), 0, userJoined );
             state = Object.assign( {}, state, { users: newUsers } );
         } else {
             // update the user and it's data in the array
-            let newUsers = state.users.map( user => {
+            const newUsers = state.users.map( user => {
                 if ( user.uid !== userJoined.uid ) {
                     // then this isn't the user i care about
                     return user;
