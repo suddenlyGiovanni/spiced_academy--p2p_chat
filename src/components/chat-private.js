@@ -13,7 +13,7 @@ export default class ChatPrivate extends Component {
             e.preventDefault();
             console.log( e.target.value );
             getSocket().emit( 'chatMessagePrivate', {
-                toUserId: this.props.otherUid,
+                toUserId: this.props.otherUser.uid,
                 messageBody: e.target.value
             } );
             e.target.value = '';
@@ -27,18 +27,38 @@ export default class ChatPrivate extends Component {
 
     render() {
         console.log( 'ChatPrivate - RENDER - this.props: ', this.props );
+        const { currentUser, otherUser, messages } = this.props;
 
-        const chatMessages = this.props.privateMessagesList && this.props.privateMessagesList.map( message => {
-            const { mid, fromUserId, firstName, lastName, profilePic, messageBody, timestamp } = message;
+        const chatMessages = messages && messages.map( message => {
+            const { mid, sender, msg, timestamp } = message;
+
+            let uid,
+                firstName,
+                lastName,
+                profilePic;
+
+
+            if ( sender ) {
+                uid = otherUser.uid;
+                firstName = otherUser.firstName;
+                lastName = otherUser.lastName;
+                profilePic = otherUser.profilePic;
+            } else {
+                uid = currentUser.uid;
+                firstName = currentUser.firstName;
+                lastName = currentUser.lastName;
+                profilePic = currentUser.profilePic;
+            }
+
             return (
                 <li key={mid}>
                     <ProfilePicOther
                         src={profilePic}
                         alt={`${firstName} ${lastName}`}
-                        uid={fromUserId}/>
+                        uid={uid}/>
                     <h3>{firstName} {lastName}</h3>
                     <p>{timestamp}</p>
-                    <p>{messageBody}</p>
+                    <p>{msg}</p>
                 </li>
             );
         } );

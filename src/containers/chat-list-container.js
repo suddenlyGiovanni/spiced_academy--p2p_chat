@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link, browserHistory } from 'react-router';
 import OnlineFriendsContainer from './online-friends-container';
-import ProfilePicOther from '../components/profilePicOther';
 
 // MATERIAL-UI
 import Avatar from 'material-ui/Avatar';
@@ -28,7 +27,7 @@ class ChatListContainer extends Component {
 
     render() {
         console.log( 'ChatListContainer - RENDER - this.props: ', this.props );
-        const { privateConversation, user } = this.props;
+        const { privateConversation } = this.props;
 
         const privateConversations = privateConversation && privateConversation.map( conversation => {
             const { uid, firstName, lastName, profilePic } = conversation;
@@ -47,7 +46,7 @@ class ChatListContainer extends Component {
                     <Divider inset={true} />
                 </div>
             );
-        } )
+        } );
 
         return (
             <div>

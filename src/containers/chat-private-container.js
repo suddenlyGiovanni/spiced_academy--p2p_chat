@@ -16,15 +16,16 @@ class ChatPrivateContainer extends Component {
 
     render() {
         console.log( 'ChatPrivateContainer - RENDER - this.props: ', this.props );
-        const { privateMessages, otherUid } = this.props;
+        const { currentUser, otherUser, messages } = this.props;
         return (
             <div>
                 ChatPrivateContainer.js
                 {
-                    privateMessages &&
+                    messages &&
                     <ChatPrivate
-                        privateMessagesList={privateMessages}
-                        otherUid={otherUid}/>
+                        currentUser={currentUser}
+                        otherUser={otherUser}
+                        messages={messages}/>
                 }
             </div>
         );
@@ -33,12 +34,13 @@ class ChatPrivateContainer extends Component {
 
 const mapStateToProps = ( state ) => {
     console.log( 'ChatPrivateContainer - fn: mapStateToProps' );
+    const otherUser = state.users && state.users.find( user => user.uid == state.otherUid );
+    const messages = otherUser && otherUser.privateMessages;
     return {
-        currentUser: state.user,
         otherUid: state.otherUid,
-        privateMessages: state.privateMessages && state.privateMessages.filter( message => {
-            return ( message.fromUserId == state.otherUid || message.toUserId == state.otherUid);
-        } )
+        currentUser: state.user,
+        otherUser: otherUser,
+        messages: messages
     };
 };
 

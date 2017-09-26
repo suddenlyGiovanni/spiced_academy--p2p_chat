@@ -22,7 +22,6 @@ import ChatChildrenContainer from './containers/chat-children-container';
 import ChatListContainer from './containers/chat-list-container';
 import ChatPublicContainer from './containers/chat-public-container';
 import ChatPrivateContainer from './containers/chat-private-container';
-import OnlineFriendsContainer from './containers/online-friends-container';
 import UsersContainer from './containers/users-container';
 
 // Components
