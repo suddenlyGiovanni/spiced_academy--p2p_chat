@@ -57,17 +57,14 @@ class App extends Component {
     componentWillReceiveProps( nextProps ) {
         const { pathname } = nextProps.location;
         switch ( pathname ) {
-        case '/online':
+        case '/chat':
             this.setState( { selectedIndex: 0 } );
             break;
-        case '/chat':
+        case '/friends':
             this.setState( { selectedIndex: 1 } );
             break;
-        case '/friends':
-            this.setState( { selectedIndex: 2 } );
-            break;
         case '/users':
-            this.setState( { selectedIndex: 3 } );
+            this.setState( { selectedIndex: 2 } );
             break;
         }
     }
@@ -116,17 +113,14 @@ class App extends Component {
     handleNavigation( href ) {
         browserHistory.push( href );
         switch ( href ) {
-        case '/online':
+        case '/chat':
             this.setState( { selectedIndex: 0 } );
             break;
-        case '/chat':
+        case '/friends':
             this.setState( { selectedIndex: 1 } );
             break;
-        case '/friends':
-            this.setState( { selectedIndex: 2 } );
-            break;
         case '/users':
-            this.setState( { selectedIndex: 3 } );
+            this.setState( { selectedIndex: 2 } );
             break;
         }
     }

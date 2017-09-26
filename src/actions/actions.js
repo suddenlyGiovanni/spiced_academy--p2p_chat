@@ -92,12 +92,13 @@ export function loadSearchedUsers( search ) {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
+
+
 export function clearSearchedUsers() {
     console.log( 'REDUX - ACTION - fn: clearSearchedUsers' );
     return { type: 'CLEAR_SEARCHED_USERS' };
 }
-
-
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
 

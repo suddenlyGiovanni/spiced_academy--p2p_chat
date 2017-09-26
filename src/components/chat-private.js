@@ -1,12 +1,19 @@
+// REACT
 import React, { Component } from 'react';
+// UTILS
 import getSocket from '../utils/socketIo';
-import ProfilePicOther from './profilePicOther';
+
+// MATERIAL UI
+import { Card, CardHeader, CardTitle, CardText } from 'material-ui/Card';
+import Avatar from 'material-ui/Avatar';
+import { Toolbar } from 'material-ui/Toolbar';
+import TextField from 'material-ui/TextField';
+
 
 export default class ChatPrivate extends Component {
     constructor( props ) {
         super( props );
     }
-
 
     handleSubmit( e ) {
         if ( e.keyCode === 13 ) {
@@ -19,7 +26,6 @@ export default class ChatPrivate extends Component {
             e.target.value = '';
         }
     }
-
 
     componentDidUpdate() {
         this.messageArea.scrollTop = this.messageArea.scrollHeight;
@@ -50,15 +56,30 @@ export default class ChatPrivate extends Component {
                 profilePic = currentUser.profilePic;
             }
 
+            const avatar = <Avatar src={profilePic} />
+
+
+            if ( sender ) {
+                <Card>
+                    <CardHeader
+                        title={`${firstName} ${lastName}`}
+                        subtitle={timestamp}
+                        avatar={avatar}
+                    />
+                    <CardTitle title="Card title" subtitle="Card subtitle" />
+                    <CardText>{msg}</CardText>
+                </Card>
+            }
+
             return (
                 <li key={mid}>
-                    <ProfilePicOther
-                        src={profilePic}
-                        alt={`${firstName} ${lastName}`}
-                        uid={uid}/>
-                    <h3>{firstName} {lastName}</h3>
-                    <p>{timestamp}</p>
-                    <p>{msg}</p>
+                    <Card style={{marginTop: 10, marginBottom: 10}}>
+                        <CardHeader
+                            title={`${firstName} ${lastName}`}
+                            subtitle={timestamp}
+                            avatar={avatar}/>
+                        <CardText>{msg}</CardText>
+                    </Card>
                 </li>
             );
         } );
@@ -76,13 +97,16 @@ export default class ChatPrivate extends Component {
                         {chatMessages}
                     </ul>
                 </div>
-                <textarea
-                    name='newMessage'
-                    maxLength='300'
-                    placeholder='Please somebody answer me..'
-                    ref={newMessage => this.newMessage = newMessage}
-                    onKeyDown={e=>this.handleSubmit(e)}>
-                </textarea>
+                <Toolbar>
+                    <TextField
+                        name='newMessage'
+                        maxLength='300'
+                        hintText='say hello'
+                        fullWidth={true}
+                        ref={newMessage => this.newMessage = newMessage}
+                        onKeyDown={ e => this.handleSubmit(e) }
+                    />
+                </Toolbar>
             </div>
         );
     }
