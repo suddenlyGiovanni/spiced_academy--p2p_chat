@@ -1,88 +1,68 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 import OnlineFriendsContainer from './online-friends-container';
 import ProfilePicOther from '../components/profilePicOther';
+
+// MATERIAL-UI
+import Avatar from 'material-ui/Avatar';
+import { List, ListItem } from 'material-ui/List';
+import Subheader from 'material-ui/Subheader';
+import Divider from 'material-ui/Divider';
+
 
 class ChatListContainer extends Component {
     constructor( props ) {
         super( props );
     }
 
+    handleTouchConversation( uid ) {
+        console.log( 'ChatListContainer - fn: handleTouchConversation' );
+        browserHistory.push( `/chat/private/${uid}` );
+    }
+
+    handleTouchConversationGlobal() {
+        console.log( 'ChatListContainer - fn: handleTouchConversationGlobal' );
+        browserHistory.push( '/chat/public' );
+    }
+
     render() {
         console.log( 'ChatListContainer - RENDER - this.props: ', this.props );
-        /*
-        let privateChatList = [
-            {
-                chatName: otherUserName,
-                chatUrl: otherUid
-            }
-        ]
-        */
-        let privateChatList = [];
+        const { privateConversation, user } = this.props;
 
-        const { privateMessages, user } = this.props;
-
-        if (privateMessages) {
-            privateMessages.map( message => {
-                const { uid, fromUserId, toUserId, firstName, lastName, profilePic, } = message;
-
-                if ( message.fromUserId === user.uid ) {
-                    // this mean that the mess was sent by the logged in user
-                    // no name and imgpic at disposal
-                    if ( !privateChatList.some( el => el.privateChatId === toUserId ) ) {
-                        privateChatList.push( {
-                            privateChatId: toUserId
-                        } );
-                    }
-                } else if ( message.toUserId === user.uid ) {
-                    // this mean that the mess was sent by somebody else
-                    // we have at disposal then name and pic
-                    if ( !privateChatList.some( el => el.privateChatId === fromUserId ) ) {
-                        privateChatList.push( {
-                            privateChatId: fromUserId,
-                            privateChatName: `${firstName} ${lastName}`,
-                            privateChatPic: profilePic
-                        } );
-                    } else {
-                        const objIndex = privateChatList.findIndex( ( obj => obj.privateChatId == fromUserId ) );
-                        privateChatList[ objIndex ].privateChatName = `${firstName} ${lastName}`;
-                        privateChatList[ objIndex ].privateChatPic = profilePic;
-                    }
-                }
-
-            } );
-        }
-
-        console.log('privateChatList', privateChatList);
-
-        const privateChatRooms = privateChatList && privateChatList.map( ( room ) => {
-            const { privateChatId, privateChatName, privateChatPic } = room;
-
-            return (
-                <li key={privateChatId}>
-                    <ProfilePicOther
-                        src={privateChatPic}
-                        alt={privateChatName}
-                        uid={privateChatId}
-                        chat={true}/>
-                    <Link to={`/chat/private/${privateChatId}`}>
-                        <h3>{privateChatName}</h3>
-                    </Link>
-                </li>
+        const privateConversations = privateConversation && privateConversation.map( conversation => {
+            const { uid, firstName, lastName, profilePic } = conversation;
+            const avatar = (
+                <Link to={`/user/${uid}`}>
+                    <Avatar src={profilePic} />
+                </Link>
             );
-        } );
+            return (
+                <div>
+                    <ListItem
+                        primaryText={`${firstName} ${lastName}`}
+                        leftAvatar={avatar}
+                        onClick={ () => this.handleTouchConversation(uid) }
+                    />
+                    <Divider inset={true} />
+                </div>
+            );
+        } )
 
         return (
             <div>
                 <OnlineFriendsContainer />
                 ChatListContainer.js
-                <ul>
-                    <li>
-                        <Link to='/chat/public'>PUBLIC CHAT</Link>
-                    </li>
-                    {privateChatRooms && privateChatRooms}
-                </ul>
+                <List>
+                    <Subheader>Global chat</Subheader>
+                    <ListItem
+                        primaryText='Public Chat Room'
+                        onClick={ () => this.handleTouchConversationGlobal() }
+                    />
+                    <Divider inset={true} />
+                    <Subheader>Private</Subheader>
+                    {privateConversations}
+                </List>
             </div>
         );
     }
@@ -92,8 +72,9 @@ const mapStateToProps = ( state ) => {
     console.log( 'ChatListContainer - fn: mapStateToProps' );
     return {
         user: state.user,
-        publicMessages: state.publicMessages && state.publicMessages,
-        privateMessages: state.privateMessages && state.privateMessages,
+        privateConversation: state.users && state.users.filter( user => {
+            return user.privateMessages;
+        } )
     };
 };
 
