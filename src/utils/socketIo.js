@@ -49,7 +49,7 @@ const getSocket = () => {
         } );
 
 
-        socket.on( 'privateChatMessages', ( privateMessageList ) => {
+        socket.on( 'privateChatMessages', privateMessageList => {
             console.log( 'Socket.io Event: privateChatMessages', privateMessageList );
             store.dispatch( createPrivateMessageList( privateMessageList ) );
         } );

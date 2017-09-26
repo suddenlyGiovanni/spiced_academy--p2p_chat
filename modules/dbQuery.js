@@ -524,11 +524,11 @@ module.exports.readAllPublicMessages = () => {
 
 module.exports.readAllPrivateMessages = ( uid ) => {
     console.log( 'dbQuery.js - fn: "readAllPrivateMessages"\n' );
-    const query = `SELECT   users.uid,
+    const query = `SELECT   messages.mid,
+                            users.uid,
                             users."firstName",
                             users."lastName",
                             users."profilePic",
-                            messages.mid,
                             messages."fromUserId",
                             messages."toUserId",
                             messages."toAll",

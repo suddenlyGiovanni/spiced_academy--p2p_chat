@@ -283,7 +283,64 @@ export default ( state = {}, action ) => {
 
 
     case 'CREATE_PRIVATE_MESSAGE_LIST':
+        // FIXME: legacy code to be update
         state = Object.assign( {}, state, { privateMessages: action.privateMessageList } );
+
+        // FIXME: when ready switch to this new storage state.
+        action.privateMessageList.map( privateMessage => {
+            let otherUserId;
+            if ( state.user.uid === privateMessage.fromUserId ) {
+                otherUserId = privateMessage.toUserId;
+            } else {
+                otherUserId = privateMessage.fromUserId;
+            }
+            const matchUser = state.users.find( user => user.uid == otherUserId );
+            // matchUser return either UNDEFINED || copy of the OBJ
+
+            // create the privateMessage OBJ:
+            const newPrivateMessage = {
+                mid: privateMessage.mid,
+                sender: ( otherUserId === privateMessage.fromUserId ) ? true : false,
+                msg: privateMessage.messageBody,
+                timestamp: privateMessage.timestamp
+            };
+
+            if ( !matchUser ) {
+                // then create the newUser
+                const newUser = {
+                    uid: otherUserId,
+                    privateMessages: [ newPrivateMessage ]
+                }
+                // then insert the new newUser into the array of users
+                const newUsers = state.users.slice();
+                newUsers.splice( ( newUsers.length ), 0, newUser );
+                state = Object.assign( {}, state, { users: newUsers } );
+            } else {
+                // update the user and it's data in the array
+                const newUsers = state.users.map( user => {
+                    if ( user.uid !== otherUserId ) {
+                        // this isn't the user i care about
+                        return user;
+                    } else {
+                        // this is the user i care...
+                        // time to check if it has any privateMessages
+                        if ( !user.hasOwnProperty( 'privateMessages' ) ) {
+                            // then just add the first privateMessage...
+                            let updatedUser = { ...user };
+                            updatedUser.privateMessages = [ newPrivateMessage ];
+                            return updatedUser;
+                        } else {
+                            // now the logic for IF the user has already privateMessages;
+                            const arrToInsert = [ newPrivateMessage ];
+                            const newPrivateMessages = [ ...user.privateMessages, ...arrToInsert ];
+                            return { ...user, privateMessages: newPrivateMessages };
+                        }
+                    }
+                } )
+                state = Object.assign( {}, state, { users: newUsers } );
+            }
+        } );
+
         break;
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

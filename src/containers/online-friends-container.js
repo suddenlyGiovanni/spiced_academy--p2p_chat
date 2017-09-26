@@ -13,13 +13,7 @@ class OnlineFriendsContainer extends Component {
         if ( !onlineFriends ) {
             return <div>Loading online friends</div>;
         }
-
-        return (
-            <div>
-                <h1>OnlineFriendsContainer</h1>
-                <OnlineFriends onlineFriends={ onlineFriends }/>
-            </div>
-        );
+        return <OnlineFriends onlineFriends={ onlineFriends }/>;
     }
 }
 
