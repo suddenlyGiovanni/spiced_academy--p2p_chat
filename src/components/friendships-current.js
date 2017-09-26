@@ -8,7 +8,7 @@ import Avatar from 'material-ui/Avatar';
 import { List, ListItem } from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
-import { grey400, darkBlack, lightBlack } from 'material-ui/styles/colors';
+import { grey400 } from 'material-ui/styles/colors';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
@@ -21,7 +21,7 @@ import ContentRemoveCircle from 'material-ui/svg-icons/content/remove-circle';
 const handleTouchCurrentFriend = ( uid ) => {
     console.log( 'App - fn: handleTouchCurrentFriend' );
     browserHistory.push( `/chat/private/${uid}` );
-}
+};
 
 
 const iconButtonElement = (

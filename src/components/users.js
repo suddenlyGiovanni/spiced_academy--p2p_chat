@@ -40,7 +40,7 @@ const Users = props => {
         const rightIconMenu = (
             <IconMenu
                 iconButtonElement={iconButtonElement}
-                onItemTouchTap={ () => handleFriendshipChange( uid, 'ACCEPTED' ) }>
+                onItemTouchTap={ () => handleFriendshipChange( uid, 'PENDING' ) }>
                 <MenuItem
                     value='FRIEND REQ'
                     primaryText='MAKE FRIEND REQ'
@@ -58,7 +58,7 @@ const Users = props => {
                         <Avatar src={profilePic} />
                     </IconButton>
                 </Badge>
-            )
+            );
         } else {
             avatar = <Avatar src={profilePic} />;
         }

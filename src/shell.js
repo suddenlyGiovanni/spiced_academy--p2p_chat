@@ -22,6 +22,7 @@ import ChatChildrenContainer from './containers/chat-children-container';
 import ChatListContainer from './containers/chat-list-container';
 import ChatPublicContainer from './containers/chat-public-container';
 import ChatPrivateContainer from './containers/chat-private-container';
+import ChatSecureContainer from './containers/chat-secure-container';
 import UsersContainer from './containers/users-container';
 
 // Components
@@ -65,6 +66,7 @@ if ( location.pathname === '/welcome/' ) {
                             <IndexRoute component={ChatListContainer} />
                             <Route path='public' component={ChatPublicContainer} />
                             <Route path='private/:otherUid' component={ChatPrivateContainer} />
+                            <Route path='secure/:otherUid' component={ChatSecureContainer} />
                         </Route>
                     </Route>
                 </Router>

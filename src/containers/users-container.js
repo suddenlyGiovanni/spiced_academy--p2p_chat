@@ -8,11 +8,10 @@ import { loadLatestUsers, loadSearchedUsers, clearSearchedUsers, updateFriendshi
 import Users from '../components/users';
 
 // MATERIAL-UI
-import { Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui/Toolbar';
-import AutoComplete from 'material-ui/AutoComplete';
+import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 import TextField from 'material-ui/TextField';
 
-
+// ICONS
 import ActionSearch from 'material-ui/svg-icons/action/search';
 
 class UsersContainer extends Component {
@@ -27,7 +26,8 @@ class UsersContainer extends Component {
 
     handleFriendshipChange( toUserId, status ) {
         console.log( 'handleFriendshipChange', toUserId, status );
-        this.props.updateFriendship( this.props.user.uid, toUserId, status );
+        const { updateFriendship, user } = this.props;
+        updateFriendship( user.uid, toUserId, status );
     }
 
     handleUpdateInput( e ) {
@@ -49,12 +49,6 @@ class UsersContainer extends Component {
         return (
             <div>
                 <Toolbar>
-                    {/* <AutoComplete
-                        hintText='Search for new Friends'
-                        dataSource={this.state.dataSource}
-                        onUpdateInput={ e => this.handleUpdateInput(e) }
-                        fullWidth={true}
-                    /> */}
                     <TextField
                         hintText="Full width"
                         fullWidth={true}
