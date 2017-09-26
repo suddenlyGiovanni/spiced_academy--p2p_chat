@@ -25,7 +25,8 @@ class FriendsContainer extends Component {
 
     render() {
         console.log( 'FriendsContainer - RENDER - this.props: ', this.props );
-        const { pendingFriendships, currentFriendships, blockedFriendships } = this.props;
+        const { pendingFriendships, currentFriendships, blockedFriendships, user } = this.props;
+        const fromUserId = user.uid;
 
         if ( !pendingFriendships && currentFriendships ) {
             return <div>Loading friendships...</div>;

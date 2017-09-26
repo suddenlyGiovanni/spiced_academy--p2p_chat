@@ -10,10 +10,10 @@ import { grey400 } from 'material-ui/styles/colors';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 
 // ICONS
 import SocialPersonAdd from 'material-ui/svg-icons/social/person-add';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 
 const iconButtonElement = (
     <IconButton

@@ -55,7 +55,6 @@ const CurrentFriendship = ( props ) => {
 
         return (
             <div>
-
                 <ListItem
                     primaryText={`${firstName} ${lastName}`}
                     leftAvatar={<Avatar src={profilePic} />}
@@ -70,9 +69,9 @@ const CurrentFriendship = ( props ) => {
 
     return (
         <List>
-                <Subheader>These people are currently your friend</Subheader>
-                {listCurrentFriendships}
-            </List>
+            <Subheader>These people are currently your friend</Subheader>
+            {listCurrentFriendships}
+        </List>
     );
 
 };

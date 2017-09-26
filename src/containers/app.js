@@ -167,13 +167,10 @@ class App extends Component {
 
 
                 <BottomNavigation selectedIndex={this.state.selectedIndex}>
+
                     <BottomNavigationItem
-                        label='Online Users'
+                        label='Home'
                         icon={<ActionHome />}
-                        onClick={ e => this.handleNavigation('/online')}/>
-                    <BottomNavigationItem
-                        label='Chat'
-                        icon={<CommunicationChatBubble />}
                         onClick={ e => this.handleNavigation('/chat')}/>
                     <BottomNavigationItem
                         label='Friends'
@@ -204,17 +201,17 @@ class App extends Component {
                     <Divider />
                     <Subheader>Navigation</Subheader>
                     <ListItem
-                        primaryText="Online Users"
-                        leftIcon={<ContentSend />}
-                        onClick={ e => this.handleNavigation('/online')}/>
-                    <ListItem
-                        primaryText="Chat"
-                        leftIcon={<CommunicationChatBubble />}
+                        primaryText="Home"
+                        leftIcon={<ActionHome />}
                         onClick={ e => this.handleNavigation('/chat')}/>
                     <ListItem
                         primaryText="Friends"
-                        leftIcon={<CommunicationChatBubble />}
+                        leftIcon={<SocialGroup />}
                         onClick={ e => this.handleNavigation('/friends')}/>
+                    <ListItem
+                        primaryText="Users"
+                        leftIcon={<SocialGroupAdd />}
+                        onClick={ e => this.handleNavigation('/users')}/>
 
                 </Drawer>
 

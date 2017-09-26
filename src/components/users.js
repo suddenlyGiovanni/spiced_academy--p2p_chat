@@ -11,8 +11,13 @@ import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import Badge from 'material-ui/Badge';
+
+
 // ICONS
 import SocialPersonAdd from 'material-ui/svg-icons/social/person-add';
+import NotificationsIcon from 'material-ui/svg-icons/social/notifications';
+
 
 
 const iconButtonElement = (
@@ -29,8 +34,9 @@ const Users = props => {
     console.log( 'Users - RENDER - this.props: ', props );
     const { handleFriendshipChange } = props;
 
-    const listUsers = props.users.map( ( pendingFriend ) => {
-        const { uid, firstName, lastName, profilePic } = pendingFriend;
+    const listUsers = props.users.map( user => {
+        const { uid, firstName, lastName, profilePic, online } = user;
+
         const rightIconMenu = (
             <IconMenu
                 iconButtonElement={iconButtonElement}
@@ -41,11 +47,28 @@ const Users = props => {
                     leftIcon={<SocialPersonAdd />}/>
             </IconMenu>
         );
+
+        let avatar;
+        if ( online ) {
+            avatar = (
+                <Badge
+                    badgeContent={4}
+                    secondary={true}>
+                    <IconButton tooltip="online">
+                        <Avatar src={profilePic} />
+                    </IconButton>
+                </Badge>
+            )
+        } else {
+            avatar = <Avatar src={profilePic} />;
+        }
+
+
         return (
             <div>
                 <ListItem
                     primaryText={`${firstName} ${lastName}`}
-                    leftAvatar={<Avatar src={profilePic} />}
+                    leftAvatar={avatar}
                     rightIconButton={rightIconMenu}
                 />
                 <Divider inset={true} />

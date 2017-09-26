@@ -198,16 +198,16 @@ export default ( state = {}, action ) => {
             state = Object.assign( {}, state, { users: action.onlineUsers } );
         } else {
             action.onlineUsers.map( onlineUser => {
-                let matchUser = state.users.find( user => user.uid === onlineUser );
+                const matchUser = state.users.find( user => user.uid === onlineUser );
                 // matchUser return either UNDEFINED || copy of the OBJ
                 if ( !matchUser ) {
                     // then insert the new onlineUser into the array of users
-                    let newUsers = state.users.slice();
+                    const newUsers = state.users.slice();
                     newUsers.splice( ( newUsers.length ), 0, onlineUser );
                     state = Object.assign( {}, state, { users: newUsers } );
                 } else {
                     // update the user and it's data in the array
-                    let newUsers = state.users.map( user => {
+                    const newUsers = state.users.map( user => {
                         if ( user.uid !== onlineUser.uid ) {
                             // this isn't the user i care about
                             return user;

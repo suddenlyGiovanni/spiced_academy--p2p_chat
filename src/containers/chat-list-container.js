@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
+import OnlineFriendsContainer from './online-friends-container';
 import ProfilePicOther from '../components/profilePicOther';
 
 class ChatListContainer extends Component {
@@ -20,13 +21,13 @@ class ChatListContainer extends Component {
         */
         let privateChatList = [];
 
-        const { privateMessages, currentUser } = this.props;
+        const { privateMessages, user } = this.props;
 
         if (privateMessages) {
             privateMessages.map( message => {
                 const { uid, fromUserId, toUserId, firstName, lastName, profilePic, } = message;
 
-                if ( message.fromUserId === currentUser.uid ) {
+                if ( message.fromUserId === user.uid ) {
                     // this mean that the mess was sent by the logged in user
                     // no name and imgpic at disposal
                     if ( !privateChatList.some( el => el.privateChatId === toUserId ) ) {
@@ -34,7 +35,7 @@ class ChatListContainer extends Component {
                             privateChatId: toUserId
                         } );
                     }
-                } else if ( message.toUserId === currentUser.uid ) {
+                } else if ( message.toUserId === user.uid ) {
                     // this mean that the mess was sent by somebody else
                     // we have at disposal then name and pic
                     if ( !privateChatList.some( el => el.privateChatId === fromUserId ) ) {
@@ -74,6 +75,7 @@ class ChatListContainer extends Component {
 
         return (
             <div>
+                <OnlineFriendsContainer />
                 ChatListContainer.js
                 <ul>
                     <li>
@@ -89,7 +91,7 @@ class ChatListContainer extends Component {
 const mapStateToProps = ( state ) => {
     console.log( 'ChatListContainer - fn: mapStateToProps' );
     return {
-        currentUser: state.user,
+        user: state.user,
         publicMessages: state.publicMessages && state.publicMessages,
         privateMessages: state.privateMessages && state.privateMessages,
     };
