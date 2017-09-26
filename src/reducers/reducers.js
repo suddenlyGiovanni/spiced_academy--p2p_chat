@@ -91,7 +91,7 @@ export default ( state = {}, action ) => {
                     if ( !user.online ) {
                         return { ...user, ...latestUser };
                     } else {
-                        let onlineUser = { ...user, ...latestUser }
+                        let onlineUser = { ...user, ...latestUser };
                         onlineUser.online = true;
                         return onlineUser;
                     }
@@ -126,7 +126,7 @@ export default ( state = {}, action ) => {
                         return user;
                     }
                     return searchedUser;
-                } )
+                } );
                 state = Object.assign( {}, state, { users: newUsers } );
             }
         } );
@@ -171,7 +171,7 @@ export default ( state = {}, action ) => {
 
 
 
-    case 'UPDATE_FRIENDSHIP':
+    case 'UPDATE_FRIENDSHIP': {
         const { newFriendshipStatus } = action;
         const matchUser = state.users.find( user => user.uid === newFriendshipStatus.toUserId );
         if ( matchUser ) {
@@ -186,7 +186,8 @@ export default ( state = {}, action ) => {
             state = Object.assign( {}, state, { users: newUsers } );
         }
         break;
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    }
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
 
@@ -216,17 +217,17 @@ export default ( state = {}, action ) => {
                             profilePic: onlineUser.profilePic,
                             online: onlineUser.online
                         } );
-                    } )
+                    } );
                     state = Object.assign( {}, state, { users: newUsers } );
                 }
-            } )
+            } );
         }
         break;
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
 
-    case 'ADD_ONLINE_USER':
+    case 'ADD_ONLINE_USER': {
         const { userJoined } = action;
         const matchingUser = state.users.find( user => user.uid === userJoined.uid );
         if ( !matchingUser ) {
@@ -243,16 +244,17 @@ export default ( state = {}, action ) => {
                 }
 
                 return { ...user, ...userJoined };
-            } )
+            } );
             state = Object.assign( {}, state, { users: newUsers } );
         }
         break;
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    }
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
 
 
-    case 'REMOVE_ONLINE_USER':
+    case 'REMOVE_ONLINE_USER': {
         const newUsers = state.users.map( user => {
             if ( user.uid != action.offlineUserId.uid ) {
                 // then this isn't the user i care about
@@ -269,7 +271,8 @@ export default ( state = {}, action ) => {
         } );
         state = Object.assign( {}, state, { users: newUsers } );
         break;
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    }
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
 
@@ -310,7 +313,7 @@ export default ( state = {}, action ) => {
                 const newUser = {
                     uid: otherUserId,
                     privateMessages: [ newPrivateMessage ]
-                }
+                };
                 // then insert the new newUser into the array of users
                 const newUsers = state.users.slice();
                 newUsers.splice( ( newUsers.length ), 0, newUser );
@@ -336,7 +339,7 @@ export default ( state = {}, action ) => {
                             return { ...user, privateMessages: newPrivateMessages };
                         }
                     }
-                } )
+                } );
                 state = Object.assign( {}, state, { users: newUsers } );
             }
         } );
