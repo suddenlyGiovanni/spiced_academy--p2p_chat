@@ -21,9 +21,9 @@ const getSocket = () => {
 
         socket.on( 'connect', () => {
             console.log( `Socket.io Event: connect - socketId: ${socket.id}` );
+            socketId = socket.id;
             store.dispatch( connectUser( socket.id ) );
         } );
-
 
         socket.on( 'onlineUsers', ( onlineUsers ) => {
             console.log( 'Socket.io Event: onlineUsers', onlineUsers );

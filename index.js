@@ -6,17 +6,21 @@ const express = require( 'express' ),
     cookieSession = require( 'cookie-session' ),
     csrf = require( 'csurf' ),
     compression = require( 'compression' );
-    // db = require( './modules/dbQuery' );
-    // favicon = require( 'serve-favicon' );
+// db = require( './modules/dbQuery' );
+// favicon = require( 'serve-favicon' );
 
 
 // EXPRESS
 const app = express();
 
 // SOCKETio
-const server = require('http').Server(app);
-const io = require('socket.io')(server);
+const server = require( 'http' ).Server( app );
+const io = require( 'socket.io' )( server );
 module.exports.io = io;
+
+// PEERJS
+const ExpressPeerServer = require( 'peer' ).ExpressPeerServer;
+const options = { debug: true };
 
 // MIDDLEWARE __________________________________________________________________
 
@@ -70,14 +74,18 @@ app.use( ( req, res, next ) => {
 app.use( '/', require( './routes/root' ) );
 app.use( '/api/', require( './routes/api' ) );
 // load webSocket.js and pass it the socket.io object
-app.use('/ws/', require('./routes/webSocket'));
+app.use( '/ws/', require( './routes/webSocket' ) );
 
 
-// if no route match then..
-app.get( '*', function ( req, res ) {
-    res.sendFile( path.join( __dirname, 'index.html' ) );
+// PEERJS ROUTING
+app.use( '/peerjs', ExpressPeerServer( server, options ) );
+// PEERJS EVENTS LISTENING
+server.on( 'connection', peer => {
+    console.log( 'Peerjs - server - Event - "connection" - id:', peer.id );
 } );
-// _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+server.on( 'disconnect', peer => {
+    console.log( 'Peerjs - server - Event - "disconnect" - id:', peer.id );
+} );
 
 
 // ERROR:
@@ -99,6 +107,10 @@ app.use( ( err, req, res, next ) => {
 } );
 // _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
+// if no route match then..
+app.get( '*', function ( req, res ) {
+    res.sendFile( path.join( __dirname, 'index.html' ) );
+} );
 
 // SERVER ______________________________________________________________________
 const listener = server.listen( process.env.PORT || 8080, () => {

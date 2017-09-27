@@ -8,6 +8,7 @@ import { logOutUser, updateProfilePic, loadUserData } from '../actions/actions';
 
 // SOCKETIO
 import getSocket from '../utils/socketIo';
+import getPeer from '../utils/peer';
 
 // MATERIAL-UI:
 import AppBar from 'material-ui/AppBar';
@@ -41,6 +42,7 @@ class App extends Component {
     constructor( props ) {
         super( props );
         getSocket();
+        getPeer();
         this.state = {
             uploaderIsVisible: false,
             open: false,

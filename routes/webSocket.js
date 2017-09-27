@@ -33,7 +33,7 @@ io.on( 'connection', ( socket ) => {
         online users accordingly. Let's call this event 'userLeft'.
         */
         const disconnectedUserId = onlineUsers.filter( user => {
-            return user.uid == disconnectedUserSocket.uid;
+            return user.userId == disconnectedUserSocket.uid;
         } );
         // console.log( 'disconnectedUserId: ', disconnectedUserId );
 
@@ -45,7 +45,7 @@ io.on( 'connection', ( socket ) => {
     } );
 
     socket.on( 'chatMessage', ( messageBody ) => {
-        const messengerId = onlineUsers.find( user => user.socketId == socket.id ).uid;
+        const messengerId = onlineUsers.find( user => user.socketId == socket.id ).userId;
         console.log( `SocketIo - on: "chatMessage" - messengerId: ${messengerId} - payload:`, messageBody );
         /*  When the server receives this event, it should broadcast
         a 'chatMessage' event to all of the connected sockets.
@@ -58,10 +58,10 @@ io.on( 'connection', ( socket ) => {
 
 
     socket.on( 'chatMessagePrivate', privateMessage => {
-        const fromUserId = onlineUsers.find( user => user.socketId == socket.id ).uid;
+        const fromUserId = onlineUsers.find( user => user.socketId == socket.id ).userId;
         const { toUserId, messageBody } = privateMessage;
 
-        const toUserIdOnline = onlineUsers.find( user => user.uid == toUserId );
+        const toUserIdOnline = onlineUsers.find( user => user.userId == toUserId );
 
         const fromUserSocketId = socket.id;
         const toUserSocketId = toUserIdOnline && toUserIdOnline.socketId;
@@ -90,11 +90,19 @@ function makeSureUserIsLoggedIn( req, res, next ) {
 
 
 let onlineUsers = [];
+let mapUsersIdToPeerId = [];
 /* exemple...
 onlineUsers = [
     {
         socketId: 'wJdwDQAKhUuXxZ2vAAAA',
-        uid: 1
+        userId: 1
+    }
+];
+
+mapPeerToUsers = [
+    {
+        peerId: 'lololololllolloo',
+        userId: 1
     }
 ]
 */
@@ -117,12 +125,12 @@ router.post( '/connected/:socketId', makeSureUserIsLoggedIn, ( req, res ) => {
         /*  Every time a logged in user makes a request, push
         an object representing that user to an array after confirming that
         that user is not already in the list */
-        onlineUsers.push( { socketId, uid } );
+        onlineUsers.push( { userId: uid, socketId } );
 
         /*  When a user is added to the list of online users, the server should
         send a message to that user with the list of all online users
         as the payload: event 'onlineUsers' */
-        return db.readAllUsersByIds( onlineUsers.map( user => user.uid ) )
+        return db.readAllUsersByIds( onlineUsers.map( user => user.userId ) )
 
             .then( onlineUsers => io.sockets.sockets[ socketId ].emit( 'onlineUsers', onlineUsers ) )
 
@@ -145,7 +153,7 @@ router.post( '/connected/:socketId', makeSureUserIsLoggedIn, ( req, res ) => {
                 if ( !userAlreadyThere ) {
                     return db.readUser( uid )
                         .then( userJoined => {
-                            // FIXME: this should not be done here!!!!! 
+                            // FIXME: this should not be done here!!!!!
                             userJoined.online = true;
                             return io.sockets.emit( 'userJoined', userJoined );
                         } );
@@ -155,8 +163,71 @@ router.post( '/connected/:socketId', makeSureUserIsLoggedIn, ( req, res ) => {
             .catch( err => console.log( err ) );
     }
 } );
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+// PEER.JS ROUTES
+/*  make a route that the client can hit after the socket connects.
+    The /ws/storeIdToServer/:peerId route can then read the user's id from
+    the session and the socket id from req.params
+*/
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+router.post( '/storeIdToServer/:peerId', makeSureUserIsLoggedIn, ( req, res ) => {
+    const uid = req.session.user.uid;
+    const peerId = req.params.peerId;
+
+    const peerAlreadyThere = mapUsersIdToPeerId.find( user => user.peerId == peerId );
+    const userAlreadyThere = mapUsersIdToPeerId.find( user => user.userId == uid );
+
+    console.log( `API: method: POST /ws/storeIdToServer/:${peerId} - uid: ${uid} -
+            onlineUsers: `, onlineUsers, '\n' );
+
+    if ( !peerAlreadyThere ) {
+        /*  Every time a logged in user makes a request, push
+        an object representing that user to an array after confirming that
+        that user is not already in the list */
+        mapUsersIdToPeerId.push( { userId: uid, peerId } );
+
+        /*  When a user is added to the list of mapUsersIdToPeerId, the server should
+        send a message to that user with the list of all online users
+        as the payload: event 'onlineUsers' */
+        return db.readAllUsersByIds( mapUsersIdToPeerId.map( user => user.userId ) )
+
+            .then( onlinePeers => {
+                // find the socket that belongs to the user
+                onlineUsers.find(user=>user.userId == uid).socketId
+                return io.sockets.sockets[ socketId ].emit( 'onlinePeers', onlinePeers )
+            } )
+
+            .then( () => {
+                return db.readAllPublicMessages()
+                    .then( publicMessageList => io.sockets.sockets[ socketId ].emit( 'publicChatMessages', publicMessageList ) );
+            } )
+
+            .then( () => {
+                return db.readAllPrivateMessages( uid )
+                    .then( privateMessageList => io.sockets.sockets[ socketId ].emit( 'privateChatMessages', privateMessageList ) );
+            } )
+
+            .then( () => {
+                res.json( { success: true } );
+                /*  Also when a user is added to the list of online users,
+                the server should send a message to all online users with information
+                about the user who just came online as the payload, allowing all clients
+                to keep their list of online users updated: event 'userJoined' */
+                if ( !userAlreadyThere ) {
+                    return db.readUser( uid )
+                        .then( userJoined => {
+                            // FIXME: this should not be done here!!!!!
+                            userJoined.online = true;
+                            return io.sockets.emit( 'userJoined', userJoined );
+                        } );
+                }
+            } )
+
+            .catch( err => console.log( err ) );
+    }
+} );
 
 
 /* MODULE EXPORTS */
