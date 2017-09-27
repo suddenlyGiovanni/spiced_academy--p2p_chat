@@ -180,53 +180,53 @@ export default ( state = {}, action ) => {
 
 
     case 'ADD_ONLINE_USER':
-        {
-            const { userJoined } = action;
-            const matchingUser = state.users.find( user => user.uid === userJoined.uid );
-            if ( !matchingUser ) {
-                // then insert the new action.userJoined into the array of onlineUsers
-                const newUsers = state.users.slice();
-                newUsers.splice( ( newUsers.length ), 0, userJoined );
-                state = Object.assign( {}, state, { users: newUsers } );
-            } else {
-                // update the user and it's data in the array
-                const newUsers = state.users.map( user => {
-                    if ( user.uid !== userJoined.uid ) {
-                        // then this isn't the user i care about
-                        return user;
-                    }
+    {
+        const { userJoined } = action;
+        const matchingUser = state.users.find( user => user.uid === userJoined.uid );
+        if ( !matchingUser ) {
+            // then insert the new action.userJoined into the array of onlineUsers
+            const newUsers = state.users.slice();
+            newUsers.splice( ( newUsers.length ), 0, userJoined );
+            state = Object.assign( {}, state, { users: newUsers } );
+        } else {
+            // update the user and it's data in the array
+            const newUsers = state.users.map( user => {
+                if ( user.uid !== userJoined.uid ) {
+                    // then this isn't the user i care about
+                    return user;
+                }
 
-                    return { ...user, ...userJoined };
-                } );
-                state = Object.assign( {}, state, { users: newUsers } );
-            }
-            break;
+                return { ...user, ...userJoined };
+            } );
+            state = Object.assign( {}, state, { users: newUsers } );
         }
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        break;
+    }
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
 
 
     case 'REMOVE_ONLINE_USER':
-        {
-            const newUsers = state.users.map( user => {
-                if ( user.uid != action.offlineUserId.uid ) {
-                    // then this isn't the user i care about
-                    console.log( `REMOVE_ONLINE_USER - ${action.offlineUserId}` );
-                    return user;
-                } else {
-                    console.log( 'REMOVE_ONLINE_USER - user.uid === action.offlineUserId' );
+    {
+        const newUsers = state.users.map( user => {
+            if ( user.uid != action.offlineUserId.uid ) {
+                // then this isn't the user i care about
+                console.log( `REMOVE_ONLINE_USER - ${action.offlineUserId}` );
+                return user;
+            } else {
+                console.log( 'REMOVE_ONLINE_USER - user.uid === action.offlineUserId' );
 
-                    const newUserState = { ...user };
-                    delete newUserState.online;
-                    console.log( 'newUserState', newUserState );
-                    return newUserState;
-                }
-            } );
-            state = Object.assign( {}, state, { users: newUsers } );
-            break;
-        }
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+                const newUserState = { ...user };
+                delete newUserState.online;
+                console.log( 'newUserState', newUserState );
+                return newUserState;
+            }
+        } );
+        state = Object.assign( {}, state, { users: newUsers } );
+        break;
+    }
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
 
@@ -310,7 +310,8 @@ export default ( state = {}, action ) => {
 
 
 
-    case 'ADD_NEW_PRIVATE_MESSAGE': {
+    case 'ADD_NEW_PRIVATE_MESSAGE':
+    {
         const message = action.newPrivateMessage;
         let otherUserId;
         if ( state.user.uid === message.fromUserId ) {
@@ -342,8 +343,8 @@ export default ( state = {}, action ) => {
             state = Object.assign( {}, state, { users: newUsers } );
         } else {
             // update the user and it's data in the array
-            const newUsers = state.users.map( user =>{
-                if (user.uid !== otherUserId) {
+            const newUsers = state.users.map( user => {
+                if ( user.uid !== otherUserId ) {
                     // this isn't the user i care about
                     return user;
                 } else {
@@ -361,7 +362,7 @@ export default ( state = {}, action ) => {
                         return { ...user, privateMessages: newPrivateMessages };
                     }
                 }
-            });
+            } );
             state = Object.assign( {}, state, { users: newUsers } );
         }
         break;

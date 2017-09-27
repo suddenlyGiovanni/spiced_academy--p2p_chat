@@ -67,7 +67,7 @@ export function loadLatestUsers() {
             return {
                 type: 'LOAD_LATEST_USERS',
                 users: result.data.users
-            }
+            };
         } )
 
         .catch( err => console.log( err ) );
@@ -84,11 +84,11 @@ export function loadSearchedUsers( search ) {
             return {
                 type: 'LOAD_SEARCHED_USERS',
                 users: results.data.users
-            }
+            };
         } )
 
         .catch( err => console.log( err ) );
-};
+}
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
@@ -163,6 +163,16 @@ export function connectUser( socketId ) {
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+
+
+
+export function sendPeerIdToServer( peerId ) {
+    console.log( 'REDUX - ACTION - fn: sendPeerIdToServer' );
+    return axios.post( `/ws/storeIdToServer/${peerId}` )
+        .then( () => { return { type: 'SEND_PEERID_TO_SERVER' }; } )
+        .catch( err => console.log( err ) );
+}
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
 
