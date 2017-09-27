@@ -11,10 +11,22 @@ export default ( state = {}, action ) => {
 
 
 
-    case 'UPDATE_USER_DATA':
-        state = Object.assign( {}, state, { user: action.user } );
+    case 'UPDATE_USER_DATA': {
+        const updateUser = { ...state.user, ...action.user };
+        state = Object.assign({}, state, { user: updateUser } );
         break;
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    }
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
+
+    case 'ADD_PEERID_TO_USER_DATA': {
+        const updateUser = { ...state.user, peerId: action.peerId };
+        state = Object.assign({}, state, { user: updateUser } );
+        break;
+    }
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
 
@@ -264,23 +276,19 @@ export default ( state = {}, action ) => {
 
 
 
-    case 'REMOVE_ONLINE_USER':
-    {
+    case 'REMOVE_ONLINE_USER': {
+        console.log('inside:  REMOVE_ONLINE_USER, action :', action );
         const newUsers = state.users.map( user => {
-            if ( user.uid != action.offlineUserId.uid ) {
-                // then this isn't the user i care about
-                console.log( `REMOVE_ONLINE_USER - ${action.offlineUserId}` );
+            if ( user.uid !== action.uid ) {
                 return user;
-            } else {
-                console.log( 'REMOVE_ONLINE_USER - user.uid === action.offlineUserId' );
-
-                const newUserState = { ...user };
-                delete newUserState.online;
-                console.log( 'newUserState', newUserState );
-                return newUserState;
             }
-        } );
-        state = Object.assign( {}, state, { users: newUsers } );
+            const newUser = { ...user };
+            delete newUser.online;
+            delete newUser.peerId;
+            console.log(newUser);
+            return newUser;
+        });
+        state = Object.assign({}, state, { users: newUsers });
         break;
     }
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
