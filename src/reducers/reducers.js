@@ -122,24 +122,23 @@ export default ( state = {}, action ) => {
 
 
 
-    case 'UPDATE_FRIENDSHIP':
-        {
-            const { newFriendshipStatus } = action;
-            const matchUser = state.users.find( user => user.uid === newFriendshipStatus.toUserId );
-            if ( matchUser ) {
-                // update the user and it's data in the array
-                const newUsers = state.users.map( user => {
-                    if ( user.uid !== newFriendshipStatus.toUserId ) {
-                        // then this isn't the user i care about
-                        return user;
-                    }
-                    return { ...user, status: newFriendshipStatus.status };
-                } );
-                state = Object.assign( {}, state, { users: newUsers } );
-            }
-            break;
+    case 'UPDATE_FRIENDSHIP': {
+        const { newFriendshipStatus } = action;
+        const matchUser = state.users.find( user => user.uid === newFriendshipStatus.toUserId );
+        if ( matchUser ) {
+            // update the user and it's data in the array
+            const newUsers = state.users.map( user => {
+                if ( user.uid !== newFriendshipStatus.toUserId ) {
+                    // then this isn't the user i care about
+                    return user;
+                }
+                return { ...user, status: newFriendshipStatus.status };
+            } );
+            state = Object.assign( {}, state, { users: newUsers } );
         }
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        break;
+    }
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
 
@@ -151,7 +150,7 @@ export default ( state = {}, action ) => {
             state = Object.assign( {}, state, { users: action.onlineUsers } );
         } else {
             action.onlineUsers.map( onlineUser => {
-                const matchUser = state.users.find( user => user.uid === onlineUser );
+                const matchUser = state.users.find( user => user.uid === onlineUser.uid );
                 // matchUser return either UNDEFINED || copy of the OBJ
                 if ( !matchUser ) {
                     // then insert the new onlineUser into the array of users
@@ -176,6 +175,35 @@ export default ( state = {}, action ) => {
         }
         break;
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
+
+    case 'CREATE_ONLINE_PEERS':
+        if ( !state.users ) {
+            state = Object.assign( {}, state, { users: action.onlinePeers } );
+        } else {
+            action.onlinePeers.map( onlinePeer => {
+                const matchUser = state.users.find( user => user.uid === onlinePeer.uid );
+                if ( !matchUser ) {
+                    // then insert the new onlinePeer into the array of users
+                    const newUsers = state.users.slice();
+                    newUsers.splice( ( newUsers.length ), 0, onlinePeer );
+                    state = Object.assign( {}, state, { users: newUsers } );
+                } else {
+                    // update the user and it's data in the array
+                    const newUsers = state.users.map( user => {
+                        if ( user.uid !== onlinePeer.uid ) {
+                            // this isn't the user i care about
+                            return user;
+                        }
+                        return { ...user, ...onlinePeer };
+                    } );
+                    state = Object.assign( {}, state, { users: newUsers } );
+                }
+            } );
+        }
+        break;
 
 
 

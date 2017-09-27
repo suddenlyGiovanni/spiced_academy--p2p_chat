@@ -99,7 +99,7 @@ onlineUsers = [
     }
 ];
 
-mapPeerToUsers = [
+mapUsersIdToPeerId = [
     {
         peerId: 'lololololllolloo',
         userId: 1
@@ -176,6 +176,8 @@ router.post( '/storeIdToServer/:peerId', makeSureUserIsLoggedIn, ( req, res ) =>
     const uid = req.session.user.uid;
     const peerId = req.params.peerId;
 
+    // FIXME: eventually in the future send the peerId info to just the clients of the the user's friend
+
     const peerAlreadyThere = mapUsersIdToPeerId.find( user => user.peerId == peerId );
     const userAlreadyThere = mapUsersIdToPeerId.find( user => user.userId == uid );
 
@@ -189,24 +191,19 @@ router.post( '/storeIdToServer/:peerId', makeSureUserIsLoggedIn, ( req, res ) =>
         mapUsersIdToPeerId.push( { userId: uid, peerId } );
 
         /*  When a user is added to the list of mapUsersIdToPeerId, the server should
-        send a message to that user with the list of all online users
+        send a message to that user with the list of all online users linked to their peerId
         as the payload: event 'onlineUsers' */
         return db.readAllUsersByIds( mapUsersIdToPeerId.map( user => user.userId ) )
 
             .then( onlinePeers => {
                 // find the socket that belongs to the user
-                onlineUsers.find(user=>user.userId == uid).socketId
-                return io.sockets.sockets[ socketId ].emit( 'onlinePeers', onlinePeers )
-            } )
-
-            .then( () => {
-                return db.readAllPublicMessages()
-                    .then( publicMessageList => io.sockets.sockets[ socketId ].emit( 'publicChatMessages', publicMessageList ) );
-            } )
-
-            .then( () => {
-                return db.readAllPrivateMessages( uid )
-                    .then( privateMessageList => io.sockets.sockets[ socketId ].emit( 'privateChatMessages', privateMessageList ) );
+                const socketId = onlineUsers.find( user => user.userId == uid ).socketId;
+                // set update the user list with their respecting peerId
+                const updatedUsers = onlinePeers.map( user => {
+                    const peerIdToAdd = mapUsersIdToPeerId.find( peer => peer.userId === user.uid ).peerId;
+                    return { ...user, peerId: peerIdToAdd };
+                } );
+                return io.sockets.sockets[ socketId ].emit( 'onlinePeers', updatedUsers );
             } )
 
             .then( () => {
@@ -217,10 +214,10 @@ router.post( '/storeIdToServer/:peerId', makeSureUserIsLoggedIn, ( req, res ) =>
                 to keep their list of online users updated: event 'userJoined' */
                 if ( !userAlreadyThere ) {
                     return db.readUser( uid )
-                        .then( userJoined => {
+                        .then( userData => {
                             // FIXME: this should not be done here!!!!!
-                            userJoined.online = true;
-                            return io.sockets.emit( 'userJoined', userJoined );
+                            userData.peerId = peerId;
+                            return io.sockets.emit( 'peerJoined', userData );
                         } );
                 }
             } )
