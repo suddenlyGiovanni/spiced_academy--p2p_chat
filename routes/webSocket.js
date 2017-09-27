@@ -216,8 +216,8 @@ router.post( '/storeIdToServer/:peerId', makeSureUserIsLoggedIn, ( req, res ) =>
                     return db.readUser( uid )
                         .then( userData => {
                             // FIXME: this should not be done here!!!!!
-                            userData.peerId = peerId;
-                            return io.sockets.emit( 'peerJoined', userData );
+                            // userData.peerId = peerId;
+                            return io.sockets.emit( 'peerJoined', { ...userData, peerId: peerId } );
                         } );
                 }
             } )

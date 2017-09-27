@@ -122,7 +122,8 @@ export default ( state = {}, action ) => {
 
 
 
-    case 'UPDATE_FRIENDSHIP': {
+    case 'UPDATE_FRIENDSHIP':
+    {
         const { newFriendshipStatus } = action;
         const matchUser = state.users.find( user => user.uid === newFriendshipStatus.toUserId );
         if ( matchUser ) {
@@ -204,6 +205,8 @@ export default ( state = {}, action ) => {
             } );
         }
         break;
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 
 
 
@@ -223,14 +226,40 @@ export default ( state = {}, action ) => {
                     // then this isn't the user i care about
                     return user;
                 }
-
                 return { ...user, ...userJoined };
             } );
             state = Object.assign( {}, state, { users: newUsers } );
         }
         break;
     }
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
+
+    case 'ADD_ONLINE_PEER':
+    {
+        const { peerJoined } = action;
+        const matchUser = state.users.find( user => user.uid === peerJoined.uid );
+        if ( !matchUser ) {
+            // then insert the new action.peerJoined into the array of users
+            const newUsers = state.users.slice();
+            newUsers.splice( ( newUsers.length ), 0, peerJoined );
+            state = Object.assign( {}, state, { users: newUsers } );
+        } else {
+            // update the user and it's data in the array
+            const newUsers = state.users.map( user => {
+                if ( user.uid !== peerJoined.uid ) {
+                    // then this isn't the user i care about
+                    return user;
+                }
+                return { ...user, ...peerJoined };
+            } );
+            state = Object.assign( {}, state, { users: newUsers } );
+        }
+        break;
+    }
+
 
 
 
