@@ -176,6 +176,7 @@ export function sendPeerIdToServer( peerId ) {
 
 
 
+
 export function createOnlineUsers( onlineUsers ) {
     console.log( 'REDUX - ACTION - fn: createOnlineUsers' );
     return {
@@ -188,11 +189,35 @@ export function createOnlineUsers( onlineUsers ) {
 
 
 
+export function createOnlinePeers( onlinePeers ) {
+    console.log( 'REDUX - ACTION - fn: createOnlinePeers' );
+    return {
+        type: 'CREATE_ONLINE_PEERS',
+        onlinePeers
+    };
+}
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
+
 export function addOnlineUser( userJoined ) {
     console.log( 'REDUX - ACTION - fn: addOnlineUser' );
     return {
         type: 'ADD_ONLINE_USER',
         userJoined
+    };
+}
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
+
+export function addOnlinePeer( peerJoined ) {
+    console.log( 'REDUX - ACTION - fn: addOnlinePeer' );
+    return {
+        type: 'ADD_ONLINE_PEER',
+        peerJoined
     };
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
