@@ -33,13 +33,15 @@ io.on( 'connection', ( socket ) => {
         online users accordingly. Let's call this event 'userLeft'.
         */
         const disconnectedUserId = onlineUsers.filter( user => {
-            return user.userId == disconnectedUserSocket.uid;
+            // remember that filter return an array
+            return user.userId == disconnectedUserSocket.userId;
         } );
         // console.log( 'disconnectedUserId: ', disconnectedUserId );
 
         if ( disconnectedUserId.length === 0 ) {
-            // console.log(`last user with id ${disconnectedUserSocket.uid} has gone offline`);
-            io.sockets.emit( 'userLeft', { uid: disconnectedUserSocket.uid } );
+            const userId = disconnectedUserSocket.userId;
+            console.log(`last user with id ${userId} has gone offline`);
+            io.sockets.emit( 'userLeft', userId );
         }
 
     } );

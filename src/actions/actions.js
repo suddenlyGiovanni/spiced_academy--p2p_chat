@@ -169,7 +169,9 @@ export function connectUser( socketId ) {
 export function sendPeerIdToServer( peerId ) {
     console.log( 'REDUX - ACTION - fn: sendPeerIdToServer' );
     return axios.post( `/ws/storeIdToServer/${peerId}` )
-        .then( () => { return { type: 'SEND_PEERID_TO_SERVER' }; } )
+        .then( () => {
+            return { type: 'ADD_PEERID_TO_USER_DATA', peerId };
+        } )
         .catch( err => console.log( err ) );
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -226,10 +228,10 @@ export function addOnlinePeer( peerJoined ) {
 
 
 export function removeOnlineUser( uid ) {
-    console.log( 'REDUX - ACTION - fn: removeOnlineUser' );
+    console.log( 'REDUX - ACTION - fn: removeOnlineUser - uid:', uid );
     return {
         type: 'REMOVE_ONLINE_USER',
-        offlineUserId: uid
+        uid
     };
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
