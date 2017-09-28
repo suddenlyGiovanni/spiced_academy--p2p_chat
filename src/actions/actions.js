@@ -299,4 +299,15 @@ export function persistOtherUid( otherUid ) {
 
 
 
+export function passPeerToAction(peerObj) {
+    console.log( 'REDUX - ACTION - fn: passPeerToAction - peerObj:', peerObj );
+    return;
+}
+
+
+
+export function peerConnect( peerId ) {
+    console.log( 'REDUX - ACTION - fn: peerConnect' );
+    return;
+}
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

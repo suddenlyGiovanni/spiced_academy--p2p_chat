@@ -79,6 +79,14 @@ app.use( '/ws/', require( './routes/webSocket' ) );
 
 // PEERJS ROUTING
 app.use( '/peerjs', ExpressPeerServer( server, options ) );
+
+// if no route match then..
+app.get( '*', function ( req, res ) {
+    res.sendFile( path.join( __dirname, 'index.html' ) );
+} );
+
+
+
 // PEERJS EVENTS LISTENING
 server.on( 'connection', peer => {
     console.log( 'Peerjs - server - Event - "connection" - id:', peer.id );
@@ -86,6 +94,7 @@ server.on( 'connection', peer => {
 server.on( 'disconnect', peer => {
     console.log( 'Peerjs - server - Event - "disconnect" - id:', peer.id );
 } );
+
 
 
 // ERROR:
@@ -108,10 +117,6 @@ app.use( ( err, req, res, next ) => {
 } );
 // _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-// if no route match then..
-app.get( '*', function ( req, res ) {
-    res.sendFile( path.join( __dirname, 'index.html' ) );
-} );
 
 // SERVER ______________________________________________________________________
 const listener = server.listen( process.env.PORT || 8080, () => {

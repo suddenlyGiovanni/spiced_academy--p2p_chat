@@ -1,6 +1,5 @@
 import React from 'react';
-import ProfilePicOther from './profilePicOther';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 
 
 // MATERIAL-UI
@@ -11,8 +10,8 @@ import Divider from 'material-ui/Divider';
 
 const handleTouchOnlineFriend = ( uid ) => {
     console.log( 'OnlineFriend - fn: handleTouchOnlineFriend' );
-    browserHistory.push( `/chat/private/${uid}` );
-}
+    browserHistory.push( `/chat/secure/${uid}` );
+};
 
 const OnlineFriend = props => {
     console.log( 'OnlineFriend - RENDER - this.props: ', props );
@@ -40,7 +39,7 @@ const OnlineFriend = props => {
 
     return (
         <List>
-            <Subheader>OnlineFriend</Subheader>
+            <Subheader>Online Friends you can secure chat with:</Subheader>
             {listOnlineFriends}
         </List>
     );
