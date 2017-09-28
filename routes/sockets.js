@@ -8,7 +8,7 @@ const router = require( 'express' ).Router(),
 // define constructor function that gets `io` send to it
 // function( io ) {
 // };
-io.on( 'connection',  socket => {
+io.on( 'connection', socket => {
     console.log( `socket with the id ${socket.id} is now connected` );
 
     socket.on( 'disconnect', () => {
@@ -24,10 +24,10 @@ io.on( 'connection',  socket => {
 
         let userId;
 
-        for (let uid in onlineUsers) {
-            const socketIds = onlineUsers[uid].socketId;
-            const matchSocket = socketIds.find( socketId=> socketId === socket.id );
-            if (matchSocket) {
+        for ( let uid in onlineUsers ) {
+            const socketIds = onlineUsers[ uid ].socketId;
+            const matchSocket = socketIds.find( socketId => socketId === socket.id );
+            if ( matchSocket ) {
                 userId = uid;
             }
         }
@@ -35,9 +35,9 @@ io.on( 'connection',  socket => {
 
         // onlineUsers.splice( onlineUsers.indexOf( disconnectedUserSocket ), 1 );
 
-        const socketIds = onlineUsers[userId].socketId;
-        socketIds.splice(socketIds.indexOf(socket.id), 1);
-        onlineUsers[userId].socketId = socketIds;
+        const socketIds = onlineUsers[ userId ].socketId;
+        socketIds.splice( socketIds.indexOf( socket.id ), 1 );
+        onlineUsers[ userId ].socketId = socketIds;
 
 
         // console.log( 'onlineUsers - after removing disconnectedUserSocket: ', onlineUsers );
@@ -55,9 +55,9 @@ io.on( 'connection',  socket => {
         // } );
         // console.log( 'disconnectedUserId: ', disconnectedUserId );
 
-        if ( onlineUsers[userId].socketId.length === 0) {
+        if ( onlineUsers[ userId ].socketId.length === 0 ) {
             // const userId = disconnectedUserSocket.userId;
-            console.log(`last user with id ${userId} has gone offline`);
+            console.log( `last user with id ${userId} has gone offline` );
             io.sockets.emit( 'userLeft', userId );
         }
 
@@ -65,10 +65,10 @@ io.on( 'connection',  socket => {
 
     socket.on( 'chatMessage', messageBody => {
         let userId;
-        for (let uid in onlineUsers) {
-            const socketIds = onlineUsers[uid].socketId;
-            const matchSocket = socketIds.find( socketId=> socketId === socket.id );
-            if (matchSocket) {
+        for ( let uid in onlineUsers ) {
+            const socketIds = onlineUsers[ uid ].socketId;
+            const matchSocket = socketIds.find( socketId => socketId === socket.id );
+            if ( matchSocket ) {
                 userId = uid;
             }
         }
@@ -86,10 +86,10 @@ io.on( 'connection',  socket => {
 
     socket.on( 'chatMessagePrivate', privateMessage => {
         let fromUserId;
-        for (let uid in onlineUsers) {
-            const socketIds = onlineUsers[uid].socketId;
-            const matchSocket = socketIds.find( socketId=> socketId === socket.id );
-            if (matchSocket) {
+        for ( let uid in onlineUsers ) {
+            const socketIds = onlineUsers[ uid ].socketId;
+            const matchSocket = socketIds.find( socketId => socketId === socket.id );
+            if ( matchSocket ) {
                 fromUserId = uid;
             }
         }
@@ -97,11 +97,11 @@ io.on( 'connection',  socket => {
         const { toUserId, messageBody } = privateMessage;
 
         // const toUserIdOnline = onlineUsers.find( user => user.userId == toUserId );
-        const toUserIdOnline = Object.keys(onlineUsers).find( userId => userId == toUserId );
+        const toUserIdOnline = Object.keys( onlineUsers ).find( userId => userId == toUserId );
 
 
         const fromUserSocketId = socket.id;
-        const toUserSocketId = toUserIdOnline && onlineUsers[toUserIdOnline].socketId.slice(-1)[0];
+        const toUserSocketId = toUserIdOnline && onlineUsers[ toUserIdOnline ].socketId.slice( -1 )[ 0 ];
 
         console.log( `SocketIo - on: "chatMessagePrivate"
         - fromUserId: ${fromUserId} - toUserId: ${toUserId}
@@ -153,9 +153,9 @@ router.post( '/connected/:socketId', makeSureUserIsLoggedIn, ( req, res ) => {
     const socketId = req.params.socketId;
 
     // const socketAlreadyThere = onlineUsers.find( user => user.socketId == socketId );
-    const socketAlreadyThere = onlineUsers[uid].socketId.find(socket => socket == socketId);
+    const socketAlreadyThere = onlineUsers[ uid ].socketId.find( socket => socket == socketId );
     // const userAlreadyThere = onlineUsers.find( user => user.userId == uid );
-    const userAlreadyThere = onlineUsers.hasOwnProperty(uid);
+    const userAlreadyThere = onlineUsers.hasOwnProperty( uid );
 
     console.log( `API: method: POST /ws/connected/:${socketId} - uid: ${uid} -
         onlineUsers: `, onlineUsers, '\n' );
@@ -167,19 +167,19 @@ router.post( '/connected/:socketId', makeSureUserIsLoggedIn, ( req, res ) => {
 
         // onlineUsers.push( { userId: uid, socketId } );
         const newOnlineUsers = { ...onlineUsers };
-        newOnlineUsers[uid] = {
+        newOnlineUsers[ uid ] = {
             userId: uid,
-            socketId:[
+            socketId: [
                 socketId
             ]
         };
-        onlineUsers = Object.assign({}, onlineUsers,  newOnlineUsers );
+        onlineUsers = Object.assign( {}, onlineUsers, newOnlineUsers );
 
         /*  When a user is added to the list of online users, the server should
         send a message to that user with the list of all online users
         as the payload: event 'onlineUsers' */
 
-        return db.readAllUsersByIds( Object.keys(onlineUsers) )
+        return db.readAllUsersByIds( Object.keys( onlineUsers ) )
 
             .then( onlineUsers => io.sockets.sockets[ socketId ].emit( 'onlineUsers', onlineUsers ) )
 
@@ -227,8 +227,10 @@ router.post( '/storeIdToServer/:peerId', makeSureUserIsLoggedIn, ( req, res ) =>
 
     // FIXME: eventually in the future send the peerId info to just the clients of the the user's friend
 
-    const peerAlreadyThere = mapUsersIdToPeerId.find( user => user.peerId == peerId );
-    const userAlreadyThere = mapUsersIdToPeerId.find( user => user.userId == uid );
+    // const peerAlreadyThere = mapUsersIdToPeerId.find( user => user.peerId == peerId );
+    const peerAlreadyThere = onlineUsers[ uid ] && onlineUsers[ uid ].peerId === peerId;
+    // const userAlreadyThere = mapUsersIdToPeerId.find( user => user.userId == uid );
+    const userAlreadyThere = onlineUsers.hasOwnProperty( uid );
 
     console.log( `API: method: POST /ws/storeIdToServer/:${peerId} - uid: ${uid} -
             onlineUsers: `, onlineUsers, '\n' );
@@ -237,20 +239,31 @@ router.post( '/storeIdToServer/:peerId', makeSureUserIsLoggedIn, ( req, res ) =>
         /*  Every time a logged in user makes a request, push
         an object representing that user to an array after confirming that
         that user is not already in the list */
-        mapUsersIdToPeerId.push( { userId: uid, peerId } );
+        // mapUsersIdToPeerId.push( { userId: uid, peerId } );
+        const newOnlineUsers = { ...onlineUsers };
+        newOnlineUsers[ uid ].peerId = peerId;
+
+
+        onlineUsers = Object.assign( {}, onlineUsers, newOnlineUsers );
 
         /*  When a user is added to the list of mapUsersIdToPeerId, the server should
         send a message to that user with the list of all online users linked to their peerId
         as the payload: event 'onlineUsers' */
-        return db.readAllUsersByIds( mapUsersIdToPeerId.map( user => user.userId ) )
+        return db.readAllUsersByIds( Object.keys( onlineUsers ) )
 
             .then( onlinePeers => {
                 // find the socket that belongs to the user
-                const socketId = onlineUsers.find( user => user.userId == uid ).socketId;
+                // const socketId = onlineUsers.find( user => user.userId == uid ).socketId;
+                const socketId = onlineUsers[ uid ].socketId.slice( -1 )[ 0 ];
+
                 // set update the user list with their respecting peerId
                 const updatedUsers = onlinePeers.map( user => {
-                    const peerIdToAdd = mapUsersIdToPeerId.find( peer => peer.userId === user.uid ).peerId;
-                    return { ...user, peerId: peerIdToAdd };
+                    // const peerIdToAdd = mapUsersIdToPeerId.find( peer => peer.userId === user.uid ).peerId;
+                    for ( let uid in onlineUsers ) {
+                        if ( uid == user.uid ) {
+                            return { ...user, peerId: onlineUsers[ uid ].peerId };
+                        }
+                    }
                 } );
                 return io.sockets.sockets[ socketId ].emit( 'onlinePeers', updatedUsers );
             } )
