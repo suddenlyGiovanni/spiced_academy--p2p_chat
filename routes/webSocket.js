@@ -39,6 +39,10 @@ io.on( 'connection', socket => {
             }
         }
 
+        if ( !onlineUsers[ userId ] ) {
+            return
+        }
+
         const socketIdIndex = onlineUsers[ userId ].socketIds.indexOf( socket.id );
         onlineUsers[ userId ].socketIds.splice( socketIdIndex, 1 );
 
@@ -53,7 +57,7 @@ io.on( 'connection', socket => {
         online users accordingly. Let's call this event 'userLeft'.
         */
 
-        if ( onlineUsers[ userId ].socketId.length === 0 ) {
+        if ( onlineUsers[ userId ].socketIds.length === 0 ) {
             console.log( `last user with id ${userId} has gone offline` );
             io.sockets.emit( 'userLeft', userId );
             delete onlineUsers[ userId ];
@@ -129,31 +133,31 @@ function makeSureUserIsLoggedIn( req, res, next ) {
 router.post( '/connected/:socketId', makeSureUserIsLoggedIn, ( req, res ) => {
     const uid = req.session.user.uid;
     const socketId = req.params.socketId;
-
-    const socketAlreadyThere = onlineUsers[ uid ].socketIds.find( socket => socket == socketId );
-    const userAlreadyThere = onlineUsers.hasOwnProperty( uid ); // resolve to either true || false
-
     console.log( `API: method: POST /ws/connected/:${socketId} - uid: ${uid} -
         onlineUsers: `, onlineUsers, '\n' );
+    let userAlreadyThere = true;
+    if ( !onlineUsers[ uid ] ) {
+        userAlreadyThere = false;
+        onlineUsers[ uid ] = {
+            socketIds: [ socketId ]
+        };
+    }
+
+    const socketAlreadyThere = onlineUsers[ uid ].socketIds.find( socket => socket == socketId );
 
     /*  Every time a logged in user makes a request, push
     an object representing that user to an array after confirming that
     that user is not already in the list */
 
     // if the obj with key of uid is present => then update it's property
-    if ( !onlineUsers.hasOwnProperty( uid ) ) {
-        // then create a new obj witch key is uid and has an array of socketsIds with his own socketId
-        onlineUsers[ uid ] = {
-            socketIds: [ socketId ]
-        };
-    } else if ( onlineUsers.hasOwnProperty( uid ) ) {
-        // if the obj with key of uid is present => then update it's property
-        // if the socket is not in the user's socketsIds list, than add it to he list.
-        if ( !socketAlreadyThere && io.sockets.sockets[ socketId ] ) {
-            onlineUsers[ uid ].socketIds.push( socketId );
-        }
-        // else, there can't be any sockets ids duplication's, so break
+
+    // if the obj with key of uid is present => then update it's property
+    // if the socket is not in the user's socketsIds list, than add it to he list.
+    if ( !socketAlreadyThere && io.sockets.sockets[ socketId ] ) {
+        onlineUsers[ uid ].socketIds.push( socketId );
     }
+    // else, there can't be any sockets ids duplication's, so break
+
 
     // THEN SEND the list of all online users TO THE USER HIMSELF
     /*  When a user is added to the list of online users, the server should
@@ -209,7 +213,7 @@ router.post( '/storeIdToServer/:peerId', makeSureUserIsLoggedIn, ( req, res ) =>
     // const peerAlreadyThere = mapUsersIdToPeerId.find( user => user.peerId == peerId );
     const peerAlreadyThere = onlineUsers[ uid ].peerId === peerId;
     // const userAlreadyThere = mapUsersIdToPeerId.find( user => user.userId == uid );
-    const userAlreadyThere = onlineUsers.hasOwnProperty( uid );
+    // const userAlreadyThere = onlineUsers.hasOwnProperty( uid );
 
     console.log( `API: method: POST /ws/storeIdToServer/:${peerId} - uid: ${uid} -
             onlineUsers: `, onlineUsers, '\n' );
@@ -257,14 +261,13 @@ router.post( '/storeIdToServer/:peerId', makeSureUserIsLoggedIn, ( req, res ) =>
             the server should send a message to all online users with information
             about the user who just came online as the payload, allowing all clients
             to keep their list of online users updated: event 'userJoined' */
-            if ( !userAlreadyThere ) {
-                return db.readUser( uid )
-                    .then( userData => {
-                        // FIXME: this should not be done here!!!!!
-                        // userData.peerId = peerId;
-                        return io.sockets.emit( 'peerJoined', { ...userData, peerId: peerId } );
-                    } );
-            }
+            return db.readUser( uid )
+                .then( userData => {
+                    // FIXME: this should not be done here!!!!!
+                    // userData.peerId = peerId;
+                    return io.sockets.emit( 'peerJoined', { ...userData, peerId: peerId } );
+                } );
+
         } )
 
         .catch( err => console.log( err ) );
