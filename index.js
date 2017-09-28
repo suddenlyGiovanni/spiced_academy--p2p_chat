@@ -60,10 +60,10 @@ app.use( express.static( path.join( __dirname, '/public' ) ) );
 
 
 // CSURF
-app.use( csrf() );
+// app.use( csrf() );
 
 app.use( ( req, res, next ) => {
-    res.cookie( '__csrf__', req.csrfToken() );
+    // res.cookie( '__csrf__', req.csrfToken() );
     next();
 } );
 // _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
@@ -103,6 +103,7 @@ app.use( ( err, req, res, next ) => {
 
     // render the error page
     res.status( err.status || 500 );
+    console.log(err);
     res.send( 'error' );
 } );
 // _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
