@@ -19,10 +19,27 @@ io.on( 'connection',  socket => {
         it is important to only remove the item from the list that has the
         matching socket id when 'disconnect' event occurs
         */
-        const disconnectedUserSocket = onlineUsers.find( user => user.socketId == socket.id );
+        // const disconnectedUserSocket = onlineUsers.find( user => user.socketId == socket.id );
         // console.log( 'disconnectedUserSocket: ', disconnectedUserSocket );
 
-        onlineUsers.splice( onlineUsers.indexOf( disconnectedUserSocket ), 1 );
+        let userId;
+
+        for (let uid in onlineUsers) {
+            const socketIds = onlineUsers[uid].socketId;
+            const matchSocket = socketIds.find( socketId=> socketId === socket.id );
+            if (matchSocket) {
+                userId = uid;
+            }
+        }
+
+
+        // onlineUsers.splice( onlineUsers.indexOf( disconnectedUserSocket ), 1 );
+
+        const socketIds = onlineUsers[userId].socketId;
+        socketIds.splice(socketIds.indexOf(socket.id), 1);
+        onlineUsers[userId].socketId = socketIds;
+
+
         // console.log( 'onlineUsers - after removing disconnectedUserSocket: ', onlineUsers );
         /*
         When a user disconnects, after removing the user with the id of the
@@ -32,41 +49,59 @@ io.on( 'connection',  socket => {
         disconnected user in the payload so that they can update their lists of
         online users accordingly. Let's call this event 'userLeft'.
         */
-        const disconnectedUserId = onlineUsers.filter( user => {
-            // remember that filter return an array
-            return user.userId == disconnectedUserSocket.userId;
-        } );
+        // const disconnectedUserId = onlineUsers.filter( user => {
+        //     // remember that filter return an array
+        //     return user.userId == disconnectedUserSocket.userId;
+        // } );
         // console.log( 'disconnectedUserId: ', disconnectedUserId );
 
-        if ( disconnectedUserId.length === 0 ) {
-            const userId = disconnectedUserSocket.userId;
+        if ( onlineUsers[userId].socketId.length === 0) {
+            // const userId = disconnectedUserSocket.userId;
             console.log(`last user with id ${userId} has gone offline`);
             io.sockets.emit( 'userLeft', userId );
         }
 
     } );
 
-    socket.on( 'chatMessage', ( messageBody ) => {
-        const messengerId = onlineUsers.find( user => user.socketId == socket.id ).userId;
-        console.log( `SocketIo - on: "chatMessage" - messengerId: ${messengerId} - payload:`, messageBody );
+    socket.on( 'chatMessage', messageBody => {
+        let userId;
+        for (let uid in onlineUsers) {
+            const socketIds = onlineUsers[uid].socketId;
+            const matchSocket = socketIds.find( socketId=> socketId === socket.id );
+            if (matchSocket) {
+                userId = uid;
+            }
+        }
+
+        console.log( `SocketIo - on: "chatMessage" - messengerId: ${userId} - payload:`, messageBody );
         /*  When the server receives this event, it should broadcast
         a 'chatMessage' event to all of the connected sockets.
         The payload for this event should include the message the user sent
         as well as the user's id, first name, last name, and profile pic.*/
-        return db.createPublicMessage( messengerId, messageBody )
+        return db.createPublicMessage( userId, messageBody )
             .then( newPublicMessage => io.sockets.emit( 'chatMessage', newPublicMessage ) )
             .catch( err => console.error( err.stack ) );
     } );
 
 
     socket.on( 'chatMessagePrivate', privateMessage => {
-        const fromUserId = onlineUsers.find( user => user.socketId == socket.id ).userId;
+        let fromUserId;
+        for (let uid in onlineUsers) {
+            const socketIds = onlineUsers[uid].socketId;
+            const matchSocket = socketIds.find( socketId=> socketId === socket.id );
+            if (matchSocket) {
+                fromUserId = uid;
+            }
+        }
+        // const fromUserId = onlineUsers.find( user => user.socketId == socket.id ).userId;
         const { toUserId, messageBody } = privateMessage;
 
-        const toUserIdOnline = onlineUsers.find( user => user.userId == toUserId );
+        // const toUserIdOnline = onlineUsers.find( user => user.userId == toUserId );
+        const toUserIdOnline = Object.keys(onlineUsers).find( userId => userId == toUserId );
+
 
         const fromUserSocketId = socket.id;
-        const toUserSocketId = toUserIdOnline && toUserIdOnline.socketId;
+        const toUserSocketId = toUserIdOnline && onlineUsers[toUserIdOnline].socketId.slice(-1)[0];
 
         console.log( `SocketIo - on: "chatMessagePrivate"
         - fromUserId: ${fromUserId} - toUserId: ${toUserId}
@@ -94,12 +129,12 @@ function makeSureUserIsLoggedIn( req, res, next ) {
 let onlineUsers = [];
 let mapUsersIdToPeerId = [];
 /* exemple...
-onlineUsers = [
-    {
-        socketId: 'wJdwDQAKhUuXxZ2vAAAA',
-        userId: 1
+onlineUsers = {
+    uid:{
+        socketId: ['wJdwDQAKhUuXxZ2vAAAA', 'yolloyllyo'],
+        peerId: 'lololololllolloo',
     }
-];
+}
 
 mapUsersIdToPeerId = [
     {
@@ -117,8 +152,10 @@ router.post( '/connected/:socketId', makeSureUserIsLoggedIn, ( req, res ) => {
     const uid = req.session.user.uid;
     const socketId = req.params.socketId;
 
-    const socketAlreadyThere = onlineUsers.find( user => user.socketId == socketId );
-    const userAlreadyThere = onlineUsers.find( user => user.userId == uid );
+    // const socketAlreadyThere = onlineUsers.find( user => user.socketId == socketId );
+    const socketAlreadyThere = onlineUsers[uid].socketId.find(socket => socket == socketId);
+    // const userAlreadyThere = onlineUsers.find( user => user.userId == uid );
+    const userAlreadyThere = onlineUsers.hasOwnProperty(uid);
 
     console.log( `API: method: POST /ws/connected/:${socketId} - uid: ${uid} -
         onlineUsers: `, onlineUsers, '\n' );
@@ -127,12 +164,22 @@ router.post( '/connected/:socketId', makeSureUserIsLoggedIn, ( req, res ) => {
         /*  Every time a logged in user makes a request, push
         an object representing that user to an array after confirming that
         that user is not already in the list */
-        onlineUsers.push( { userId: uid, socketId } );
+
+        // onlineUsers.push( { userId: uid, socketId } );
+        const newOnlineUsers = { ...onlineUsers };
+        newOnlineUsers[uid] = {
+            userId: uid,
+            socketId:[
+                socketId
+            ]
+        };
+        onlineUsers = Object.assign({}, onlineUsers,  newOnlineUsers );
 
         /*  When a user is added to the list of online users, the server should
         send a message to that user with the list of all online users
         as the payload: event 'onlineUsers' */
-        return db.readAllUsersByIds( onlineUsers.map( user => user.userId ) )
+
+        return db.readAllUsersByIds( Object.keys(onlineUsers) )
 
             .then( onlineUsers => io.sockets.sockets[ socketId ].emit( 'onlineUsers', onlineUsers ) )
 
