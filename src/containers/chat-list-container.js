@@ -9,6 +9,8 @@ import { List, ListItem } from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
 
+// MATERIAL-UI
+import SocialPublic from 'material-ui/svg-icons/social/public';
 
 class ChatListContainer extends Component {
     constructor( props ) {
@@ -56,6 +58,7 @@ class ChatListContainer extends Component {
                     <Subheader>Global chat</Subheader>
                     <ListItem
                         primaryText='Public Chat Room'
+                        leftAvatar={<SocialPublic />}
                         onClick={ () => this.handleTouchConversationGlobal() }
                     />
                     <Divider inset={true} />

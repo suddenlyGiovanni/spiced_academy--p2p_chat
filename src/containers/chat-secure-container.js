@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ChatPrivate from '../components/chat-private';
 import { store } from '../shell';
-import { persistOtherUid } from '../actions/actions';
+import { persistOtherUid, peerConnect } from '../actions/actions';
 
 class ChatSecureContainer extends Component {
     constructor( props ) {
@@ -11,7 +11,9 @@ class ChatSecureContainer extends Component {
 
     componentDidMount() {
         const otherUid = this.props.routeParams.otherUid;
-        store.dispatch( persistOtherUid( otherUid ) );
+        persistOtherUid( otherUid );
+        // CHANGE THIS!!!!
+        peerConnect(otherUid)
     }
 
     render() {
@@ -44,4 +46,9 @@ const mapStateToProps = ( state ) => {
     };
 };
 
-export default connect( mapStateToProps )( ChatSecureContainer );
+const mapDispatchToProps = dispatch => ( {
+    persistOtherUid: otherUid => dispatch( persistOtherUid( otherUid ) ),
+    peerConnect: peerId => dispatch( peerConnect( peerId ) )
+} );
+
+export default connect( mapStateToProps, mapDispatchToProps )( ChatSecureContainer );

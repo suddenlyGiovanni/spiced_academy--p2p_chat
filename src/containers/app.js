@@ -4,7 +4,7 @@ import { Link, browserHistory } from 'react-router';
 
 // REDUX
 import { connect } from 'react-redux';
-import { logOutUser, updateProfilePic, loadUserData } from '../actions/actions';
+import { logOutUser, updateProfilePic, loadUserData, passPeerToAction } from '../actions/actions';
 
 // SOCKETIO
 import getSocket from '../utils/socketIo';
@@ -33,8 +33,6 @@ import SocialGroupAdd from 'material-ui/svg-icons/social/group-add';
 
 
 // MY COMPONENTS
-import Logo from '../components/logo';
-import ProfilePic from '../components/profile-pic';
 import ProfilePicUpload from '../components/profile-pic-upload';
 
 class App extends Component {
@@ -42,7 +40,10 @@ class App extends Component {
     constructor( props ) {
         super( props );
         getSocket();
-        getPeer();
+
+        const myFreshShinyPeer = getPeer();
+        console.log( 'myFreshShinyPeer', myFreshShinyPeer );
+
         this.state = {
             uploaderIsVisible: false,
             open: false,
@@ -54,6 +55,9 @@ class App extends Component {
     componentDidMount() {
         console.log( 'App - fn: componentDidMount - this.props: ', this.props );
         this.props.loadUserData();
+        const myFreshShinyPeer = getPeer();
+        console.log( 'myFreshShinyPeer', myFreshShinyPeer );
+        passPeerToAction( myFreshShinyPeer );
     }
 
     componentWillReceiveProps( nextProps ) {
@@ -244,7 +248,8 @@ const mapStateToProps = ( state ) => {
 const mapDispatchToProps = ( dispatch ) => ( {
     loadUserData: () => dispatch( loadUserData() ),
     logOutUser: () => dispatch( logOutUser() ),
-    updateProfilePic: ( formData ) => dispatch( updateProfilePic( formData ) )
+    updateProfilePic: ( formData ) => dispatch( updateProfilePic( formData ) ),
+    passPeerToAction: ( peerObj ) => dispatch( passPeerToAction( peerObj ) )
 } );
 
 export default connect( mapStateToProps, mapDispatchToProps )( App );
