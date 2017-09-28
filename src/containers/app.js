@@ -40,9 +40,7 @@ class App extends Component {
     constructor( props ) {
         super( props );
         getSocket();
-
-        const myFreshShinyPeer = getPeer();
-        console.log( 'myFreshShinyPeer', myFreshShinyPeer );
+        getPeer();
 
         this.state = {
             uploaderIsVisible: false,
@@ -55,9 +53,6 @@ class App extends Component {
     componentDidMount() {
         console.log( 'App - fn: componentDidMount - this.props: ', this.props );
         this.props.loadUserData();
-        const myFreshShinyPeer = getPeer();
-        console.log( 'myFreshShinyPeer', myFreshShinyPeer );
-        passPeerToAction( myFreshShinyPeer );
     }
 
     componentWillReceiveProps( nextProps ) {
