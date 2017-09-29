@@ -125,6 +125,32 @@ export function loadFriends() {
 
 
 
+export function requestFriendship( fromUserId, toUserId, status ) {
+
+    console.log( `REDUX - ACTION - fn: requestFriendship
+        fromUserId: ${fromUserId},
+        toUserId: ${toUserId},
+        status: ${status}` );
+
+    return axios.post( `/api/friends/${fromUserId}/${toUserId}/new`, { status: status } )
+
+        .then( result => {
+            console.log( 'REDUX - ACTION - fn: requestFriendship - data', result.data );
+            return {
+                type: 'REQUEST_FRIENDSHIP',
+                newFriendshipStatus: result.data.newFriendshipStatus
+            };
+        } )
+
+        .catch( err => {
+            console.log( err );
+            return { type: 'ERROR' };
+        } );
+}
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
 
 export function updateFriendship( fromUserId, toUserId, status ) {
 

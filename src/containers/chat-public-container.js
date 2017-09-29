@@ -14,7 +14,10 @@ class ChatPublicContainer extends Component {
                 ChatPublicContainer.js
                 {
                     this.props.publicMessages &&
-                    <ChatPublic publicMessagesList={this.props.publicMessages}/>
+                    <ChatPublic
+                        publicMessagesList={this.props.publicMessages}
+                        currentUser={this.props.currentUser}
+                    />
                 }
             </div>
         );
@@ -24,7 +27,8 @@ class ChatPublicContainer extends Component {
 const mapStateToProps = ( state ) => {
     console.log( 'ChatPublicContainer - fn: mapStateToProps' );
     return {
-        publicMessages: state.publicMessages && state.publicMessages
+        publicMessages: state.publicMessages && state.publicMessages,
+        currentUser: state.user
     };
 };
 

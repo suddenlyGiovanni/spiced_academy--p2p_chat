@@ -280,7 +280,7 @@ router.get( '/users', ( req, res ) => {
             // console.log( 'latestUsers: ', latestUsers );
             res.json( { users: latestUsers } );
         } )
-        .catch( err => console.error( err.stack ) )
+        .catch( err => console.error( err.stack ) );
 } );
 
 
@@ -293,7 +293,7 @@ router.post( '/users/search', ( req, res ) => {
     return db.readSearchedUsers( search )
         .then( searchedUsers => res.json( { users: searchedUsers } ) )
         .catch( err => console.error( err.stack ) );
-} )
+} );
 
 
 // ____________________________________________________________________________
@@ -349,7 +349,7 @@ router.get( '/friends/:fromUserId/:toUserId', ( req, res ) => {
 
 
 // C:   CREATE  -   POST    -   /api/friends/:fromUserId/:toUserId   && newStatus === 'PENDING'
-router.post( '/friends/:fromUserId/:toUserId', ( req, res ) => {
+router.post( '/friends/:fromUserId/:toUserId/new', ( req, res ) => {
     const fromUserId = req.params.fromUserId;
     const toUserId = req.params.toUserId;
     const status = req.body.status;
@@ -383,6 +383,8 @@ router.put( '/friends/:fromUserId/:toUserId', ( req, res ) => {
         status === 'ACCEPTED' ||
         status === 'CANCELED' ||
         status === 'TERMINATED' ) {
+
+        console.log('WE ARE IN THIS B!', status, fromUserId, toUserId );
 
         return db.updateFriendshipStatus( fromUserId, toUserId, status )
 
