@@ -427,11 +427,15 @@ module.exports.createFriendshipReq = ( fromUserId, toUserId, status ) => {
     const query = `INSERT INTO friendships
                     ("fromUserId", "toUserId", status)
                     VALUES ($1, $2, $3)
-                    RETURNING "fId", "fromUserId", status, "toUserId";`;
+                    RETURNING fid, "fromUserId", status, "toUserId";`;
 
     return db.query( query, [ fromUserId, toUserId, status ] )
 
-        .then( result => Object.assign( result.rows[ 0 ], { success: true } ) )
+        .then( result => {
+            const toReturn = Object.assign( result.rows[ 0 ], { success: true } );
+            console.log(toReturn);
+            return toReturn;
+        } )
 
         .catch( err => console.error( err.stack ) );
 };
@@ -442,7 +446,7 @@ module.exports.createFriendshipReq = ( fromUserId, toUserId, status ) => {
 
 // UPDATE FREINDSHIP STATUS between fromUserId AND toUserId_ _ _ _ _ _ _ _ _ _ _
 module.exports.updateFriendshipStatus = ( fromUserId, toUserId, status ) => {
-    console.log( 'dbQuery.js - fn: "updateFriendshipStatus"' );
+    console.log( 'dbQuery.js - fn: "updateFriendshipStatus" fromUserId:', fromUserId, toUserId, status  );
 
     const query = ` UPDATE friendships
                     SET "fromUserId" = $1,
@@ -455,9 +459,14 @@ module.exports.updateFriendshipStatus = ( fromUserId, toUserId, status ) => {
 
     return db.query( query, [ fromUserId, toUserId, status ] )
 
-        .then( result => Object.assign( result.rows[ 0 ], { success: true } ) )
+        .then( result => {
+            console.log('result.rows: ', result.rows);
+            const wtf = Object.assign( result.rows[ 0 ], { success: true } );
+            console.log('wtf: ',wtf);
+            return wtf
+        })
 
-        .catch( err => console.error( err.stack ) );
+        .catch( err => console.error( "wtf is goin on", err.stack ) );
 };
 // _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
