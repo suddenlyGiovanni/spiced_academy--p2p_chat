@@ -109,25 +109,31 @@ export default ( state = {}, action ) => {
 
     case 'LOAD_FRIENDS':
         // save the up to date data to the array of users
-        action.friends.map( friend => {
-            const matchUser = state.users.find( user => user.uid === friend.uid );
-            // matchUser return either UNDEFINED || copy of the OBJ
-            if ( !matchUser ) {
-                // then insert the new friend into the array of users
-                const newUsers = state.users.slice();
-                newUsers.splice( ( newUsers.length ), 0, friend );
-                state = Object.assign( {}, state, { users: newUsers } );
-            } else {
-                const newUsers = state.users.map( user => {
-                    if ( user.uid !== friend.uid ) {
-                        // this isn't the user i care about
-                        return user;
-                    }
-                    return { ...user, ...friend };
-                } );
-                state = Object.assign( {}, state, { users: newUsers } );
-            }
-        } );
+
+        if (!state.users) {
+            // add the friends to the users directly
+            state = Object.assign( {}, state, { users: action.friends } );
+        } else {
+            action.friends.map( friend => {
+                const matchUser = state.users.find( user => user.uid === friend.uid );
+                // matchUser return either UNDEFINED || copy of the OBJ
+                if ( !matchUser ) {
+                    // then insert the new friend into the array of users
+                    const newUsers = state.users.slice();
+                    newUsers.splice( ( newUsers.length ), 0, friend );
+                    state = Object.assign( {}, state, { users: newUsers } );
+                } else {
+                    const newUsers = state.users.map( user => {
+                        if ( user.uid !== friend.uid ) {
+                            // this isn't the user i care about
+                            return user;
+                        }
+                        return { ...user, ...friend };
+                    } );
+                    state = Object.assign( {}, state, { users: newUsers } );
+                }
+            } );
+        }
         break;
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -156,13 +162,16 @@ export default ( state = {}, action ) => {
 
 
 
-    case 'CREATE_ONLINE_USERS':
+    case 'CREATE_ONLINE_USERS':{
         // state = Object.assign( {}, state, { onlineUsers: action.onlineUsers } );
         //...
+        const newOnlineUsers = action.onlineUsers.map( user => {
+            return { ...user, online: true };
+        });
         if ( !state.users ) {
-            state = Object.assign( {}, state, { users: action.onlineUsers } );
+            state = Object.assign( {}, state, { users: newOnlineUsers } );
         } else {
-            action.onlineUsers.map( onlineUser => {
+            newOnlineUsers.map( onlineUser => {
                 const matchUser = state.users.find( user => user.uid === onlineUser.uid );
                 // matchUser return either UNDEFINED || copy of the OBJ
                 if ( !matchUser ) {
@@ -187,7 +196,8 @@ export default ( state = {}, action ) => {
             } );
         }
         break;
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    }
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
 
@@ -279,14 +289,13 @@ export default ( state = {}, action ) => {
     case 'REMOVE_ONLINE_USER': {
         console.log('inside:  REMOVE_ONLINE_USER, action :', action );
         const newUsers = state.users.map( user => {
-            if ( user.uid !== action.uid ) {
+            if ( user.uid == action.uid ) {
+                const newUser = { ...user, online: false, peerId: null };
+                console.log(newUser);
+                return newUser;
+            } else {
                 return user;
             }
-            const newUser = { ...user };
-            delete newUser.online;
-            delete newUser.peerId;
-            console.log(newUser);
-            return newUser;
         });
         state = Object.assign({}, state, { users: newUsers });
         break;

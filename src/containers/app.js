@@ -4,7 +4,7 @@ import { Link, browserHistory } from 'react-router';
 
 // REDUX
 import { connect } from 'react-redux';
-import { logOutUser, updateProfilePic, loadUserData, passPeerToAction } from '../actions/actions';
+import { logOutUser, updateProfilePic, loadUserData, loadFriends } from '../actions/actions';
 
 // SOCKETIO
 import getSocket from '../utils/socketIo';
@@ -18,12 +18,12 @@ import Avatar from 'material-ui/Avatar';
 import { List, ListItem } from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
-import FontIcon from 'material-ui/FontIcon';
+// import FontIcon from 'material-ui/FontIcon';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 
 // ICONS
-import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
-import ContentSend from 'material-ui/svg-icons/content/send';
+// import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
+// import ContentSend from 'material-ui/svg-icons/content/send';
 import ActionInfo from 'material-ui/svg-icons/action/info';
 import ActionHome from 'material-ui/svg-icons/action/home';
 import SocialGroup from 'material-ui/svg-icons/social/group';
@@ -53,6 +53,7 @@ class App extends Component {
     componentDidMount() {
         console.log( 'App - fn: componentDidMount - this.props: ', this.props );
         this.props.loadUserData();
+        this.props.loadFriends();
     }
 
     componentWillReceiveProps( nextProps ) {
@@ -242,9 +243,9 @@ const mapStateToProps = ( state ) => {
 
 const mapDispatchToProps = ( dispatch ) => ( {
     loadUserData: () => dispatch( loadUserData() ),
+    loadFriends: () => dispatch( loadFriends() ),
     logOutUser: () => dispatch( logOutUser() ),
     updateProfilePic: ( formData ) => dispatch( updateProfilePic( formData ) ),
-    passPeerToAction: ( peerObj ) => dispatch( passPeerToAction( peerObj ) )
 } );
 
 export default connect( mapStateToProps, mapDispatchToProps )( App );
