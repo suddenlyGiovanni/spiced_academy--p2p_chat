@@ -20,13 +20,13 @@ class ChatPrivateContainer extends Component {
         return (
             <div>
                 ChatPrivateContainer.js
-                {
-                    messages &&
-                    <ChatPrivate
-                        currentUser={currentUser}
-                        otherUser={otherUser}
-                        messages={messages}/>
-                }
+
+                <ChatPrivate
+                    style={{height:'100%'}}
+                    currentUser={currentUser}
+                    otherUser={otherUser}
+                    messages={messages}/>
+
             </div>
         );
     }

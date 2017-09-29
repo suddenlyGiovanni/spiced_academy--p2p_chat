@@ -38,50 +38,49 @@ export default class ChatPrivate extends Component {
         const chatMessages = messages && messages.map( message => {
             const { mid, sender, msg, timestamp } = message;
 
-            let uid,
-                firstName,
-                lastName,
-                profilePic;
 
 
             if ( sender ) {
-                uid = otherUser.uid;
-                firstName = otherUser.firstName;
-                lastName = otherUser.lastName;
-                profilePic = otherUser.profilePic;
-            } else {
-                uid = currentUser.uid;
-                firstName = currentUser.firstName;
-                lastName = currentUser.lastName;
-                profilePic = currentUser.profilePic;
-            }
-
-            const avatar = <Avatar src={profilePic} />
-
-
-            if ( sender ) {
-                <Card>
-                    <CardHeader
-                        title={`${firstName} ${lastName}`}
-                        subtitle={timestamp}
-                        avatar={avatar}
-                    />
-                    <CardTitle title="Card title" subtitle="Card subtitle" />
-                    <CardText>{msg}</CardText>
-                </Card>
-            }
-
-            return (
-                <li key={mid}>
-                    <Card style={{marginTop: 10, marginBottom: 10}}>
+                // MESSAGE FROM THE USER
+                const avatar = <Avatar src={otherUser.profilePic} />
+                return (
+                    <Card key={mid}
+                        style={{
+                            marginTop: 15,
+                            marginBottom: 15,
+                            backgroundColor: '#009688',
+                            width: '60%',
+                            alignSelf: 'flex-start'
+                        }}>
                         <CardHeader
-                            title={`${firstName} ${lastName}`}
+                            title={`${ otherUser.firstName} ${ otherUser.lastName}`}
+                            subtitle={timestamp}
+                            avatar={avatar}
+                        />
+                        <CardText>{msg}</CardText>
+                    </Card>
+                );
+            } else {
+                // MESSAGE FORM THE OTHE USER
+                const avatar = <Avatar src={currentUser.profilePic} />
+                return (
+                    <Card key={mid}
+                        style={{
+                            marginTop: 15,
+                            marginBottom: 15,
+                            backgroundColor: '#2196F3',
+                            width: '60%',
+                            alignSelf: 'flex-end'
+                        }}>
+                        <CardHeader
+                            title={`${currentUser.firstName} ${currentUser.lastName}`}
                             subtitle={timestamp}
                             avatar={avatar}/>
                         <CardText>{msg}</CardText>
                     </Card>
-                </li>
-            );
+                );
+            }
+
         } );
 
         return (
@@ -90,12 +89,15 @@ export default class ChatPrivate extends Component {
                     ref={elem => this.messageArea = elem}
                     style={{
                         overflow: 'scroll',
-                        height: 400
+                        height: 400,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-evenly',
+                        alignItems: 'center'
                     }}>
-                    messages go here
-                    <ul>
-                        {chatMessages}
-                    </ul>
+
+                    {chatMessages}
+
                 </div>
                 <Toolbar>
                     <TextField
