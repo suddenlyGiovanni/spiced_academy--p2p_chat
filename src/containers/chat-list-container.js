@@ -8,6 +8,7 @@ import Avatar from 'material-ui/Avatar';
 import { List, ListItem } from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
+import { darkBlack } from 'material-ui/styles/colors';
 
 // MATERIAL-UI
 import SocialPublic from 'material-ui/svg-icons/social/public';
@@ -41,15 +42,22 @@ class ChatListContainer extends Component {
             return (
                 <div>
                     <ListItem
-                        primaryText={`${firstName} ${lastName}`}
                         leftAvatar={avatar}
+                        primaryText={`${firstName} ${lastName}`}
                         onClick={ () => this.handleTouchConversation(uid) }
                     />
                     <Divider inset={true} />
+                    
+
                 </div>
             );
         } );
 
+
+
+        if (!this.props.user && !this.props.privateConversation && !this.props.privateConversation ) {
+            return null;
+        }
         return (
             <div>
                 <OnlineFriendsContainer />
@@ -62,6 +70,7 @@ class ChatListContainer extends Component {
                         onClick={ () => this.handleTouchConversationGlobal() }
                     />
                     <Divider inset={true} />
+
                     <Subheader>Private</Subheader>
                     {privateConversations}
                 </List>
@@ -76,7 +85,9 @@ const mapStateToProps = ( state ) => {
         user: state.user,
         privateConversation: state.users && state.users.filter( user => {
             return user.privateMessages;
-        } )
+        } ),
+        latestPublicMessage: state.publicMessages && state.publicMessages[ state.publicMessages.length - 1 ]
+
     };
 };
 

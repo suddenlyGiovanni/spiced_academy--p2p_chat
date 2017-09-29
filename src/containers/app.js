@@ -25,6 +25,7 @@ import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNaviga
 // import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
 // import ContentSend from 'material-ui/svg-icons/content/send';
 import ActionInfo from 'material-ui/svg-icons/action/info';
+import ComunicationChat from 'material-ui/svg-icons/communication/chat';
 import ActionHome from 'material-ui/svg-icons/action/home';
 import SocialGroup from 'material-ui/svg-icons/social/group';
 import SocialGroupAdd from 'material-ui/svg-icons/social/group-add';
@@ -54,6 +55,7 @@ class App extends Component {
         console.log( 'App - fn: componentDidMount - this.props: ', this.props );
         this.props.loadUserData();
         this.props.loadFriends();
+        browserHistory.push( '/chat' );
     }
 
     componentWillReceiveProps( nextProps ) {
@@ -98,7 +100,7 @@ class App extends Component {
 
     handleTouchTitle() {
         console.log( 'App - fn: handleTouchTitle' );
-        browserHistory.push( '/' );
+        browserHistory.push( '/chat' );
     }
 
 
@@ -151,7 +153,9 @@ class App extends Component {
 
 
         return (
-            <div>
+            <div style={{
+                height: '100%'
+            }}>
                 <AppBar
                     title={<span style={titleStyle}>p2pChat</span>}
                     onTitleTouchTap={ () => this.handleTouchTitle() }
@@ -165,8 +169,8 @@ class App extends Component {
                 <BottomNavigation selectedIndex={this.state.selectedIndex}>
 
                     <BottomNavigationItem
-                        label='Home'
-                        icon={<ActionHome />}
+                        label='Chat'
+                        icon={<ComunicationChat />}
                         onClick={ e => this.handleNavigation('/chat')}/>
                     <BottomNavigationItem
                         label='Friends'
@@ -176,6 +180,7 @@ class App extends Component {
                         label='Users'
                         icon={<SocialGroupAdd />}
                         onClick={ e => this.handleNavigation('/users')}/>
+
                 </BottomNavigation>
 
 
@@ -197,8 +202,8 @@ class App extends Component {
                     <Divider />
                     <Subheader>Navigation</Subheader>
                     <ListItem
-                        primaryText="Home"
-                        leftIcon={<ActionHome />}
+                        primaryText="Chat"
+                        leftIcon={<ComunicationChat />}
                         onClick={ e => this.handleNavigation('/chat')}/>
                     <ListItem
                         primaryText="Friends"
@@ -210,6 +215,7 @@ class App extends Component {
                         onClick={ e => this.handleNavigation('/users')}/>
 
                 </Drawer>
+
 
 
 

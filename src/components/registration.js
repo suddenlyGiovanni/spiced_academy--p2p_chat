@@ -13,7 +13,7 @@ const RegistrationForm = ( { handleInput, handleSubmit, error } ) => {
     console.log( 'RegistrationForm - RENDER ' );
 
     return (
-        <div style={{border: 'thin dotted red'}}>
+        <div>
 
             <h1>Register</h1>
             {error && <div>Something went wrong. Please try again!</div>}

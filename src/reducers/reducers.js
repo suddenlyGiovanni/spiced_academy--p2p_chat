@@ -290,9 +290,7 @@ export default ( state = {}, action ) => {
         console.log('inside:  REMOVE_ONLINE_USER, action :', action );
         const newUsers = state.users.map( user => {
             if ( user.uid == action.uid ) {
-                const newUser = { ...user, online: false, peerId: null };
-                console.log(newUser);
-                return newUser;
+                return { ...user, online: false, peerId: null };
             } else {
                 return user;
             }
