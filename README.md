@@ -86,11 +86,11 @@ Forms include CSRF protection using the csurf npm package.
 This Feature is implemented as an incremental search field. 
 Input events result in ajax requests, and the route hit does a database queries with pattern matching to find matches.
 
-> > As a user, I can **see a list of all of my friends**. I can also **manage friendship status**: 
-> I can send a friendship request,
-> I can cancel ann erroneous friendship request,
-> I can accept friends requests,
-> I can terminate friendships
+> As a user, I can **see a list of all of my friends**. I can also **manage friendship status**: 
+I can send a friendship request,
+I can cancel ann erroneous friendship request,
+I can accept friends requests,
+I can terminate friendships
 
 > As a user, I can **use the group chat** feature to chat with everyone that is online.
 
