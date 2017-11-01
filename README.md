@@ -58,7 +58,7 @@ $ npm install
 $ cd config && touch secrets.json
 ```
 ##### Secret.json
-Paste in the following code and remember to configure [PostgreSQL] and [AWS S3] it accordingly...
+Paste in the following code and remember to configure [PostgreSQL] and [AWS S3] it accordingly... 
 ```javascript
 {
     "psqlConfig": "postgres:postgres:postgres@localhost:5432/p2p-chat",
@@ -71,7 +71,7 @@ Paste in the following code and remember to configure [PostgreSQL] and [AWS S3] 
 }
 ```
 
-## Features:
+## Features: 
 > As a user, I can **register and login**. If I am already login, I can skip this step.
 
 The user can create or submit its credentials: Passwords are hashed using the bcrypt library.
@@ -81,12 +81,12 @@ Forms include CSRF protection using the csurf npm package.
 
 > As a user, I can **see who of my friends is online now**.
 
-> As a user, I can **find friends using the search box**.
+> As a user, I can **find friends using the search box**. 
 
-This Feature is implemented as an incremental search field.
+This Feature is implemented as an incremental search field. 
 Input events result in ajax requests, and the route hit does a database queries with pattern matching to find matches.
 
-> As a user, I can **see a list of all of my friends**. I can also **manage friendship status**:
+> As a user, I can **see a list of all of my friends**. I can also **manage friendship status**: 
 I can send a friendship request,
 I can cancel ann erroneous friendship request,
 I can accept friends requests,
@@ -111,7 +111,7 @@ The **messages** payload **are stored only locally** in the redux store of each 
 
 License
 ----
-MIT © [suddenlyGiovanni]
+MIT © [suddenlyGiovanni] 
 **Free Software, Hell Yeah!**
 
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
@@ -121,7 +121,7 @@ MIT © [suddenlyGiovanni]
    [suddenlyGiovanni]: <https://github.com/suddenlyGiovanni/>
    [/giovanni-ravalico]: <https://www.linkedin.com/in/giovanni-ravalico/>
    [@superspacezova]: <https://twitter.com/superspacezova>
-
+   
 [//]: # (Context references:)
    [Reichstag]: <https://github.com/suddenlyGiovanni/reichstag>
    [Kitty Carousel]: <https://github.com/suddenlyGiovanni/kitty_carousel>
@@ -135,7 +135,7 @@ MIT © [suddenlyGiovanni]
    [Imageboard]: <https://github.com/suddenlyGiovanni/imageboard>
    [Social Network]: <https://github.com/suddenlyGiovanni/socialnetwork>
    [P2P Chat]: <https://github.com/suddenlyGiovanni/p2p-chat>
-
+   
 [//]: # (Tech Stack references:)
    [React.js]: <https://reactjs.org/docs/installation.html>
    [Node.js]: <https://nodejs.org/dist/latest-v8.x/docs/api/>
