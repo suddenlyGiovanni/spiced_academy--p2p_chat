@@ -12,9 +12,23 @@ export default ( state = {}, action ) => {
 
 
     case 'UPDATE_USER_DATA':
-        state = Object.assign( {}, state, { user: action.user } );
-        break;
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        {
+            const updateUser = { ...state.user, ...action.user };
+            state = Object.assign( {}, state, { user: updateUser } );
+            break;
+        }
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
+
+    case 'ADD_PEERID_TO_USER_DATA':
+        {
+            const updateUser = { ...state.user, peerId: action.peerId };
+            state = Object.assign( {}, state, { user: updateUser } );
+            break;
+        }
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
 
@@ -97,28 +111,54 @@ export default ( state = {}, action ) => {
 
     case 'LOAD_FRIENDS':
         // save the up to date data to the array of users
-        action.friends.map( friend => {
-            const matchUser = state.users.find( user => user.uid === friend.uid );
-            // matchUser return either UNDEFINED || copy of the OBJ
-            if ( !matchUser ) {
-                // then insert the new friend into the array of users
-                const newUsers = state.users.slice();
-                newUsers.splice( ( newUsers.length ), 0, friend );
-                state = Object.assign( {}, state, { users: newUsers } );
-            } else {
-                const newUsers = state.users.map( user => {
-                    if ( user.uid !== friend.uid ) {
-                        // this isn't the user i care about
-                        return user;
-                    }
-                    return { ...user, ...friend };
-                } );
-                state = Object.assign( {}, state, { users: newUsers } );
-            }
-        } );
+
+        if ( !state.users ) {
+            // add the friends to the users directly
+            state = Object.assign( {}, state, { users: action.friends } );
+        } else {
+            action.friends.map( friend => {
+                const matchUser = state.users.find( user => user.uid === friend.uid );
+                // matchUser return either UNDEFINED || copy of the OBJ
+                if ( !matchUser ) {
+                    // then insert the new friend into the array of users
+                    const newUsers = state.users.slice();
+                    newUsers.splice( ( newUsers.length ), 0, friend );
+                    state = Object.assign( {}, state, { users: newUsers } );
+                } else {
+                    const newUsers = state.users.map( user => {
+                        if ( user.uid !== friend.uid ) {
+                            // this isn't the user i care about
+                            return user;
+                        }
+                        return { ...user, ...friend };
+                    } );
+                    state = Object.assign( {}, state, { users: newUsers } );
+                }
+            } );
+        }
         break;
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+
+
+    case 'REQUEST_FRIENDSHIP':
+    {
+        const { newFriendshipStatus } = action;
+        const matchUser = state.users.find( user => user.uid === newFriendshipStatus.toUserId );
+        if ( matchUser ) {
+            // update the user and it's data in the array
+            const newUsers = state.users.map( user => {
+                if ( user.uid !== newFriendshipStatus.toUserId ) {
+                    // then this isn't the user i care about
+                    return user;
+                }
+                return { ...user, status: newFriendshipStatus.status };
+            } );
+            state = Object.assign( {}, state, { users: newUsers } );
+        }
+        break;
+    }
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
 
@@ -145,37 +185,73 @@ export default ( state = {}, action ) => {
 
 
     case 'CREATE_ONLINE_USERS':
-        // state = Object.assign( {}, state, { onlineUsers: action.onlineUsers } );
-        //...
+        {
+            // state = Object.assign( {}, state, { onlineUsers: action.onlineUsers } );
+            //...
+            const newOnlineUsers = action.onlineUsers.map( user => {
+                return { ...user, online: true };
+            } );
+            if ( !state.users ) {
+                state = Object.assign( {}, state, { users: newOnlineUsers } );
+            } else {
+                newOnlineUsers.map( onlineUser => {
+                    const matchUser = state.users.find( user => user.uid === onlineUser.uid );
+                    // matchUser return either UNDEFINED || copy of the OBJ
+                    if ( !matchUser ) {
+                        // then insert the new onlineUser into the array of users
+                        const newUsers = state.users.slice();
+                        newUsers.splice( ( newUsers.length ), 0, onlineUser );
+                        state = Object.assign( {}, state, { users: newUsers } );
+                    } else {
+                        // update the user and it's data in the array
+                        const newUsers = state.users.map( user => {
+                            if ( user.uid !== onlineUser.uid ) {
+                                // this isn't the user i care about
+                                return user;
+                            }
+                            return Object.assign( {}, user, {
+                                profilePic: onlineUser.profilePic,
+                                online: onlineUser.online
+                            } );
+                        } );
+                        state = Object.assign( {}, state, { users: newUsers } );
+                    }
+                } );
+            }
+            break;
+        }
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
+
+    case 'CREATE_ONLINE_PEERS':
         if ( !state.users ) {
-            state = Object.assign( {}, state, { users: action.onlineUsers } );
+            state = Object.assign( {}, state, { users: action.onlinePeers } );
         } else {
-            action.onlineUsers.map( onlineUser => {
-                const matchUser = state.users.find( user => user.uid === onlineUser );
-                // matchUser return either UNDEFINED || copy of the OBJ
+            action.onlinePeers.map( onlinePeer => {
+                const matchUser = state.users.find( user => user.uid === onlinePeer.uid );
                 if ( !matchUser ) {
-                    // then insert the new onlineUser into the array of users
+                    // then insert the new onlinePeer into the array of users
                     const newUsers = state.users.slice();
-                    newUsers.splice( ( newUsers.length ), 0, onlineUser );
+                    newUsers.splice( ( newUsers.length ), 0, onlinePeer );
                     state = Object.assign( {}, state, { users: newUsers } );
                 } else {
                     // update the user and it's data in the array
                     const newUsers = state.users.map( user => {
-                        if ( user.uid !== onlineUser.uid ) {
+                        if ( user.uid !== onlinePeer.uid ) {
                             // this isn't the user i care about
                             return user;
                         }
-                        return Object.assign( {}, user, {
-                            profilePic: onlineUser.profilePic,
-                            online: onlineUser.online
-                        } );
+                        return { ...user, ...onlinePeer };
                     } );
                     state = Object.assign( {}, state, { users: newUsers } );
                 }
             } );
         }
         break;
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 
 
 
@@ -195,32 +271,52 @@ export default ( state = {}, action ) => {
                         // then this isn't the user i care about
                         return user;
                     }
-
                     return { ...user, ...userJoined };
                 } );
                 state = Object.assign( {}, state, { users: newUsers } );
             }
             break;
         }
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
+
+    case 'ADD_ONLINE_PEER':
+        {
+            const { peerJoined } = action;
+            const matchUser = state.users.find( user => user.uid === peerJoined.uid );
+            if ( !matchUser ) {
+                // then insert the new action.peerJoined into the array of users
+                const newUsers = state.users.slice();
+                newUsers.splice( ( newUsers.length ), 0, peerJoined );
+                state = Object.assign( {}, state, { users: newUsers } );
+            } else {
+                // update the user and it's data in the array
+                const newUsers = state.users.map( user => {
+                    if ( user.uid !== peerJoined.uid ) {
+                        // then this isn't the user i care about
+                        return user;
+                    }
+                    return { ...user, ...peerJoined };
+                } );
+                state = Object.assign( {}, state, { users: newUsers } );
+            }
+            break;
+        }
+
 
 
 
 
     case 'REMOVE_ONLINE_USER':
         {
+            console.log( 'inside:  REMOVE_ONLINE_USER, action :', action );
             const newUsers = state.users.map( user => {
-                if ( user.uid != action.offlineUserId.uid ) {
-                    // then this isn't the user i care about
-                    console.log( `REMOVE_ONLINE_USER - ${action.offlineUserId}` );
-                    return user;
+                if ( user.uid == action.uid ) {
+                    return { ...user, online: false, peerId: null };
                 } else {
-                    console.log( 'REMOVE_ONLINE_USER - user.uid === action.offlineUserId' );
-
-                    const newUserState = { ...user };
-                    delete newUserState.online;
-                    console.log( 'newUserState', newUserState );
-                    return newUserState;
+                    return user;
                 }
             } );
             state = Object.assign( {}, state, { users: newUsers } );
@@ -310,63 +406,64 @@ export default ( state = {}, action ) => {
 
 
 
-    case 'ADD_NEW_PRIVATE_MESSAGE': {
-        const message = action.newPrivateMessage;
-        let otherUserId;
-        if ( state.user.uid === message.fromUserId ) {
-            otherUserId = message.toUserId;
-        } else {
-            otherUserId = message.fromUserId;
-        }
+    case 'ADD_NEW_PRIVATE_MESSAGE':
+        {
+            const message = action.newPrivateMessage;
+            let otherUserId;
+            if ( state.user.uid === message.fromUserId ) {
+                otherUserId = message.toUserId;
+            } else {
+                otherUserId = message.fromUserId;
+            }
 
-        const matchUser = state.users.find( user => user.uid == otherUserId );
-        // matchUser return either UNDEFINED || copy of the OBJ
+            const matchUser = state.users.find( user => user.uid == otherUserId );
+            // matchUser return either UNDEFINED || copy of the OBJ
 
-        // create the privateMessage OBJ:
-        const newPrivateMessage = {
-            mid: message.mid,
-            sender: ( otherUserId === message.fromUserId ) ? true : false,
-            msg: message.messageBody,
-            timestamp: message.timestamp
-        };
-
-        if ( !matchUser ) {
-            // then create the newUser
-            const newUser = {
-                uid: otherUserId,
-                privateMessages: [ newPrivateMessage ]
+            // create the privateMessage OBJ:
+            const newPrivateMessage = {
+                mid: message.mid,
+                sender: ( otherUserId === message.fromUserId ) ? true : false,
+                msg: message.messageBody,
+                timestamp: message.timestamp
             };
-            // then insert the new newUser into the array of users
-            const newUsers = state.users.slice();
-            newUsers.splice( ( newUsers.length ), 0, newUser );
-            state = Object.assign( {}, state, { users: newUsers } );
-        } else {
-            // update the user and it's data in the array
-            const newUsers = state.users.map( user =>{
-                if (user.uid !== otherUserId) {
-                    // this isn't the user i care about
-                    return user;
-                } else {
-                    // this is the user i care...
-                    // time to check if it has any privateMessages
-                    if ( !user.hasOwnProperty( 'privateMessages' ) ) {
-                        // then just add the first privateMessage...
-                        let updatedUser = { ...user };
-                        updatedUser.privateMessages = [ newPrivateMessage ];
-                        return updatedUser;
+
+            if ( !matchUser ) {
+                // then create the newUser
+                const newUser = {
+                    uid: otherUserId,
+                    privateMessages: [ newPrivateMessage ]
+                };
+                // then insert the new newUser into the array of users
+                const newUsers = state.users.slice();
+                newUsers.splice( ( newUsers.length ), 0, newUser );
+                state = Object.assign( {}, state, { users: newUsers } );
+            } else {
+                // update the user and it's data in the array
+                const newUsers = state.users.map( user => {
+                    if ( user.uid !== otherUserId ) {
+                        // this isn't the user i care about
+                        return user;
                     } else {
-                        // now the logic for IF the user has already privateMessages;
-                        const arrToInsert = [ newPrivateMessage ];
-                        const newPrivateMessages = [ ...user.privateMessages, ...arrToInsert ];
-                        return { ...user, privateMessages: newPrivateMessages };
+                        // this is the user i care...
+                        // time to check if it has any privateMessages
+                        if ( !user.hasOwnProperty( 'privateMessages' ) ) {
+                            // then just add the first privateMessage...
+                            let updatedUser = { ...user };
+                            updatedUser.privateMessages = [ newPrivateMessage ];
+                            return updatedUser;
+                        } else {
+                            // now the logic for IF the user has already privateMessages;
+                            const arrToInsert = [ newPrivateMessage ];
+                            const newPrivateMessages = [ ...user.privateMessages, ...arrToInsert ];
+                            return { ...user, privateMessages: newPrivateMessages };
+                        }
                     }
-                }
-            });
-            state = Object.assign( {}, state, { users: newUsers } );
+                } );
+                state = Object.assign( {}, state, { users: newUsers } );
+            }
+            break;
         }
-        break;
-    }
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
 

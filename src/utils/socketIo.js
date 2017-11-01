@@ -4,7 +4,9 @@ import { store } from '../shell';
 import {
     connectUser,
     createOnlineUsers,
+    createOnlinePeers,
     addOnlineUser,
+    addOnlinePeer,
     removeOnlineUser,
     createPublicMessageList,
     createPrivateMessageList,
@@ -31,9 +33,21 @@ const getSocket = () => {
         } );
 
 
+        socket.on( 'onlinePeers', ( onlinePeers ) => {
+            console.log( 'Socket.io Event: onlinePeers', onlinePeers );
+            store.dispatch( createOnlinePeers( onlinePeers ) );
+        } );
+
+
         socket.on( 'userJoined', ( userJoined ) => {
             console.log( 'Socket.io Event: userJoined', userJoined );
             store.dispatch( addOnlineUser( userJoined ) );
+        } );
+
+
+        socket.on( 'peerJoined', ( peerJoined ) => {
+            console.log( 'Socket.io Event: peerJoined', peerJoined );
+            store.dispatch( addOnlinePeer( peerJoined ) );
         } );
 
 

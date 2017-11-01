@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 // UTILS
 import getSocket from '../utils/socketIo';
+import getPeers from '../utils/peer';
 
 // MATERIAL UI
 import { Card, CardHeader, CardTitle, CardText } from 'material-ui/Card';
@@ -9,20 +10,31 @@ import Avatar from 'material-ui/Avatar';
 import { Toolbar } from 'material-ui/Toolbar';
 import TextField from 'material-ui/TextField';
 
+let conn;
 
-export default class ChatPrivate extends Component {
+export default class ChatSecure extends Component {
     constructor( props ) {
         super( props );
+    }
+
+    componentDidMount() {
+        conn = getPeers().connect( this.props.otherUser.peerId );
+        console.log( 'ChatSecure - componentDidMount - conn: ', conn );
     }
 
     handleSubmit( e ) {
         if ( e.keyCode === 13 ) {
             e.preventDefault();
             console.log( e.target.value );
-            getSocket().emit( 'chatMessagePrivate', {
+            conn.send( {
+                fromUserId: this.props.currentUser.uid,
                 toUserId: this.props.otherUser.uid,
                 messageBody: e.target.value
             } );
+            // getSocket().emit( 'chatMessagePrivate', {
+            //     toUserId: this.props.otherUser.uid,
+            //     messageBody: e.target.value
+            // } );
             e.target.value = '';
         }
     }
@@ -32,55 +44,56 @@ export default class ChatPrivate extends Component {
     }
 
     render() {
-        console.log( 'ChatPrivate - RENDER - this.props: ', this.props );
+        console.log( 'ChatSecure - RENDER - this.props: ', this.props );
         const { currentUser, otherUser, messages } = this.props;
 
         const chatMessages = messages && messages.map( message => {
             const { mid, sender, msg, timestamp } = message;
 
+            let uid,
+                firstName,
+                lastName,
+                profilePic;
 
 
             if ( sender ) {
-                // MESSAGE FROM THE USER
-                const avatar = <Avatar src={otherUser.profilePic} />
-                return (
-                    <Card key={mid}
-                        style={{
-                            marginTop: 15,
-                            marginBottom: 15,
-                            backgroundColor: '#009688',
-                            width: '60%',
-                            alignSelf: 'flex-start'
-                        }}>
-                        <CardHeader
-                            title={`${ otherUser.firstName} ${ otherUser.lastName}`}
-                            subtitle={timestamp}
-                            avatar={avatar}
-                        />
-                        <CardText>{msg}</CardText>
-                    </Card>
-                );
+                uid = otherUser.uid;
+                firstName = otherUser.firstName;
+                lastName = otherUser.lastName;
+                profilePic = otherUser.profilePic;
             } else {
-                // MESSAGE FORM THE OTHE USER
-                const avatar = <Avatar src={currentUser.profilePic} />
-                return (
-                    <Card key={mid}
-                        style={{
-                            marginTop: 15,
-                            marginBottom: 15,
-                            backgroundColor: '#2196F3',
-                            width: '60%',
-                            alignSelf: 'flex-end'
-                        }}>
+                uid = currentUser.uid;
+                firstName = currentUser.firstName;
+                lastName = currentUser.lastName;
+                profilePic = currentUser.profilePic;
+            }
+
+            const avatar = <Avatar src={profilePic} />
+
+
+            if ( sender ) {
+                <Card>
+                    <CardHeader
+                        title={`${firstName} ${lastName}`}
+                        subtitle={timestamp}
+                        avatar={avatar}
+                    />
+                    <CardTitle title="Card title" subtitle="Card subtitle" />
+                    <CardText>{msg}</CardText>
+                </Card>
+            }
+
+            return (
+                <li key={mid}>
+                    <Card style={{marginTop: 10, marginBottom: 10}}>
                         <CardHeader
-                            title={`${currentUser.firstName} ${currentUser.lastName}`}
+                            title={`${firstName} ${lastName}`}
                             subtitle={timestamp}
                             avatar={avatar}/>
                         <CardText>{msg}</CardText>
                     </Card>
-                );
-            }
-
+                </li>
+            );
         } );
 
         return (
@@ -89,15 +102,12 @@ export default class ChatPrivate extends Component {
                     ref={elem => this.messageArea = elem}
                     style={{
                         overflow: 'scroll',
-                        height: 400,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'space-evenly',
-                        alignItems: 'center'
+                        height: 400
                     }}>
-
-                    {chatMessages}
-
+                    messages go here
+                    <ul>
+                        {chatMessages}
+                    </ul>
                 </div>
                 <Toolbar>
                     <TextField

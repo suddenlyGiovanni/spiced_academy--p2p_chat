@@ -67,7 +67,7 @@ export function loadLatestUsers() {
             return {
                 type: 'LOAD_LATEST_USERS',
                 users: result.data.users
-            }
+            };
         } )
 
         .catch( err => console.log( err ) );
@@ -84,11 +84,11 @@ export function loadSearchedUsers( search ) {
             return {
                 type: 'LOAD_SEARCHED_USERS',
                 users: results.data.users
-            }
+            };
         } )
 
         .catch( err => console.log( err ) );
-};
+}
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
@@ -113,6 +113,32 @@ export function loadFriends() {
             return {
                 type: 'LOAD_FRIENDS',
                 friends: result.data.friends
+            };
+        } )
+
+        .catch( err => {
+            console.log( err );
+            return { type: 'ERROR' };
+        } );
+}
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
+export function requestFriendship( fromUserId, toUserId, status ) {
+
+    console.log( `REDUX - ACTION - fn: requestFriendship
+        fromUserId: ${fromUserId},
+        toUserId: ${toUserId},
+        status: ${status}` );
+
+    return axios.post( `/api/friends/${fromUserId}/${toUserId}/new`, { status: status } )
+
+        .then( result => {
+            console.log( 'REDUX - ACTION - fn: requestFriendship - data', result.data );
+            return {
+                type: 'REQUEST_FRIENDSHIP',
+                newFriendshipStatus: result.data.newFriendshipStatus
             };
         } )
 
@@ -166,11 +192,36 @@ export function connectUser( socketId ) {
 
 
 
+export function sendPeerIdToServer( peerId ) {
+    console.log( 'REDUX - ACTION - fn: sendPeerIdToServer' );
+    return axios.post( `/ws/storeIdToServer/${peerId}` )
+        .then( () => {
+            return { type: 'ADD_PEERID_TO_USER_DATA', peerId };
+        } )
+        .catch( err => console.log( err ) );
+}
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
+
 export function createOnlineUsers( onlineUsers ) {
     console.log( 'REDUX - ACTION - fn: createOnlineUsers' );
     return {
         type: 'CREATE_ONLINE_USERS',
         onlineUsers
+    };
+}
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
+
+export function createOnlinePeers( onlinePeers ) {
+    console.log( 'REDUX - ACTION - fn: createOnlinePeers' );
+    return {
+        type: 'CREATE_ONLINE_PEERS',
+        onlinePeers
     };
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -190,11 +241,23 @@ export function addOnlineUser( userJoined ) {
 
 
 
+export function addOnlinePeer( peerJoined ) {
+    console.log( 'REDUX - ACTION - fn: addOnlinePeer' );
+    return {
+        type: 'ADD_ONLINE_PEER',
+        peerJoined
+    };
+}
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
+
 export function removeOnlineUser( uid ) {
-    console.log( 'REDUX - ACTION - fn: removeOnlineUser' );
+    console.log( 'REDUX - ACTION - fn: removeOnlineUser - uid:', uid );
     return {
         type: 'REMOVE_ONLINE_USER',
-        offlineUserId: uid
+        uid
     };
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

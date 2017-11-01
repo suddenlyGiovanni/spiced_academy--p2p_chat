@@ -13,7 +13,7 @@ const LoginForm = ( { handleInput, handleSubmit, error } ) => {
     console.log( 'LoginForm - RENDER');
 
     return (
-        <div style={{border: 'thin dotted red'}}>
+        <div>
             <h1>Log in</h1>
             { error && <div>Something went wrong. Please try again!</div> }
             <form onSubmit={handleSubmit}>

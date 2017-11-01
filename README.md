@@ -26,9 +26,9 @@ During this program, I built a portfolio of web applications.
 10. **[Imageboard]** - An app that allows users to upload images, comment, and like images.
 11. **[Social Network]** - Mock social network project for superheroes and villains.
 12. Final Project - one-week coding challenge - **[P2P Chat]**
- 
-As my **Final Project** I was required to come up with and develop a project of my own to showcase what I had learned and to test new ideas and technologies. 
-The constraints were the following: 
+
+As my **Final Project** I was required to come up with and develop a project of my own to showcase what I had learned and to test new ideas and technologies.
+The constraints were the following:
 - it had to be completed in just one week
 - it had to be substantial but also achievable.
 ###### Timeframe:  _**One week**_
@@ -36,8 +36,8 @@ The constraints were the following:
 - PeerJs (WebRTC)
 
 ## Summary:
-Recently I've participated in a one-week coding challenge where I set myself to build a **secure and decentralized chat application**. 
-**My goal** with this application **was to test the architecture and tech needed to make it happen**. 
+Recently I've participated in a one-week coding challenge where I set myself to build a **secure and decentralized chat application**.
+**My goal** with this application **was to test the architecture and tech needed to make it happen**.
 The user has the ability to register, login, look up people to befriend, manage friendships, use a global chatroom, use a private chatroom or switch to a “secure” channel to protect the privacy of a conversation. To make all of this happen, I had to build a node.js backend that used WebSocket to emit real-time events to all the relevant clients while on a React/Redux frontend I had to handle the secure chat by enabling two clients to speak directly to each other through webRtc protocol (p2p connection).
 I especially enjoyed how React in combination with Redux allowed me to explicitly implement the separation of concerns principle and also write clean, functional and maintainable code.
 

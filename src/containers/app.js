@@ -4,10 +4,11 @@ import { Link, browserHistory } from 'react-router';
 
 // REDUX
 import { connect } from 'react-redux';
-import { logOutUser, updateProfilePic, loadUserData } from '../actions/actions';
+import { logOutUser, updateProfilePic, loadUserData, loadFriends } from '../actions/actions';
 
 // SOCKETIO
 import getSocket from '../utils/socketIo';
+import getPeer from '../utils/peer';
 
 // MATERIAL-UI:
 import AppBar from 'material-ui/AppBar';
@@ -17,13 +18,14 @@ import Avatar from 'material-ui/Avatar';
 import { List, ListItem } from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
-import FontIcon from 'material-ui/FontIcon';
+// import FontIcon from 'material-ui/FontIcon';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 
 // ICONS
-import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
-import ContentSend from 'material-ui/svg-icons/content/send';
+// import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
+// import ContentSend from 'material-ui/svg-icons/content/send';
 import ActionInfo from 'material-ui/svg-icons/action/info';
+import ComunicationChat from 'material-ui/svg-icons/communication/chat';
 import ActionHome from 'material-ui/svg-icons/action/home';
 import SocialGroup from 'material-ui/svg-icons/social/group';
 import SocialGroupAdd from 'material-ui/svg-icons/social/group-add';
@@ -32,8 +34,6 @@ import SocialGroupAdd from 'material-ui/svg-icons/social/group-add';
 
 
 // MY COMPONENTS
-import Logo from '../components/logo';
-import ProfilePic from '../components/profile-pic';
 import ProfilePicUpload from '../components/profile-pic-upload';
 
 class App extends Component {
@@ -41,6 +41,8 @@ class App extends Component {
     constructor( props ) {
         super( props );
         getSocket();
+        getPeer();
+
         this.state = {
             uploaderIsVisible: false,
             open: false,
@@ -52,6 +54,8 @@ class App extends Component {
     componentDidMount() {
         console.log( 'App - fn: componentDidMount - this.props: ', this.props );
         this.props.loadUserData();
+        this.props.loadFriends();
+        browserHistory.push( '/chat' );
     }
 
     componentWillReceiveProps( nextProps ) {
@@ -96,7 +100,7 @@ class App extends Component {
 
     handleTouchTitle() {
         console.log( 'App - fn: handleTouchTitle' );
-        browserHistory.push( '/' );
+        browserHistory.push( '/chat' );
     }
 
 
@@ -149,7 +153,9 @@ class App extends Component {
 
 
         return (
-            <div>
+            <div style={{
+                height: '100%'
+            }}>
                 <AppBar
                     title={<span style={titleStyle}>p2pChat</span>}
                     onTitleTouchTap={ () => this.handleTouchTitle() }
@@ -163,8 +169,8 @@ class App extends Component {
                 <BottomNavigation selectedIndex={this.state.selectedIndex}>
 
                     <BottomNavigationItem
-                        label='Home'
-                        icon={<ActionHome />}
+                        label='Chat'
+                        icon={<ComunicationChat />}
                         onClick={ e => this.handleNavigation('/chat')}/>
                     <BottomNavigationItem
                         label='Friends'
@@ -174,6 +180,7 @@ class App extends Component {
                         label='Users'
                         icon={<SocialGroupAdd />}
                         onClick={ e => this.handleNavigation('/users')}/>
+
                 </BottomNavigation>
 
 
@@ -195,8 +202,8 @@ class App extends Component {
                     <Divider />
                     <Subheader>Navigation</Subheader>
                     <ListItem
-                        primaryText="Home"
-                        leftIcon={<ActionHome />}
+                        primaryText="Chat"
+                        leftIcon={<ComunicationChat />}
                         onClick={ e => this.handleNavigation('/chat')}/>
                     <ListItem
                         primaryText="Friends"
@@ -208,6 +215,7 @@ class App extends Component {
                         onClick={ e => this.handleNavigation('/users')}/>
 
                 </Drawer>
+
 
 
 
@@ -241,8 +249,9 @@ const mapStateToProps = ( state ) => {
 
 const mapDispatchToProps = ( dispatch ) => ( {
     loadUserData: () => dispatch( loadUserData() ),
+    loadFriends: () => dispatch( loadFriends() ),
     logOutUser: () => dispatch( logOutUser() ),
-    updateProfilePic: ( formData ) => dispatch( updateProfilePic( formData ) )
+    updateProfilePic: ( formData ) => dispatch( updateProfilePic( formData ) ),
 } );
 
 export default connect( mapStateToProps, mapDispatchToProps )( App );

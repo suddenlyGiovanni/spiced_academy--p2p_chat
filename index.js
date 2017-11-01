@@ -6,17 +6,21 @@ const express = require( 'express' ),
     cookieSession = require( 'cookie-session' ),
     csrf = require( 'csurf' ),
     compression = require( 'compression' );
-    // db = require( './modules/dbQuery' );
-    // favicon = require( 'serve-favicon' );
+// db = require( './modules/dbQuery' );
+// favicon = require( 'serve-favicon' );
 
 
 // EXPRESS
 const app = express();
 
 // SOCKETio
-const server = require('http').Server(app);
-const io = require('socket.io')(server);
+const server = require( 'http' ).Server( app );
+const io = require( 'socket.io' )( server );
 module.exports.io = io;
+
+// PEERJS
+const ExpressPeerServer = require( 'peer' ).ExpressPeerServer;
+const options = { debug: true };
 
 // MIDDLEWARE __________________________________________________________________
 
@@ -56,10 +60,10 @@ app.use( express.static( path.join( __dirname, '/public' ) ) );
 
 
 // CSURF
-app.use( csrf() );
+// app.use( csrf() );
 
 app.use( ( req, res, next ) => {
-    res.cookie( '__csrf__', req.csrfToken() );
+    // res.cookie( '__csrf__', req.csrfToken() );
     next();
 } );
 // _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
@@ -70,14 +74,27 @@ app.use( ( req, res, next ) => {
 app.use( '/', require( './routes/root' ) );
 app.use( '/api/', require( './routes/api' ) );
 // load webSocket.js and pass it the socket.io object
-app.use('/ws/', require('./routes/webSocket'));
+app.use( '/ws/', require( './routes/webSocket' ) );
 
+
+// PEERJS ROUTING
+app.use( '/peerjs', ExpressPeerServer( server, options ) );
 
 // if no route match then..
 app.get( '*', function ( req, res ) {
     res.sendFile( path.join( __dirname, 'index.html' ) );
 } );
-// _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+
+
+// PEERJS EVENTS LISTENING
+server.on( 'connection', peer => {
+    console.log( 'Peerjs - server - Event - "connection" - id:', peer.id );
+} );
+server.on( 'disconnect', peer => {
+    console.log( 'Peerjs - server - Event - "disconnect" - id:', peer.id );
+} );
+
 
 
 // ERROR:
@@ -95,6 +112,7 @@ app.use( ( err, req, res, next ) => {
 
     // render the error page
     res.status( err.status || 500 );
+    console.log(err);
     res.send( 'error' );
 } );
 // _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _

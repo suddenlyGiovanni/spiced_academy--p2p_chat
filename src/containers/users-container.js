@@ -2,7 +2,13 @@
 import React, { Component } from 'react';
 // REDUX
 import { connect } from 'react-redux';
-import { loadLatestUsers, loadSearchedUsers, clearSearchedUsers, updateFriendship } from '../actions/actions';
+import {
+    loadLatestUsers,
+    loadSearchedUsers,
+    clearSearchedUsers,
+    updateFriendship,
+    requestFriendship
+} from '../actions/actions';
 
 // MY COMPONENTS
 import Users from '../components/users';
@@ -26,8 +32,9 @@ class UsersContainer extends Component {
 
     handleFriendshipChange( toUserId, status ) {
         console.log( 'handleFriendshipChange', toUserId, status );
-        const { updateFriendship, user } = this.props;
-        updateFriendship( user.uid, toUserId, status );
+        const { updateFriendship, requestFriendship, user } = this.props;
+        // updateFriendship( user.uid, toUserId, status );
+        requestFriendship( user.uid, toUserId, status );
     }
 
     handleUpdateInput( e ) {
@@ -79,16 +86,26 @@ const mapStateToProps = state => {
     console.log( 'UsersContainer - fn: mapStateToProps' );
     return {
         user: state.user,
-        users: state.users,
+        users: state.users && state.users.filter( user => {
+            if ( !user.status ) {
+                return user;
+            } else {
+                if ( user.status == 'TERMINATED' || user.status == 'CANCELED' ) {
+                    return user;
+                }
+            }
+
+        } ),
         searchedUsersList: state.searchedUsersList
-    }
+    };
 };
 
 const mapDispatchToProps = dispatch => ( {
     loadLatestUsers: () => dispatch( loadLatestUsers() ),
     updateFriendship: ( fromUserId, toUserId, status ) => dispatch( updateFriendship( fromUserId, toUserId, status ) ),
+    requestFriendship: ( fromUserId, toUserId, status ) => dispatch( requestFriendship( fromUserId, toUserId, status ) ),
     loadSearchedUsers: search => dispatch( loadSearchedUsers( search ) ),
     clearSearchedUsers: () => dispatch( clearSearchedUsers() )
 } );
 
-export default connect( mapStateToProps, mapDispatchToProps )( UsersContainer )
+export default connect( mapStateToProps, mapDispatchToProps )( UsersContainer );
