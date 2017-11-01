@@ -155,10 +155,10 @@ MIT © [suddenlyGiovanni]
    [suddenlyGiovanni]: <https://github.com/suddenlyGiovanni/>
 
 [//]: # (Picture references:)
-    [p2p_chat-register]: <>
-    [p2p_chat-login]: <>
-    [p2p_chat-profile_pic]: <>
-    [p2p_chat-find_friends]: <>
-    [p2p_chat-manage_friendship]: <>
-    [p2p_chat-group_chat]: <>
+    [p2p_chat-register]: <https://github.com/suddenlyGiovanni/p2p-chat/blob/master/readme/p2p_chat-register.gif>
+    [p2p_chat-login]: <https://github.com/suddenlyGiovanni/p2p-chat/blob/master/readme/p2p_chat-login.gif>
+    [p2p_chat-profile_pic]: <https://github.com/suddenlyGiovanni/p2p-chat/blob/master/readme/p2p_chat-profile_pic.gif>
+    [p2p_chat-find_friends]: <https://github.com/suddenlyGiovanni/p2p-chat/blob/master/readme/p2p_chat-find_friends.gif>
+    [p2p_chat-manage_friendship]: <https://github.com/suddenlyGiovanni/p2p-chat/blob/master/readme/p2p_chat-manage_friendship%20.gif>
+    [p2p_chat-group_chat]: <https://github.com/suddenlyGiovanni/p2p-chat/blob/master/readme/p2p_chat-group_chat.gif>
     [p2p_chat-private_chat]: <>
