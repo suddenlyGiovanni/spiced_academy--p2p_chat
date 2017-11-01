@@ -74,15 +74,18 @@ Paste in the following code and remember to configure [PostgreSQL] and [AWS S3] 
 
 The user can create or submit its credentials: Passwords are hashed using the bcrypt library.
 Forms include CSRF protection using the csurf npm package.
+
 ![p2p_chat-register]
 ![p2p_chat-login]
 
 > As a user, I can **personalize my profile picture**.
+
 ![p2p_chat-profile_pic]
 
 > As a user, I can **see who of my friends is online now**.
 
 > As a user, I can **find friends using the search box**.
+
 ![p2p_chat-find_friends]
 
 This Feature is implemented as an incremental search field.
@@ -93,12 +96,15 @@ I can send a friendship request,
 I can cancel ann erroneous friendship request,
 I can accept friends requests,
 I can terminate friendships
+
 ![p2p_chat-manage_friendship]
 
 > As a user, I can **use the group chat** feature to chat with everyone that is online.
+
 ![p2p_chat-group_chat]
 
 > As a user, I can **use the private chat** to talk to other friends that can be **either online or offline**.
+
 ![p2p_chat-private_chat]
 
 > As a user, I can **use the secure chat** to talk to other friends.
