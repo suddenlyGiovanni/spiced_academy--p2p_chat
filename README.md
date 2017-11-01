@@ -10,7 +10,6 @@ A fun and easy messaging app that allows private conversations through P2P.
 * [Todos](#todos-of-additional-features)
 * [Contact && License](#contact)
 
-
 ## Context
 Between July and October 2017, I attend **[SPICED Academy]**, an intensive 12-week coding program focused on Full Stack JavaScript Web Development in Berlin.
 During this program, I built a portfolio of web applications.
@@ -26,9 +25,9 @@ During this program, I built a portfolio of web applications.
 10. **[Imageboard]** - An app that allows users to upload images, comment, and like images.
 11. **[Social Network]** - Mock social network project for superheroes and villains.
 12. Final Project - one-week coding challenge - **[P2P Chat]**
- 
-As my **Final Project** I was required to come up with and develop a project of my own to showcase what I had learned and to test new ideas and technologies. 
-The constraints were the following: 
+
+As my **Final Project** I was required to come up with and develop a project of my own to showcase what I had learned and to test new ideas and technologies.
+The constraints were the following:
 - it had to be completed in just one week
 - it had to be substantial but also achievable.
 ###### Timeframe:  _**One week**_
@@ -36,11 +35,10 @@ The constraints were the following:
 - PeerJs (WebRTC)
 
 ## Summary:
-Recently I've participated in a one-week coding challenge where I set myself to build a **secure and decentralized chat application**. 
-**My goal** with this application **was to test the architecture and tech needed to make it happen**. 
+Recently I've participated in a one-week coding challenge where I set myself to build a **secure and decentralized chat application**.
+**My goal** with this application **was to test the architecture and tech needed to make it happen**.
 The user has the ability to register, login, look up people to befriend, manage friendships, use a global chatroom, use a private chatroom or switch to a “secure” channel to protect the privacy of a conversation. To make all of this happen, I had to build a node.js backend that used WebSocket to emit real-time events to all the relevant clients while on a React/Redux frontend I had to handle the secure chat by enabling two clients to speak directly to each other through webRtc protocol (p2p connection).
 I especially enjoyed how React in combination with Redux allowed me to explicitly implement the separation of concerns principle and also write clean, functional and maintainable code.
-
 
 ### Tech Stack:
 | **Frontend** | **Backend** | **Database** |
@@ -58,7 +56,7 @@ $ npm install
 $ cd config && touch secrets.json
 ```
 ##### Secret.json
-Paste in the following code and remember to configure [PostgreSQL] and [AWS S3] it accordingly... 
+Paste in the following code and remember to configure [PostgreSQL] and [AWS S3] it accordingly...
 ```javascript
 {
     "psqlConfig": "postgres:postgres:postgres@localhost:5432/p2p-chat",
@@ -71,30 +69,37 @@ Paste in the following code and remember to configure [PostgreSQL] and [AWS S3] 
 }
 ```
 
-## Features: 
+## Features:
 > As a user, I can **register and login**. If I am already login, I can skip this step.
 
 The user can create or submit its credentials: Passwords are hashed using the bcrypt library.
 Forms include CSRF protection using the csurf npm package.
+![p2p_chat-register]
+![p2p_chat-login]
 
 > As a user, I can **personalize my profile picture**.
+![p2p_chat-profile_pic]
 
 > As a user, I can **see who of my friends is online now**.
 
-> As a user, I can **find friends using the search box**. 
+> As a user, I can **find friends using the search box**.
+![p2p_chat-find_friends]
 
-This Feature is implemented as an incremental search field. 
+This Feature is implemented as an incremental search field.
 Input events result in ajax requests, and the route hit does a database queries with pattern matching to find matches.
 
-> As a user, I can **see a list of all of my friends**. I can also **manage friendship status**: 
+> As a user, I can **see a list of all of my friends**. I can also **manage friendship status**:
 I can send a friendship request,
 I can cancel ann erroneous friendship request,
 I can accept friends requests,
 I can terminate friendships
+![p2p_chat-manage_friendship]
 
 > As a user, I can **use the group chat** feature to chat with everyone that is online.
+![p2p_chat-group_chat]
 
 > As a user, I can **use the private chat** to talk to other friends that can be **either online or offline**.
+![p2p_chat-private_chat]
 
 > As a user, I can **use the secure chat** to talk to other friends.
 
@@ -111,7 +116,7 @@ The **messages** payload **are stored only locally** in the redux store of each 
 
 License
 ----
-MIT © [suddenlyGiovanni] 
+MIT © [suddenlyGiovanni]
 **Free Software, Hell Yeah!**
 
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
@@ -121,7 +126,7 @@ MIT © [suddenlyGiovanni]
    [suddenlyGiovanni]: <https://github.com/suddenlyGiovanni/>
    [/giovanni-ravalico]: <https://www.linkedin.com/in/giovanni-ravalico/>
    [@superspacezova]: <https://twitter.com/superspacezova>
-   
+
 [//]: # (Context references:)
    [Reichstag]: <https://github.com/suddenlyGiovanni/reichstag>
    [Kitty Carousel]: <https://github.com/suddenlyGiovanni/kitty_carousel>
@@ -135,7 +140,7 @@ MIT © [suddenlyGiovanni]
    [Imageboard]: <https://github.com/suddenlyGiovanni/imageboard>
    [Social Network]: <https://github.com/suddenlyGiovanni/socialnetwork>
    [P2P Chat]: <https://github.com/suddenlyGiovanni/p2p-chat>
-   
+
 [//]: # (Tech Stack references:)
    [React.js]: <https://reactjs.org/docs/installation.html>
    [Node.js]: <https://nodejs.org/dist/latest-v8.x/docs/api/>
@@ -148,3 +153,12 @@ MIT © [suddenlyGiovanni]
    [PeerJs - WebRTC]: <http://peerjs.com/docs/#api>
    [Material-UI]: <http://www.material-ui.com/#/>
    [suddenlyGiovanni]: <https://github.com/suddenlyGiovanni/>
+
+[//]: # (Picture references:)
+    [p2p_chat-register]: <>
+    [p2p_chat-login]: <>
+    [p2p_chat-profile_pic]: <>
+    [p2p_chat-find_friends]: <>
+    [p2p_chat-manage_friendship]: <>
+    [p2p_chat-group_chat]: <>
+    [p2p_chat-private_chat]: <>
