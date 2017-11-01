@@ -31,16 +31,16 @@ As my **Final Project** I was required to come up with and develop a project of 
 The constraints were the following: 
 - it had to be completed in just one week
 - it had to be substantial but also achievable.
-###### Time frame:  _**One week**_
+###### Timeframe:  _**One week**_
 ###### New Technologies:  
 - PeerJs (WebRTC)
 
 ## Summary:
 Recently I've participated in a one-week coding challenge where I set myself to build a **secure and decentralized chat application**. 
 **My goal** with this application **was to test the architecture and tech needed to make it happen**. 
-The user had the ability to register, login, look up for people to befriend, manage friendships, use a global chatroom, use a private chatroom or switch to a “secure” channel to protect the privacy of a conversation. 
-To make all of this happen I had to build a node.js backend that used WebSocket to emit realtime events to all the relevant clients while on a React/Redux frontend I had to handle the secure chat by enabling two clients to speak directly to each other through webRtc protocol (p2p connection).
-I have specifically enjoyed how React in combination with Redux allowed me to clearly implement the separation of concerns principle and also write clean, functional and maintainable code.
+The user has the ability to register, login, look up people to befriend, manage friendships, use a global chatroom, use a private chatroom or switch to a “secure” channel to protect the privacy of a conversation. To make all of this happen, I had to build a node.js backend that used WebSocket to emit real-time events to all the relevant clients while on a React/Redux frontend I had to handle the secure chat by enabling two clients to speak directly to each other through webRtc protocol (p2p connection).
+I especially enjoyed how React in combination with Redux allowed me to explicitly implement the separation of concerns principle and also write clean, functional and maintainable code.
+
 
 ### Tech Stack:
 | **Frontend** | **Backend** | **Database** |
@@ -72,15 +72,37 @@ Paste in the following code and remember to configure [PostgreSQL] and [AWS S3] 
 ```
 
 ## Features: 
-- Registration | Authentication | Login
-- User Search
-- Friendship managment
-- Global chat (through WebSocket)
-- Private chat (through WebSocket)
-- Secure chat (through P2P with message stored locally on your device)
-## Todos
- - Write MORE Tests
- - Add Night Mode
+> As a user, I can **register and login**. If I am already login, I can skip this step.
+
+The user can create or submit its credentials: Passwords are hashed using the bcrypt library.
+Forms include CSRF protection using the csurf npm package.
+
+> As a user, I can **personalize my profile picture**.
+
+> As a user, I can **see who of my friends is online now**.
+
+> As a user, I can **find friends using the search box**. 
+
+This Feature is implemented as an incremental search field. 
+Input events result in ajax requests, and the route hit does a database queries with pattern matching to find matches.
+
+> > As a user, I can **see a list of all of my friends**. I can also **manage friendship status**: 
+> I can send a friendship request,
+> I can cancel ann erroneous friendship request,
+> I can accept friends requests,
+> I can terminate friendships
+
+> As a user, I can **use the group chat** feature to chat with everyone that is online.
+
+> As a user, I can **use the private chat** to talk to other friends that can be **either online or offline**.
+
+> As a user, I can **use the secure chat** to talk to other friends.
+
+This feature is achieved by enabling **two clients to speak directly to each other through the webRTC** protocol (p2p connection).
+The **messages** payload **are stored only locally** in the redux store of each client. They are also not persistent.
+
+## Todos of additional features:
+ - [ ] **Temp:**
 
 ## Contact
 * e-mail: ravalico.giovanni@gmail.com
